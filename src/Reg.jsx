@@ -123,9 +123,11 @@ const Reg = () => {
       <button type="submit">Create Account</button>
     </form>
 
+  
     <p className="footer-text">
-      Already have an account? <a href="#">Login</a>
-    </p>
+  Already have an account? <a href="/">Login</a>
+</p>
+
   </div>
   )
 }

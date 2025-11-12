@@ -1,0 +1,132 @@
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: #0e1625;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Center card inside the screen */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Login box */
+.login-card {
+  background: #111c2e;
+  padding: 40px 35px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  width: 360px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Headings */
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 25px;
+}
+
+/* Input section */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Input group */
+.input-group {
+  text-align: center;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Label style */
+.input-group label {
+  font-size: 14px;
+  display: block;
+  text-align: center;
+  margin-bottom: 8px;
+  color: #d1d5db;
+}
+
+/* Input fields */
+.input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #24344d;
+  border-radius: 6px;
+  background-color: #0d1523;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input-group input::placeholder {
+  color: #777;
+}
+
+/* Button */
+.login-btn {
+  width: 100%;
+  background-color: #3b82f6;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+
+.login-btn:hover {
+  background-color: #2563eb;
+}
+
+.login-btn:disabled {
+  background-color: #1e3a8a;
+  cursor: not-allowed;
+}
+
+/* Error text */
+.error-text {
+  color: #f87171;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* Signup link */
+.signup-text {
+  font-size: 14px;
+  margin-top: 15px;
+  color: #aaa;
+}
+
+.signup-text .signup-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-text .signup-link:hover {
+  text-decoration: underline;
+}
