@@ -75,9 +75,9 @@ const Reg = () => {
 
   return (
      <div className="container">
-    <h1>CineLink</h1>
+    <h1>CineVerse</h1>
     <p className="subtitle">Join the ultimate movie community.</p>
-
+    
     <h2>Register Account</h2>
 
     <form onSubmit={handleSubmit} method="POST">
