@@ -78,7 +78,7 @@ const Reg = () => {
     <h1>CineVerse</h1>
     <p className="subtitle">Join the ultimate movie community.</p>
 
-    <h2>Create Your Account</h2>
+    <h2>Register Account</h2>
 
     <form onSubmit={handleSubmit} method="POST">
       <label htmlFor="fullname">Full Name</label>
