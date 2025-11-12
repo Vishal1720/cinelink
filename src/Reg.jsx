@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
+import Landingheader from './Landingheader'
 import "./Reg.css"
 const Reg = () => {
     const [formData, setFormData] = useState({
@@ -74,11 +75,12 @@ const Reg = () => {
   }
 
   return (
-     <div className="container">
-    <h1>CineVerse</h1>
-    <p className="subtitle">Join the ultimate movie community.</p>
+    <><Landingheader></Landingheader>
+     <div className="container" style={{marginTop:"58%",paddingBottom:"2%"}}>
+    <h1>CineLink</h1>
+    {/* <p className="subtitle">Join the ultimate movie community.</p> */}
     
-    <h2>Register Account</h2>
+    {/* <h2>Register Account</h2> */}
 
     <form onSubmit={handleSubmit} method="POST">
       <label htmlFor="fullname">Full Name</label>
@@ -127,6 +129,7 @@ const Reg = () => {
       Already have an account? <a href="#">Login</a>
     </p>
   </div>
+  </>
   )
 }
 
