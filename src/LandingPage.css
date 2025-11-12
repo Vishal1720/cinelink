@@ -1,0 +1,73 @@
+/* Reset default margin/padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.watch-section {
+  width: 99vw;
+  height: 100vh; /* taller for better detail */
+  background: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.6), 
+      rgba(0, 0, 0, 0.6)
+    ),
+    /* url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80")  */
+    url("./assets/background.png")
+    center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+  position: relative;
+  color: white;
+  /* image rendering optimizations */
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.watch-content {
+  background: rgba(1, 13, 22, 0.8); /* slightly darker and transparent */
+  border-radius: 25px;
+  padding: 40px 60px;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0, 255, 255, 0.4);
+}
+
+.watch-content h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+
+.watch-content p {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+.recommendation-btn {
+  background-color: #00fefc;
+  border: none;
+  color: black;
+  padding: 14px 36px;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 0 24px #00fefc;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recommendation-btn:hover {
+  background-color: #00dcdc;
+  box-shadow: 0 0 32px #00dcdc;
+}

@@ -76,7 +76,7 @@ const Reg = () => {
 
   return (
     <><Landingheader></Landingheader>
-     <div className="container" style={{marginTop:"58%",paddingBottom:"2%"}}>
+     <div className="container" style={{marginTop:"50%",paddingBottom:"2%"}}>
     <h1>CineLink</h1>
     {/* <p className="subtitle">Join the ultimate movie community.</p> */}
     
