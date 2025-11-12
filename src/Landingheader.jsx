@@ -42,7 +42,7 @@ const navigate = useNavigate();
       </div>
 
       <nav className="navigation" role="navigation" aria-label="Primary Navigation">
-        <Link to="/" >Home</Link>
+        <Link to="/" style={{color:"white",marginTop:"12px"}}>Home</Link>
         
       </nav>
 
