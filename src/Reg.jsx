@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
 import Landingheader from './Landingheader'
+import { Link } from "react-router-dom";
 import "./Reg.css"
 const Reg = () => {
     const [formData, setFormData] = useState({
@@ -122,12 +123,15 @@ const Reg = () => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8a3 3 0 0 0 0 6 3 3 0 0 0 0-6z"/></svg>
       </div>
 
-      <button type="submit">Create Account</button>
+      <button type="submit" className='register-btn'>Create Account</button>
     </form>
 
   
     <p className="footer-text">
-  Already have an account? <a href="/Login">Login</a>
+  Already have an account? <Link style={{ color:"#3b82f6"}} to="/Login" className="signinlink"> 
+  {/* classname css not implemented check once */}
+            Login
+          </Link>
 </p>
 
   </div>
