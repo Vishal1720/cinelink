@@ -7,7 +7,7 @@ const LandingPage = () => {
     <div>
       <Landingheader />
     {/* somewhere css class undu section g av sari malpod */}
-       <section className="watch-section" style={{marginLeft:"-70px"}} >
+       <section className="watch-section" >
       <div className="watch-content">
         <h1>WHAT TO WATCH TONIGHT?</h1>
         <p>Get an instant recommendation tailored just for you.</p>
