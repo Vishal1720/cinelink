@@ -9,8 +9,10 @@ const Login = () => {
     password: "",
   });
 
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
 
   // 🔹 Handle input change
   const handleChange = (e) => {
@@ -103,6 +105,7 @@ const Login = () => {
               placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
+
             />
           </div>
 
