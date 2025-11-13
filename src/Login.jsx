@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Login.css";
 import { Link } from "react-router-dom";
 import { supabase } from "./supabase";
-
+import Landingheader from "./Landingheader";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -76,7 +76,8 @@ const Login = () => {
     setLoading(false);
   };
 
-  return (
+  return (<>
+  <Landingheader/>
     <div className="login-container">
       <div className="login-card">
         <h1 className="title">CineVerse</h1>
@@ -114,12 +115,13 @@ const Login = () => {
 
         <p className="signup-text">
           Don’t have an account?{" "}
-          <Link to="/register" className="signup-link">
+          <Link to="/Reg" className="signup-link">
             Sign Up
           </Link>
         </p>
       </div>
     </div>
+    </>
   );
 };
 
