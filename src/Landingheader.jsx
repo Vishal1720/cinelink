@@ -1,5 +1,7 @@
 import React from 'react';
 import './Landingheader.css';
+import Reg from "./Reg";
+import Login from "./Login"; 
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
@@ -7,11 +9,11 @@ const Landingheader = () => {
 const navigate = useNavigate();
 
       const handlesigninClick = () => {
-    navigate("/signin");  // manually go to /community route
+    navigate("/Login");  // manually go to /community route
   };
 
    const handlesignupClick = () => {
-    navigate("/signup");  // manually go to /community route
+    navigate("/Reg");  // manually go to /community route
   };
 
   return (
@@ -51,7 +53,7 @@ const navigate = useNavigate();
           Sign Up
         </button>
         <button className="btn signin-btn" type="button" onClick={handlesigninClick}>
-          Sign In
+          Login
         </button>
       </div>
     </header>

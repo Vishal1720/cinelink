@@ -127,7 +127,7 @@ const Reg = () => {
 
   
     <p className="footer-text">
-  Already have an account? <a href="/">Login</a>
+  Already have an account? <a href="/Login">Login</a>
 </p>
 
   </div>
