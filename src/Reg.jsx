@@ -83,7 +83,7 @@ const Reg = () => {
     {/* <h2>Register Account</h2> */}
 
     <form onSubmit={handleSubmit} method="POST">
-      <label htmlFor="fullname">Full Name</label>
+      <label className='reglabel' htmlFor="fullname">Full Name</label>
       <input type="text" id="fullname"
       name='name'
        placeholder="Enter your full name" 
@@ -91,12 +91,12 @@ const Reg = () => {
         onChange={handleChange} required
 />
 
-      <label htmlFor="email">Email Address</label>
+      <label className='reglabel' htmlFor="email">Email Address</label>
       <input type="email" id="email" name="email" 
       value={formData.email}
         onChange={handleChange}
         placeholder="Enter your email address" />
-<label htmlFor="phone">Phone Number</label>
+<label className='reglabel' htmlFor="phone">Phone Number</label>
       <input type="tel" id="phone" name="phone"
        placeholder="Enter your phone number"
        pattern="[0-9]{10}"
@@ -104,7 +104,7 @@ const Reg = () => {
         value={formData.phone}
         onChange={handleChange} required/>
 
-      <label htmlFor="password">Password</label>
+      <label className='reglabel' htmlFor="password">Password</label>
       <div className="password-wrapper">
         <input type="password"
         value={formData.password}
@@ -112,7 +112,7 @@ const Reg = () => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8a3 3 0 0 0 0 6 3 3 0 0 0 0-6z"/></svg>
       </div>
 
-      <label htmlFor="confirmpassword">Confirm Password</label>
+      <label className='reglabel' htmlFor="confirmpassword">Confirm Password</label>
       <div className="password-wrapper">
         <input type="password" id="confirmpassword"
          name="confirmpassword" placeholder="Confirm your password"
