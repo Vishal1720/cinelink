@@ -6,14 +6,76 @@ import { Link } from "react-router-dom";
 import "./Reg.css"
 
 const Reg = () => {
-
-  const [formData, setFormData] = useState({
+const [imageFile, setImageFile] = useState(null);
+const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     password: '',
-    confirmpassword:""
+    confirmpassword:"",
+    avatar_url: ""
   });
+
+async function uploadImageAndInsertUser() {
+  let imageUrl = null;  // 👈 default value if no image
+
+  // 1️⃣ If user selected an image → Upload to Supabase
+  if (imageFile) {
+    const fileName = `${Date.now()}_${imageFile.name}`;
+
+    const { data: uploaded, error: uploadError } = await supabase.storage
+      .from("AvatarBucket")
+      .upload(`profiles/${fileName}`, imageFile);
+
+    if (uploadError) {
+      console.error("Upload error:", uploadError);
+      setError(uploadError.message);
+      return;
+    }
+
+    // 2️⃣ Get public URL of uploaded image
+    const { data: urlData } = supabase.storage
+      .from("AvatarBucket")
+      .getPublicUrl(`profiles/${fileName}`);
+
+    imageUrl = urlData.publicUrl;
+  }
+
+  // 3️⃣ Insert user details with imageUrl (could be NULL or actual URL)
+  const newUser = {
+    name: formData.name,
+    email: formData.email,
+    phone: formData.phone ? Number(formData.phone) : null,
+    password: formData.password,
+    avatar_url: imageUrl,   // 👈 will be null OR uploaded URL
+  };
+
+  const { data, error } = await supabase
+    .from("user")
+    .insert([newUser]);
+
+  if (error) {
+    console.error("Insert error:", error);
+    setError(error.message);
+  } else {
+    console.log("User inserted:", data);
+
+    // Clear form
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmpassword: "",
+      avatar_url: ""
+    });
+
+    setImageFile(null);
+  }
+}
+
+
+  
 
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +95,7 @@ const Reg = () => {
     }
 
     setPasswordError("");
-    insertUser();
+   uploadImageAndInsertUser();
   };
 
   useEffect(() => {
@@ -86,8 +148,13 @@ const Reg = () => {
 
       <div className="container" style={{ marginTop: "50%", paddingBottom: "2%" }}>
         <h1>CineLink</h1>
-
+      
         <form onSubmit={handleSubmit} method="POST">
+<input 
+  type="file" 
+  accept="image/*"
+  onChange={(e) => setImageFile(e.target.files[0])}
+/>
 
           <label className='reglabel' htmlFor="fullname">Full Name</label>
           <input type="text" id="fullname"
