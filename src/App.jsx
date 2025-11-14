@@ -11,9 +11,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Reg" element={<Reg />} />
+        <Route path="/" element={<LandingPage/>} />
+        <Route path="/Login" element={<Login/>} />
+        <Route path="/Reg" element={<Reg/>} />
       </Routes>
     </BrowserRouter>
   );

@@ -23,6 +23,16 @@
     flex-direction: column;
 
   }
+  .password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center; 
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px; 
+}
 
   /* Centered headings */
   h1, p.subtitle, h2 {
@@ -161,7 +171,6 @@
   font-size: 15px;
   transition: 0.2s;
 }
-
 
 .register-btn:hover {
   background-color: #2563eb;
