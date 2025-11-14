@@ -87,11 +87,11 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label>Username or Email</label>
+            <label>Email</label>
             <input
               type="text"
               name="email"
-              placeholder="Enter your username or email"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
             />
