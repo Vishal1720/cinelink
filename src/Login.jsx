@@ -56,6 +56,24 @@ const Login = () => {
     setLoading(true);
 
     try {
+
+       // Check admin table first
+  const { data: adminData, error: adminError } = await supabase
+    .from("admin")
+    .select("*")
+    .eq("email", formData.email)
+    .eq("password", formData.password);
+
+  if (adminError) {
+    console.error("❌ Supabase admin error:", adminError.message);
+    setError("Something went wrong. Please try again later.");
+  } else if (adminData && adminData.length > 0) {
+    // Admin found, redirect to AdminPage
+    alert(`Welcome Admin, ${adminData[0].name}!`);
+    // Your AdminPage redirect logic here, e.g.:
+    // navigate("/admin-page");
+  } else {
+    // Not an admin, check user table
       const { data, error } = await supabase
         .from("user")
         .select("*")
@@ -70,6 +88,7 @@ const Login = () => {
       } else {
         alert(`Welcome back, ${data[0].name}!`);
       }
+    }
     } catch (err) {
       console.error("⚠️ Unexpected error:", err);
       setError("An unexpected error occurred. Please try again.");
