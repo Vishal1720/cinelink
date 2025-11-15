@@ -173,7 +173,7 @@ async function uploadImageAndInsertUser() {
   }
 
   return (
-    <>
+    <div className='regformcontainer' >
       <Landingheader />
 
       <div className="container">
@@ -283,7 +283,7 @@ async function uploadImageAndInsertUser() {
         </p>
 
       </div>
-    </>
+    </div>
   )
 }
 
