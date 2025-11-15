@@ -16,8 +16,8 @@ body{
   height: 100vh;
 
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url("./assets/collage.png");
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("./assets/landingpagelandscape1.png");
 
   background-size:
     cover,
@@ -44,7 +44,7 @@ body{
   background: rgba(1, 13, 22, 0.8); /* slightly darker and transparent */
   border-radius: 25px;
   padding: 40px 60px;
-  max-width: 600px;
+  max-width: 610px;
   width: 90%;
   text-align: center;
   box-shadow: 0 8px 30px rgba(0, 255, 255, 0.4);
