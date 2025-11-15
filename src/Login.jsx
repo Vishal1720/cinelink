@@ -97,9 +97,9 @@ const Login = () => {
     setLoading(false);
   };
 
-  return (<>
+  return (<div  >
   <Landingheader/>
-    <div className="login-container">
+    <div className="login-container loginbgcontainer"  style={{ marginTop:"10px",width:"100vw"}}>
       <div className="login-card">
         <h1 className="title">CineVerse</h1>
         <h3 className="subtitle">Welcome Back</h3>
@@ -143,7 +143,7 @@ const Login = () => {
         </p>
       </div>
     </div>
-    </>
+    </div>
   );
 };
 

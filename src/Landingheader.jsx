@@ -12,13 +12,16 @@ const navigate = useNavigate();
     navigate("/Login");  // manually go to /community route
   };
 
+  const navigateToLanding = () => {
+    navigate("/");  // manually go to /community route
+  }
    const handlesignupClick = () => {
     navigate("/Reg");  // manually go to /community route
   };
 
   return (
     <header className="cineverse-header">
-      <div className="left-section">
+      <div className="left-section" onClick={navigateToLanding}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 48 48"
