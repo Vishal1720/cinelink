@@ -221,6 +221,13 @@
   .regformcontainer {
     padding: 5vw;
     margin-top: 9vh;
+    background: url("./assets/porttraitT.png");
+    background-size: cover;
+    
+  }
+
+  .container{
+    background: rgba(20, 24, 32, 0.9);
   }
 }
 
