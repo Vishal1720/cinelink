@@ -177,7 +177,7 @@ async function uploadImageAndInsertUser() {
       <Landingheader />
 
       <div className="container">
-        <h1>CineLink</h1>
+        {/* <h1>CineLink</h1> */}
       
         <form onSubmit={handleSubmit} method="POST">
 <div className="avatar-upload">
@@ -202,10 +202,10 @@ async function uploadImageAndInsertUser() {
   />
 </div>
 
-          <label className='reglabel' htmlFor="fullname">Full Name</label>
+          <label className='reglabel' htmlFor="fullname">Name</label>
           <input type="text" id="fullname"
             name='name'
-            placeholder="Enter your full name"
+            placeholder="Enter your name"
             value={formData.name}
             onChange={handleChange}
             required
