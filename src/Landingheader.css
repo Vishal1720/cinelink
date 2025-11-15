@@ -105,4 +105,16 @@
   .navigation {
     display: none; /* Adjust if hamburger menu needed */
   }
+  .auth-buttons{
+    margin-left: 0rem;
+    padding-bottom: 4%;
+    padding-left: 4%;
+    
+  }
+  .left-section {
+    font-size: 1rem;
+  }
+  .cineverse-header {
+    padding: 0 1rem;
+  }
 }
