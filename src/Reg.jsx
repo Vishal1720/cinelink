@@ -38,7 +38,7 @@ const [formData, setFormData] = useState({
 
 
 async function uploadImageAndInsertUser() {
-  let imageUrl = null;  // 👈 default value if no image
+  let imageUrl = "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";  // 👈 default value if no image
 
   // 1️⃣ If user selected an image → Upload to Supabase
   if (imageFile) {
@@ -68,7 +68,7 @@ async function uploadImageAndInsertUser() {
     email: formData.email,
     phone: formData.phone ? Number(formData.phone) : null,
     password: formData.password,
-    avatar_url: imageUrl,   // 👈 will be null OR uploaded URL
+    avatar_url: imageUrl,   // 👈 will be default one OR uploaded URL
   };
 
   const { data, error } = await supabase
@@ -145,32 +145,34 @@ async function uploadImageAndInsertUser() {
     fetchUsers()
   }, []);
 
-  async function insertUser() {
-    const newUser = {
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone ? Number(formData.phone) : null,
-      password: formData.password
-    }
+  // async function insertUser() {
+  //   const newUser = {
+  //     name: formData.name,
+  //     email: formData.email,
+  //     phone: formData.phone ? Number(formData.phone) : null,
+  //     password: formData.password,
+  //     avatar_url: "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg",
+  //   }
 
-    const { data, error } = await supabase
-      .from('user')
-      .insert([newUser])
+  //   const { data, error } = await supabase
+  //     .from('user')
+  //     .insert([newUser])
 
-    if (error) {
-      setError(error.message)
-      console.error('❌ Insert error:', error.message)
-    } else {
-      console.log('✅ Inserted:', data)
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        confirmpassword: ""
-      })
-    }
-  }
+  //   if (error) {
+  //     setError(error.message)
+  //     console.error('❌ Insert error:', error.message)
+  //   } else {
+  //     console.log('✅ Inserted:', data)
+  //     setFormData({
+  //       name: '',
+  //       email: '',
+  //       phone: '',
+  //       password: '',
+  //       confirmpassword: "",
+  //       avatar_url: ""
+  //     })
+  //   }
+  // }
 
   return (
     <div className='regformcontainer' >
