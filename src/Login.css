@@ -143,3 +143,11 @@ form {
   justify-content: center;
   align-items: center;
 }
+
+@media (max-width: 640px) {
+  .loginbgcontainer {
+   background: url("./assets/portrait4.png");
+   background-size: cover;
+   background-position: center center;
+  }
+}

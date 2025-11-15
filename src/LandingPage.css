@@ -82,3 +82,19 @@ body{
   background-color: #00dcdc;
   box-shadow: 0 0 32px #00dcdc;
 }
+
+@media (max-width: 600px) {
+  /* styles for screens smaller than 600px */
+
+  .watch-section {
+     background: url("./assets/portrait2.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat; /* avoid repeating */
+  background-position: top;  /* center the image */
+  background-color: black;   
+  }
+  .watch-content {
+ background: rgba(1, 13, 22, 0.92);
+  }
+}

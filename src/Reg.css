@@ -189,3 +189,16 @@
   background-size: cover;
   padding: 100px;
 }
+
+@media (max-width: 640px) {
+  .container {
+    width: 90vw;
+
+  margin: 0%;
+  }
+  .regformcontainer {
+    padding: 5vw;
+    margin-top: 9vh;
+  }
+}
+
