@@ -180,11 +180,27 @@ async function uploadImageAndInsertUser() {
         <h1>CineLink</h1>
       
         <form onSubmit={handleSubmit} method="POST">
-<input 
-  type="file" 
-  accept="image/*"
-  onChange={(e) => setImageFile(e.target.files[0])}
-/>
+<div className="avatar-upload">
+  <label htmlFor="avatarInput">
+    <img
+      src={
+        imageFile
+          ? URL.createObjectURL(imageFile)
+          : "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg"
+      }
+      alt="avatar"
+      className="avatar-image"
+    />
+  </label>
+
+  <input
+    type="file"
+    id="avatarInput"
+    accept="image/*"
+    onChange={(e) => setImageFile(e.target.files[0])}
+    style={{ display: "none" }}
+  />
+</div>
 
           <label className='reglabel' htmlFor="fullname">Full Name</label>
           <input type="text" id="fullname"
