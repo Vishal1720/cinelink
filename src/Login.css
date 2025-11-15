@@ -3,10 +3,10 @@ body {
   font-family: "Inter", sans-serif;
   background-color: #0e1625;
   color: #fff;
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  align-items: center; */
+  /* height: 100vh; */
 }
 
 /* Center card inside the screen */

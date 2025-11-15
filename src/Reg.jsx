@@ -176,7 +176,7 @@ async function uploadImageAndInsertUser() {
     <>
       <Landingheader />
 
-      <div className="container" style={{ marginTop: "50%", paddingBottom: "2%" }}>
+      <div className="container">
         <h1>CineLink</h1>
       
         <form onSubmit={handleSubmit} method="POST">
