@@ -20,26 +20,43 @@ const Login = () => {
   };
 
   // 🔹 Input validation before submitting
-  const validateForm = () => {
-    const { email, password } = formData;
+const validateForm = () => {
+  const { email, password } = formData;
 
-    if (!email.trim() || !password.trim()) {
-      return "All fields are required.";
-    }
+  if (!email.trim() || !password.trim()) {
+    return "All fields are required.";
+  }
 
-    // Email validation regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return "Please enter a valid email address.";
-    }
+  // Email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return "Please enter a valid email address.";
+  }
 
-    // Password length validation
-    if (password.length < 6) {
-      return "Password must be at least 6 characters long.";
-    }
+  // Password validation rules
+  if (password.length < 8) {
+    return "Password must be at least 8 characters long.";
+  }
 
-    return null; // No errors
-  };
+  if (!/[A-Z]/.test(password)) {
+    return "Password must include at least 1 uppercase letter.";
+  }
+
+  if (!/[a-z]/.test(password)) {
+    return "Password must include at least 1 lowercase letter.";
+  }
+
+  if (!/[0-9]/.test(password)) {
+    return "Password must include at least 1 number.";
+  }
+
+  if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
+    return "Password must include at least 1 special character.";
+  }
+
+  return null; // No errors
+};
+
 
   // 🔹 Handle form submission
   const handleSubmit = async (e) => {
@@ -69,7 +86,9 @@ const Login = () => {
     setError("Something went wrong. Please try again later.");
   } else if (adminData && adminData.length > 0) {
     // Admin found, redirect to AdminPage
-    alert(`Welcome Admin, ${adminData[0].name}!`);
+         sessionStorage.setItem("role", "admin");
+         sessionStorage.setItem("userame", adminData[0].name);
+    alert(`Welcome Admin, ${adminData[0].name}! you are a ${sessionStorage.getItem("role")}`);
     // Your AdminPage redirect logic here, e.g.:
     // navigate("/admin-page");
   } else {
@@ -86,7 +105,10 @@ const Login = () => {
       } else if (!data || data.length === 0) {
         setError("Invalid email or password.");
       } else {
-        alert(`Welcome back, ${data[0].name}!`);
+        
+        sessionStorage.setItem("role", "user");
+        sessionStorage.setItem("username", data[0].name);
+        alert(`Welcome back, ${data[0].name}! you are a ${sessionStorage.getItem("role")}`);
       }
     }
     } catch (err) {

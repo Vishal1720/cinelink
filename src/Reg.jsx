@@ -15,6 +15,27 @@ const [formData, setFormData] = useState({
     confirmpassword:"",
     avatar_url: ""
   });
+  function validatePassword(password) {
+  const rules = [];
+
+  if (password.length < 8)
+    rules.push("Password must be at least 8 characters");
+
+  if (!/[A-Z]/.test(password))
+    rules.push("Password must include at least 1 uppercase letter");
+
+  if (!/[a-z]/.test(password))
+    rules.push("Password must include at least 1 lowercase letter");
+
+  if (!/[0-9]/.test(password))
+    rules.push("Password must include at least 1 number");
+
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+    rules.push("Password must include at least 1 special character");
+
+  return rules;
+}
+
 
 async function uploadImageAndInsertUser() {
   let imageUrl = null;  // 👈 default value if no image
@@ -87,16 +108,25 @@ async function uploadImageAndInsertUser() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (formData.password !== formData.confirmpassword) {
-      setPasswordError("❌ Passwords do not match");
-      return;
-    }
+  // password rules validation
+  const validationErrors = validatePassword(formData.password);
+  if (validationErrors.length > 0) {
+    setPasswordError("❌ " + validationErrors.join(", "));
+    return;
+  }
 
-    setPasswordError("");
-   uploadImageAndInsertUser();
-  };
+  // confirm password check
+  if (formData.password !== formData.confirmpassword) {
+    setPasswordError("❌ Passwords do not match");
+    return;
+  }
+
+  setPasswordError("");
+  uploadImageAndInsertUser();
+};
+
 
   useEffect(() => {
     async function fetchUsers() {
