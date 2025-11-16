@@ -9,18 +9,17 @@ const Login = () => {
     password: "",
   });
 const navigate = useNavigate();
- function encrypt(text, key = "111111") {
-  let result = "";
-  for (let i = 0; i < text.length; i++) {
-    result += String.fromCharCode(
-      text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-    );
-  }
-  return btoa(result);  // convert to base64
-}
+
+  const hashPassword = async (password) => {
+  const enc = new TextEncoder().encode(password);
+  const buffer = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buffer))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+};
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
 
   // 🔹 Handle input change
   const handleChange = (e) => {
@@ -41,27 +40,6 @@ const validateForm = () => {
     return "Please enter a valid email address.";
   }
 
-  // Password validation rules
-  // if (password.length < 8) {
-  //   return "Password must be at least 8 characters long.";
-  // }
-
-  // if (!/[A-Z]/.test(password)) {
-  //   return "Password must include at least 1 uppercase letter.";
-  // }
-
-  // if (!/[a-z]/.test(password)) {
-  //   return "Password must include at least 1 lowercase letter.";
-  // }
-
-  // if (!/[0-9]/.test(password)) {
-  //   return "Password must include at least 1 number.";
-  // }
-
-  // if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
-  //   return "Password must include at least 1 special character.";
-  // }
-
   return null; // No errors
 };
 
@@ -81,13 +59,13 @@ const validateForm = () => {
     setLoading(true);
 
     try {
-
+let pass=await hashPassword(formData.password);
        // Check admin table first
   const { data: adminData, error: adminError } = await supabase
     .from("admin")
     .select("*")
     .eq("email", formData.email)
-    .eq("password", encrypt(formData.password));
+    .eq("password",pass );
 
   if (adminError) {
     console.error("❌ Supabase admin error:", adminError.message);
@@ -95,7 +73,7 @@ const validateForm = () => {
   } else if (adminData && adminData.length > 0) {
     // Admin found, redirect to AdminPage
          sessionStorage.setItem("role", "admin");
-         sessionStorage.setItem("userame", adminData[0].name);
+         sessionStorage.setItem("username", adminData[0].name);
     alert(`Welcome Admin, ${adminData[0].name}! you are a ${sessionStorage.getItem("role")}`);
     // Your AdminPage redirect logic here, e.g.:
     navigate("/adminpage");
@@ -105,7 +83,7 @@ const validateForm = () => {
         .from("user")
         .select("*")
         .eq("email", formData.email)
-        .eq("password", encrypt(formData.password));
+        .eq("password", pass);
 
       if (error) {
         console.error("❌ Supabase error:", error.message);

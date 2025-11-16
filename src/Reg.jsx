@@ -16,15 +16,13 @@ const [formData, setFormData] = useState({
     avatar_url: ""
   });
 
-  function encrypt(text, key = "111111") {
-  let result = "";
-  for (let i = 0; i < text.length; i++) {
-    result += String.fromCharCode(
-      text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-    );
-  }
-  return btoa(result);  // convert to base64
-}
+  const hashPassword = async (password) => {
+  const enc = new TextEncoder().encode(password);
+  const buffer = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buffer))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+};
 
   function validatePassword(password) {
   const rules = [];
@@ -72,13 +70,14 @@ async function uploadImageAndInsertUser() {
 
     imageUrl = urlData.publicUrl;
   }
+const hashed = await hashPassword(formData.password);
 
   // 3️⃣ Insert user details with imageUrl (could be NULL or actual URL)
   const newUser = {
     name: formData.name,
     email: formData.email,
     phone: formData.phone ? Number(formData.phone) : null,
-    password:encrypt( formData.password),
+    password:hashed,
     avatar_url: imageUrl,   // 👈 will be default one OR uploaded URL
   };
 
