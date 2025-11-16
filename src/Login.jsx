@@ -114,7 +114,7 @@ let pass=await hashPassword(formData.password);
     }
     } catch (err) {
       console.error("⚠️ Unexpected error:", err);
-      setError("An unexpected error occurred. Please try again.");
+      setError("An unexpected error occurred. Please try again.",err);
     }
 
     setLoading(false);
