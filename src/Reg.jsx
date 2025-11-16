@@ -85,12 +85,17 @@ const hashed = await hashPassword(formData.password);
     .from("user")
     .insert([newUser]);
 
+
   if (error) {
     console.error("Insert error:", error);
     setError(error.message);
   } else {
-    console.log("User inserted:", data);
-
+    // console.log("User inserted:", data);
+    // Sign up user via Supabase Auth triggering verification email
+const { data3, error3 } = await supabase.auth.signUp({
+  email: formData.email,
+  password: hashed,
+});
     // Clear form
     setFormData({
       name: "",
@@ -102,6 +107,8 @@ const hashed = await hashPassword(formData.password);
     });
 
     setImageFile(null);
+
+
   }
 }
 
@@ -137,23 +144,6 @@ const hashed = await hashPassword(formData.password);
   uploadImageAndInsertUser();
 };
 
-
-  useEffect(() => {
-    async function fetchUsers() {
-      const { data, error } = await supabase
-        .from('user')
-        .select('*')
-
-      if (error) {
-        setError(error.message)
-        console.error('❌ Supabase error:', error.message)
-      } else {
-        console.log('✅ Supabase data:', data)
-      }
-    }
-
-    fetchUsers()
-  }, []);
 
   return (
     <div className='regformcontainer' >
