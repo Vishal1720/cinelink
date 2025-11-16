@@ -1,7 +1,7 @@
 .admin-panel {
   width: 220px;
   height: 100vh;
-  background: linear-gradient(180deg, #141829 0%, #192032 100%);
+    background: linear-gradient(180deg, #080a14 0%, #141722 100%);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

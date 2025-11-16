@@ -9,7 +9,15 @@ const Login = () => {
     password: "",
   });
 const navigate = useNavigate();
-
+ function encrypt(text, key = "111111") {
+  let result = "";
+  for (let i = 0; i < text.length; i++) {
+    result += String.fromCharCode(
+      text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+    );
+  }
+  return btoa(result);  // convert to base64
+}
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -79,7 +87,7 @@ const validateForm = () => {
     .from("admin")
     .select("*")
     .eq("email", formData.email)
-    .eq("password", formData.password);
+    .eq("password", encrypt(formData.password));
 
   if (adminError) {
     console.error("❌ Supabase admin error:", adminError.message);
@@ -97,7 +105,7 @@ const validateForm = () => {
         .from("user")
         .select("*")
         .eq("email", formData.email)
-        .eq("password", formData.password);
+        .eq("password", encrypt(formData.password));
 
       if (error) {
         console.error("❌ Supabase error:", error.message);

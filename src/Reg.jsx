@@ -15,6 +15,17 @@ const [formData, setFormData] = useState({
     confirmpassword:"",
     avatar_url: ""
   });
+
+  function encrypt(text, key = "111111") {
+  let result = "";
+  for (let i = 0; i < text.length; i++) {
+    result += String.fromCharCode(
+      text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+    );
+  }
+  return btoa(result);  // convert to base64
+}
+
   function validatePassword(password) {
   const rules = [];
 
@@ -67,7 +78,7 @@ async function uploadImageAndInsertUser() {
     name: formData.name,
     email: formData.email,
     phone: formData.phone ? Number(formData.phone) : null,
-    password: formData.password,
+    password:encrypt( formData.password),
     avatar_url: imageUrl,   // 👈 will be default one OR uploaded URL
   };
 
