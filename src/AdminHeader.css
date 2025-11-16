@@ -1,0 +1,103 @@
+.admin-panel {
+  width: 220px;
+  height: 100vh;
+  background: linear-gradient(180deg, #141829 0%, #192032 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 20px;
+  box-sizing: border-box;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admin-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #37a0ff; /* simulate logo background */
+}
+
+.admin-title {
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0;
+}
+
+.admin-subtitle {
+  font-size: 12px;
+  color: #a0a8b6;
+  margin: 0;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-menu ul li {
+  margin-bottom: 18px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  color: #a0a8b6;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 20px;
+  transition: background-color 0.3s, color 0.3s;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item .icon {
+  font-size: 18px;
+}
+
+.nav-item:hover {
+  background-color: #2e3a5e;
+  color: #37a0ff;
+}
+
+.nav-item.active {
+  background-color: #2e3a5e;
+  color: #37a0ff;
+  font-weight: 600;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: #a0a8b6;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 20px;
+  width: 100%;
+}
+
+.logout-btn .icon {
+  font-size: 18px;
+}
+
+.logout-btn:hover {
+  background-color: #2e3a5e;
+  color: #37a0ff;
+}
