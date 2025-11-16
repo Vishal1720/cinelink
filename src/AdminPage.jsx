@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminHeader from './AdminHeader'
+import AddMovies from "./AddMovies";
 const AdminPage = () => {
   const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ const AdminPage = () => {
   return (
     <div style={{display:"flex"}}>
     <AdminHeader/>
-    <div style={{marginLeft:"100px"}}>AdminPage</div>
+    <AddMovies/>
     </div>
   )
 }
