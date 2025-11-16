@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import './AdminHeader.css';
-
+import { useNavigate } from 'react-router-dom';
 const AdminHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+const navigate = useNavigate();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const logout = () => {
+    sessionStorage.clear();
+
+    navigate("/Login");
   };
 
   return (
@@ -79,7 +85,7 @@ const AdminHeader = () => {
           </ul>
         </nav>
 
-        <button className="logout-btn">
+        <button className="logout-btn" onClick={logout}>
           <span className="icon">↩️</span>
           Logout
         </button>
