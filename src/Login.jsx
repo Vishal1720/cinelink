@@ -3,6 +3,7 @@ import "./Login.css";
 import { Link,useNavigate } from "react-router-dom";
 import { supabase } from "./supabase";
 import Landingheader from "./Landingheader";
+import SHA256 from "crypto-js/sha256";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -10,12 +11,18 @@ const Login = () => {
   });
 const navigate = useNavigate();
 
-  const hashPassword = async (password) => {
-  const enc = new TextEncoder().encode(password);
-  const buffer = await crypto.subtle.digest("SHA-256", enc);
-  return Array.from(new Uint8Array(buffer))
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
+//   const hashPassword = async (password) => {
+//   const enc = new TextEncoder().encode(password);
+//   const buffer = await crypto.subtle.digest("SHA-256", enc);
+//   return Array.from(new Uint8Array(buffer))
+//     .map(b => b.toString(16).padStart(2, "0"))
+//     .join("");
+// };
+
+
+
+const hashPassword = (password) => {
+  return SHA256(password).toString();
 };
 
   const [error, setError] = useState("");
@@ -84,7 +91,7 @@ let pass=await hashPassword(formData.password);
         .select("*")
         .eq("email", formData.email)
         .eq("password", pass);
-
+    console.log("User login data1:", data);
       if (error) {
         console.error("❌ Supabase error:", error.message);
         setError("Something went wrong. Please try again later.");
@@ -93,20 +100,22 @@ let pass=await hashPassword(formData.password);
       } else {
 
         //checking if email is verified
-        const { data2, error2 } = await supabase
+        const { data:data2, error:error2 } = await supabase
         .from("user")
         .select("*")
         .eq("email", formData.email)
-        .eq("password", pass).eq("verified", true);
-
+        .eq("password",pass)
+        .eq("verified",true);
+        
+        console.log("User login data:", data2);
         if (error2) {
   console.error("Error querying user:", error2);
-} else if (data2.length === 0) {
-  alert("Please verify your email before logging in.Check email for verification link.");
+} else if (data2.length<1 ) {
+  setError("Please verify your email before logging in.Check email for verification link.");
 } else {
    sessionStorage.setItem("role", "user");
-        sessionStorage.setItem("username", data[0].name);
-        alert(`Welcome back, ${data[0].name}! you are a ${sessionStorage.getItem("role")}`);
+        sessionStorage.setItem("username", data2[0].name);
+        alert(`Welcome back, ${data2[0].name}! you are a ${sessionStorage.getItem("role")}`);
 }
 
        
@@ -114,7 +123,7 @@ let pass=await hashPassword(formData.password);
     }
     } catch (err) {
       console.error("⚠️ Unexpected error:", err);
-      setError("An unexpected error occurred. Please try again.",err);
+      setError(`An unexpected error occurred.${err}`);
     }
 
     setLoading(false);

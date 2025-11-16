@@ -5,6 +5,7 @@ import Landingheader from './Landingheader'
 import { Link } from "react-router-dom";
 import "./Reg.css"
 import { useNavigate } from 'react-router-dom';
+import SHA256 from "crypto-js/sha256";
 const Reg = () => {
   const navigate = useNavigate();
 const [imageFile, setImageFile] = useState(null);
@@ -18,12 +19,16 @@ const [formData, setFormData] = useState({
     avatar_url: ""
   });
 
-  const hashPassword = async (password) => {
-  const enc = new TextEncoder().encode(password);
-  const buffer = await crypto.subtle.digest("SHA-256", enc);
-  return Array.from(new Uint8Array(buffer))
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
+//   const hashPassword = async (password) => {
+//   const enc = new TextEncoder().encode(password);
+//   const buffer = await crypto.subtle.digest("SHA-256", enc);
+//   return Array.from(new Uint8Array(buffer))
+//     .map(b => b.toString(16).padStart(2, "0"))
+//     .join("");
+// };
+
+const hashPassword = (password) => {
+  return SHA256(password).toString();
 };
 
   function validatePassword(password) {
