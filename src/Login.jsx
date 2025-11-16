@@ -91,10 +91,25 @@ let pass=await hashPassword(formData.password);
       } else if (!data || data.length === 0) {
         setError("Invalid email or password.");
       } else {
-        
-        sessionStorage.setItem("role", "user");
+
+        //checking if email is verified
+        const { data2, error2 } = await supabase
+        .from("user")
+        .select("*")
+        .eq("email", formData.email)
+        .eq("password", pass).eq("verified", true);
+
+        if (error2) {
+  console.error("Error querying user:", error2);
+} else if (data2.length === 0) {
+  alert("Please verify your email before logging in.Check email for verification link.");
+} else {
+   sessionStorage.setItem("role", "user");
         sessionStorage.setItem("username", data[0].name);
         alert(`Welcome back, ${data[0].name}! you are a ${sessionStorage.getItem("role")}`);
+}
+
+       
       }
     }
     } catch (err) {

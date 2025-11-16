@@ -2,9 +2,11 @@ import React from 'react'
 import { useEffect } from 'react'
 import { supabase } from './supabase'
 import Landingheader from './Landingheader'
+import { useNavigate } from 'react-router-dom';
 import "./LandingPage.css"
 const LandingPage = () => {
-  console.log("Goin ging to Landing Page");
+  const navigate = useNavigate();
+  console.log("Going in to Landing Page");
     useEffect(() => {
       console.log("Verifying user email status...");
     async function verifyUser() {
@@ -31,6 +33,8 @@ const LandingPage = () => {
           console.error('Error updating verification status:', updateError);
         } else {
           console.log('User verified status updated.');
+          alert("Email verified successfully! Please log in now.");
+          navigate("/Login");
         }
       }
     }

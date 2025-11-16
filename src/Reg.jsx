@@ -4,9 +4,11 @@ import { supabase } from './supabase'
 import Landingheader from './Landingheader'
 import { Link } from "react-router-dom";
 import "./Reg.css"
-
+import { useNavigate } from 'react-router-dom';
 const Reg = () => {
+  const navigate = useNavigate();
 const [imageFile, setImageFile] = useState(null);
+const [registering, setRegistering] = useState(false);
 const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -47,6 +49,7 @@ const [formData, setFormData] = useState({
 
 
 async function uploadImageAndInsertUser() {
+  setRegistering(true);
   let imageUrl = "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";  // 👈 default value if no image
 
   // 1️⃣ If user selected an image → Upload to Supabase
@@ -96,6 +99,9 @@ const { data3, error3 } = await supabase.auth.signUp({
   email: formData.email,
   password: hashed,
 });
+
+alert("Registration successful! Please check your email to verify your account.");
+navigate("/Login");
     // Clear form
     setFormData({
       name: "",
@@ -107,7 +113,7 @@ const { data3, error3 } = await supabase.auth.signUp({
     });
 
     setImageFile(null);
-
+setRegistering(false);
 
   }
 }
@@ -264,7 +270,8 @@ const { data3, error3 } = await supabase.auth.signUp({
             </p>
           )}
 
-          <button type="submit" className='register-btn'>Create Account</button>
+          <button type="submit" className='register-btn'>
+            {registering ? "Registering..." : "Register"}</button>
         </form>
 
         <p className="footer-text">
