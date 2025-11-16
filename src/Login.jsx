@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { supabase } from "./supabase";
 import Landingheader from "./Landingheader";
 const Login = () => {
@@ -8,7 +8,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+const navigate = useNavigate();
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,25 +34,25 @@ const validateForm = () => {
   }
 
   // Password validation rules
-  if (password.length < 8) {
-    return "Password must be at least 8 characters long.";
-  }
+  // if (password.length < 8) {
+  //   return "Password must be at least 8 characters long.";
+  // }
 
-  if (!/[A-Z]/.test(password)) {
-    return "Password must include at least 1 uppercase letter.";
-  }
+  // if (!/[A-Z]/.test(password)) {
+  //   return "Password must include at least 1 uppercase letter.";
+  // }
 
-  if (!/[a-z]/.test(password)) {
-    return "Password must include at least 1 lowercase letter.";
-  }
+  // if (!/[a-z]/.test(password)) {
+  //   return "Password must include at least 1 lowercase letter.";
+  // }
 
-  if (!/[0-9]/.test(password)) {
-    return "Password must include at least 1 number.";
-  }
+  // if (!/[0-9]/.test(password)) {
+  //   return "Password must include at least 1 number.";
+  // }
 
-  if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
-    return "Password must include at least 1 special character.";
-  }
+  // if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
+  //   return "Password must include at least 1 special character.";
+  // }
 
   return null; // No errors
 };
@@ -90,7 +90,7 @@ const validateForm = () => {
          sessionStorage.setItem("userame", adminData[0].name);
     alert(`Welcome Admin, ${adminData[0].name}! you are a ${sessionStorage.getItem("role")}`);
     // Your AdminPage redirect logic here, e.g.:
-    // navigate("/admin-page");
+    navigate("/adminpage");
   } else {
     // Not an admin, check user table
       const { data, error } = await supabase
