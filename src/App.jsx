@@ -5,7 +5,7 @@ import LandingPage from "./LandingPage";
 import AdminPage from "./AdminPage";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import CastGenre from "./CastGenre";
 function App() {
   
 
@@ -16,6 +16,7 @@ function App() {
         <Route path="/Login" element={<Login/>} />
         <Route path="/Reg" element={<Reg/>} />
           <Route path="/adminpage" element={<AdminPage/>} />
+          <Route path="/test" element={<CastGenre/>} />
       </Routes>
     </BrowserRouter>
   );
