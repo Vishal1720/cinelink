@@ -16,7 +16,7 @@ function App() {
         <Route path="/Login" element={<Login/>} />
         <Route path="/Reg" element={<Reg/>} />
           <Route path="/adminpage" element={<AdminPage/>} />
-          <Route path="/test" element={<CastGenre/>} />
+          <Route path="/castgenre" element={<CastGenre/>} />
       </Routes>
     </BrowserRouter>
   );

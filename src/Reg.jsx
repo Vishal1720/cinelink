@@ -95,7 +95,12 @@ const hashed = await hashPassword(formData.password);
 
 
   if (error) {
-    console.error("Insert error:", error);
+    if(error.code==='23505') 
+      {
+        setPasswordError("❌ Email already registered");
+        setRegistering(false);
+      } 
+      console.error("Insert error:", error);
     setError(error.message);
   } else {
     // console.log("User inserted:", data);

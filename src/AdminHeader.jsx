@@ -7,6 +7,17 @@ const navigate = useNavigate();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+   const genre_caste = () => {
+   setIsMenuOpen(false);   
+  navigate("/castgenre");
+    
+    
+  };
+
+  const movie_page = () => {
+   setIsMenuOpen(false);   
+  navigate("/adminpage");
+} 
 
   const logout = () => {
     sessionStorage.clear();
@@ -59,7 +70,7 @@ const navigate = useNavigate();
               </button>
             </li>
             <li>
-              <button className="nav-item active" onClick={toggleMenu}>
+              <button className="nav-item active" onClick={movie_page}>
                 <span className="icon">🎬</span>
                 Movies
               </button>
@@ -77,9 +88,9 @@ const navigate = useNavigate();
               </button>
             </li>
             <li>
-              <button className="nav-item" onClick={toggleMenu}>
-                <span className="icon">⚙️</span>
-                Settings
+              <button className="nav-item" onClick={genre_caste}>
+                <span className="icon">➕</span>
+                Genre & Cast
               </button>
             </li>
           </ul>
