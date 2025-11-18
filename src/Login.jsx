@@ -27,11 +27,17 @@ const hashPassword = (password) => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
 
   // 🔹 Handle input change
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+  const togglePassword = () => {
+  setShowPassword(!showPassword);
+};
+
 
   // 🔹 Input validation before submitting
 const validateForm = () => {
@@ -148,17 +154,56 @@ let pass=await hashPassword(formData.password);
             />
           </div>
 
-          <div className="input-group password-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
+        <div className="input-group password-group" style={{ position: "relative" }}>
+  <label>Password</label>
 
-            />
-          </div>
+  <input
+    type={showPassword ? "text" : "password"}
+    name="password"
+    placeholder="Enter your password"
+    value={formData.password}
+    onChange={handleChange}
+    style={{ paddingRight: "40px" }}
+  />
+
+  {/* Eye Icon */}
+  <span
+    onClick={togglePassword}
+    style={{
+      position: "absolute",
+      right: "12px",
+      top: "50px",
+      cursor: "pointer",
+      userSelect: "none"
+    }}
+  >
+    {showPassword ? (
+      // 👁 Visible Eye SVG
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        fill="#9ca3af"
+        viewBox="0 0 24 24"
+      >
+        <path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7z M12 15a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+      </svg>
+    ) : (
+      // 👁 Closed Eye SVG
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        fill="#9ca3af"
+        viewBox="0 0 24 24"
+      >
+        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12zm10-1.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
+      </svg>
+    )}
+  </span>
+</div>
+
+
 
           {error && <p className="error-text">{error}</p>}
 
