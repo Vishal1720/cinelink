@@ -55,11 +55,11 @@ const CastGenre = () => {
   );
 
   return (
-    <div className="cast-genre-container" style={{display:"flex",flexDirection:"column"}}>
+    <div className="cast-genre-container" style={{display:"flex",flexDirection:"row"}}>
      
-
+<AdminHeader />
       <main className="main-content">
-        <AdminHeader />
+        
 
         <div className="grid-container">
           <section className="section">
