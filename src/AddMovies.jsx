@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './AddMovies.css';
-
+import { supabase } from './supabase';
+import { useEffect } from 'react';
 const AddMovies = () => {
   const [activeTab, setActiveTab] = useState('core');
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -15,15 +16,30 @@ const AddMovies = () => {
     netflixLink: ''
   });
 
-  const genres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Thriller', 'Romance'];
+  const [genres, setGenres] = useState([]);
+const fetchGenres = async () => {
+const {data,error}=await supabase.from('genre').select('*');
 
-  const handleGenreToggle = (genre) => {
-    setSelectedGenres(prev =>
-      prev.includes(genre)
-        ? prev.filter(g => g !== genre)
-        : [...prev, genre]
-    );
-  };
+  if (error) {
+    console.error(error);
+    setGenres([]);
+    return;
+  }
+
+setGenres(data||[]);
+}
+
+useEffect(() => {
+fetchGenres();
+}, []);
+
+  // const handleGenreToggle = (genre) => {
+  //   setSelectedGenres(prev =>
+  //     prev.includes(genre)
+  //       ? prev.filter(g => g !== genre)
+  //       : [...prev, genre]
+  //   );
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -169,12 +185,12 @@ const AddMovies = () => {
               <div className="genre-buttons">
                 {genres.map(genre => (
                   <button
-                    key={genre}
+                    key={genre.id}
                     type="button"
                     className={`genre-btn ${selectedGenres.includes(genre) ? 'selected' : ''}`}
                     onClick={() => handleGenreToggle(genre)}
                   >
-                    {genre}
+                    {genre.genre_name}
                   </button>
                 ))}
               </div>
