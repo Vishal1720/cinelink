@@ -34,7 +34,7 @@ const handleDynamicUrlChange = (urlName, value) => {
 
   // Fetch genres from Supabase
   const fetchGenres = async () => {
-    const { data, error } = await supabase.from("genre").select("*");
+    const { data, error } = await supabase.from("genre").select("*") .order("genre_name", { ascending: true });;
     if (error) {
       console.error("Error fetching genres:", error);
       setGenres([]);
@@ -117,6 +117,76 @@ const handleDynamicUrlChange = (urlName, value) => {
    console.log("streamingLinks",streamingLinks)
     console.log("genres",genres)
     console.log("poster",poster)
+
+    const { data, error } = await supabase.from('movies').insert([
+      {
+       title: title,
+        year: releaseYear,
+        desc:description,
+        duration:duration,
+      
+      }
+    ]).select();
+    if (error) {
+  console.log(error);
+} else {
+  console.log("Inserted record:", data);
+  console.log("Inserted ID:", data[0].id);
+  let movieid=data[0].id;
+  // Insert genres into movie_genres table
+  if (genres.length > 0) {
+    const genreInserts = genres.map(genre_name => ({
+      movie_id: movieid,
+      genre_name: genre_name
+    }));
+    const { error: genreError } = await supabase.from('genre_in_movies').insert(genreInserts);
+
+    if (genreError) {
+      console.log("Error inserting genres:", genreError);
+    } else {
+      console.log("Inserted genres for movie ID:", movieid);  
+    }
+
+    for (const ott_name in streamingLinks) {
+  const ott_link = streamingLinks[ott_name];
+
+  // Skip empty links
+  if (!ott_link || ott_link.trim() === "") continue;
+
+  const { error: urlError } = await supabase
+    .from("url_in_movies")
+    .insert([
+      {
+        movie_id: movieid,
+        ott_name: ott_name,
+        ott_link: ott_link
+      }
+    ]);
+
+  if (urlError) {
+    console.log("Error inserting URL for:", ott_name, urlError);
+  } else {
+    console.log("Inserted:", ott_name, ott_link);
+    
+  }
+
+}
+  
+
+  }
+  setFormData({
+    title: "",
+    releaseYear: "",
+    description: "",
+    duration: "",
+   streamingLinks: {} ,// dynamic URLs go here
+   genres: [] 
+  })
+
+
+
+
+}
   }
   return (
     <div className="add-movie-container">
