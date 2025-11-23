@@ -6,7 +6,7 @@ const AddMovies = () => {
   const [activeTab, setActiveTab] = useState("core");
 
   // Store selected genres by primary key (genre_name)
-  const [selectedGenres, setSelectedGenres] = useState([]);
+  // const [selectedGenres, setSelectedGenres] = useState([]);
 
   const [posterPreview, setPosterPreview] = useState(null);
 const handleDynamicUrlChange = (urlName, value) => {
@@ -25,7 +25,8 @@ const handleDynamicUrlChange = (urlName, value) => {
     releaseYear: "",
     description: "",
     duration: "",
-   streamingLinks: {} // dynamic URLs go here
+   streamingLinks: {} ,// dynamic URLs go here
+   genres: [] 
   });
 
   const [genres, setGenres] = useState([]);
@@ -58,14 +59,15 @@ const handleDynamicUrlChange = (urlName, value) => {
     fetchUrlNames();
   }, []);
 
-  // Toggle genre using PK (genre_name)
   const handleGenreToggle = (genreName) => {
-    setSelectedGenres((prev) =>
-      prev.includes(genreName)
-        ? prev.filter((g) => g !== genreName) // remove
-        : [...prev, genreName] // add
-    );
-  };
+  setFormData(prev => ({
+    ...prev,
+    genres: prev.genres.includes(genreName)
+      ? prev.genres.filter(g => g !== genreName)   // remove
+      : [...prev.genres, genreName]                // add
+  }));
+};
+
 
   // Form input handler
   const handleInputChange = (e) => {
@@ -99,6 +101,23 @@ const handleDynamicUrlChange = (urlName, value) => {
     }
   };
 
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+   let title=formData.title
+    let releaseYear=formData.releaseYear
+    let description=formData.description
+    let duration=formData.duration
+   let streamingLinks=formData.streamingLinks
+   let genres=formData.genres
+   let poster=posterPreview
+   console.log("title",title)
+   console.log("releaseYear",releaseYear)
+   console.log("description",description)
+   console.log("duration",duration)
+   console.log("streamingLinks",streamingLinks)
+    console.log("genres",genres)
+    console.log("poster",poster)
+  }
   return (
     <div className="add-movie-container">
       <h1 className="page-title">Add New Movie</h1>
@@ -226,7 +245,7 @@ const handleDynamicUrlChange = (urlName, value) => {
                     key={genre.genre_name} // PK used as key
                     type="button"
                     className={`genre-btn ${
-                      selectedGenres.includes(genre.genre_name)
+                      formData.genres.includes(genre.genre_name)
                         ? "selected"
                         : ""
                     }`}
@@ -242,9 +261,9 @@ const handleDynamicUrlChange = (urlName, value) => {
             <div className="streaming-section">
               <h2 className="section-title">Streaming Platform Links</h2>
 
-              <div className="form-row">
+              <div className="form-row" >
                 {urlnames.map(platform => (
-      <div className="form-group" key={platform.ott_name}>
+      <div className="form-group" key={platform.ott_name} style={{width:"100%"}}>
         <label>{platform.ott_name}</label>
         <input
           type="url"
@@ -252,6 +271,7 @@ const handleDynamicUrlChange = (urlName, value) => {
           value={formData.streamingLinks?.[platform.ott_name] || ""}
           onChange={(e) => handleDynamicUrlChange(platform.ott_name, e.target.value)}
           className="input-field"
+          style={{width:"100%"}}
         />
       </div>
     ))}
@@ -266,6 +286,7 @@ const handleDynamicUrlChange = (urlName, value) => {
               >
                 Next: Crew & Cast →
               </button>
+              <button  className="btn-next" onClick={handleSubmit}>Submit movie details</button>
             </div>
           </div>
         )}
