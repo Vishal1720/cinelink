@@ -5,9 +5,8 @@ import { supabase } from "./supabase";
 const AddMovies = () => {
   const [activeTab, setActiveTab] = useState("core");
 
-  // Store selected genres by primary key (genre_name)
-  // const [selectedGenres, setSelectedGenres] = useState([]);
-
+ 
+const [posterFile, setPosterFile] = useState(null);
   const [posterPreview, setPosterPreview] = useState(null);
 const handleDynamicUrlChange = (urlName, value) => {
   setFormData(prev => ({
@@ -26,7 +25,8 @@ const handleDynamicUrlChange = (urlName, value) => {
     description: "",
     duration: "",
    streamingLinks: {} ,// dynamic URLs go here
-   genres: [] 
+   genres: [] ,
+   poster: ""  
   });
 
   const [genres, setGenres] = useState([]);
@@ -81,7 +81,8 @@ const handleDynamicUrlChange = (urlName, value) => {
   // Poster upload - click
   const handlePosterUpload = (e) => {
     const file = e.target.files?.[0];
-    if (file && file.size <= 5 * 1024 * 1024) {
+    if (file && file.size <= 1 * 1024 * 1024) {
+       setPosterFile(file);//file set for uploading later
       const reader = new FileReader();
       reader.onloadend = () => setPosterPreview(reader.result);
       reader.readAsDataURL(file);
@@ -94,7 +95,8 @@ const handleDynamicUrlChange = (urlName, value) => {
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file && file.size <= 5 * 1024 * 1024) {
+    if (file && file.size <= 1 * 1024 * 1024) {
+         setPosterFile(file);//file set for uploading later
       const reader = new FileReader();
       reader.onloadend = () => setPosterPreview(reader.result);
       reader.readAsDataURL(file);
@@ -103,13 +105,40 @@ const handleDynamicUrlChange = (urlName, value) => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    // --- UPLOAD POSTER TO SUPABASE STORAGE ---
+let posterUrl = null;
+
+if (posterFile) {
+  const fileExt = posterFile.name.split(".").pop();
+  const fileName = `${Date.now()}.${fileExt}`;
+  const filePath = `posters/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("PosterBucket") //our bucket name
+    .upload(filePath, posterFile, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+
+  if (uploadError) {
+    console.log("Poster upload failed:", uploadError);
+  } else {
+    const { data } = supabase.storage
+      .from("PosterBucket")
+      .getPublicUrl(filePath);
+
+    posterUrl = data.publicUrl;
+    console.log("Poster URL:", posterUrl);
+  }
+}
+
    let title=formData.title
     let releaseYear=formData.releaseYear
     let description=formData.description
     let duration=formData.duration
    let streamingLinks=formData.streamingLinks
    let genres=formData.genres
-   let poster=posterPreview
+   let poster=posterUrl//this is declared in this scope only
    console.log("title",title)
    console.log("releaseYear",releaseYear)
    console.log("description",description)
@@ -124,7 +153,7 @@ const handleDynamicUrlChange = (urlName, value) => {
         year: releaseYear,
         desc:description,
         duration:duration,
-      
+        poster_url:poster
       }
     ]).select();
     if (error) {
@@ -182,6 +211,8 @@ const handleDynamicUrlChange = (urlName, value) => {
    streamingLinks: {} ,// dynamic URLs go here
    genres: [] 
   })
+  setPosterFile(null);
+  setPosterPreview(null);
 
 
 
