@@ -194,19 +194,19 @@ const AddMovies = () => {
               <div className="title-year-group">
                 <div className="form-group">
                   <label>Movie Title</label>
-                  <input type="text" name="title" value={formData.title} onChange={handleInputChange} className="input-field" />
+                  <input type="text" name="title" placeholder="Enter movie title" value={formData.title} onChange={handleInputChange} className="input-field" />
                   {errors.title && <p className="error-text">{errors.title}</p>}
                 </div>
 
                 <div className="form-group">
                   <label>Release Year</label>
-                  <input type="number" name="releaseYear" value={formData.releaseYear} onChange={handleInputChange} className="input-field" />
+                  <input type="number" name="releaseYear" placeholder="e.g. 1999" value={formData.releaseYear} onChange={handleInputChange} className="input-field" />
                   {errors.releaseYear && <p className="error-text">{errors.releaseYear}</p>}
                 </div>
 
                 <div className="form-group">
                   <label>Duration (minutes)</label>
-                  <input type="number" name="duration" value={formData.duration} onChange={handleInputChange} className="input-field" />
+                  <input type="number" name="duration" placeholder="e.g. 120" value={formData.duration} onChange={handleInputChange} className="input-field" />
                   {errors.duration && <p className="error-text">{errors.duration}</p>}
                 </div>
               </div>
@@ -225,7 +225,7 @@ const AddMovies = () => {
             {/* Description */}
             <div className="form-group">
               <label>Description</label>
-              <textarea name="description" value={formData.description} onChange={handleInputChange} rows="6" className="textarea-field" />
+              <textarea name="description" placeholder="Description of the movie/series" value={formData.description} onChange={handleInputChange} rows="6" className="textarea-field" />
               {errors.description && <p className="error-text">{errors.description}</p>}
             </div>
 
