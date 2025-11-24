@@ -65,7 +65,7 @@
 
 /* Sidebar */
 .admin-panel {
-  width: 220px;
+  width: 18vw;
   height: 100vh;
   background: linear-gradient(180deg, #080a14 0%, #141722 100%);
   display: flex;
