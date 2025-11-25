@@ -41,7 +41,10 @@ const LandingPage = () => {
 
     verifyUser();
   }, []);
-
+function moveToLogin(){
+  navigate("/Login");
+}
+  
   return (
     <div>
       <Landingheader />
@@ -50,7 +53,7 @@ const LandingPage = () => {
       <div className="watch-content">
         <h1>WHAT TO WATCH TONIGHT?</h1>
         <p>Movies rated by the people — for the people.</p>
-        <button className="recommendation-btn">Get Recommendation</button>
+        <button className="recommendation-btn" onClick={moveToLogin}>Get Recommendation</button>
       </div>
     </section>
     </div>
