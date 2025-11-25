@@ -42,7 +42,7 @@ const UserHeader = () => {
           className="user-avatar"
           style={{
             backgroundImage:
-              "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAfM75aFKWWUhrmcbXZtvXUBALs1zHRJQe11lDYcHo5NR7feWsdFgP8ZAjAwIJ64K29oOlI1DKRVryHvwpdqu1gJpoKUzd2KXEZP8m1581LExyUXDsS8Oos9ZMfsBKhSh7FErN1ZJrnijASsYTz1K823vxAabicb-C-dGLtHQASlJBNt9rFFkdCPXKMqwYsDYYIjDwYve5s3YUECP_ppGQwrf95rIHRA12Lk134gH9C5WxcLXRu16H7RzDV1TFQma2KVxl_1rVoXHO8')",
+              "url('https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg')",
           }}
         ></button>
       </div>
