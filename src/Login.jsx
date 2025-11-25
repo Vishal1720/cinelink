@@ -121,6 +121,7 @@ let pass=await hashPassword(formData.password);
 } else {
    sessionStorage.setItem("role", "user");
         sessionStorage.setItem("username", data2[0].name);
+        navigate("/movielistpage");
         alert(`Welcome back, ${data2[0].name}! you are a ${sessionStorage.getItem("role")}`);
 }
 

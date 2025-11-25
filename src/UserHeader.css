@@ -1,0 +1,82 @@
+/* Header container */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 80px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Left section (logo) */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon svg {
+  width: 40px;
+  height: 40px;
+  color: #258cf4;
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* Navigation links */
+.nav-links {
+  display: flex;
+  gap: 36px;
+}
+
+.nav-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #258cf4;
+}
+
+/* Right section (user avatar) */
+.header-right .user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid transparent;
+  transition: border 0.3s;
+  cursor: pointer;
+}
+
+.header-right .user-avatar:hover {
+  border-color: #258cf4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header {
+    padding: 16px 24px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
