@@ -11,16 +11,6 @@ const Login = () => {
   });
 const navigate = useNavigate();
 
-//   const hashPassword = async (password) => {
-//   const enc = new TextEncoder().encode(password);
-//   const buffer = await crypto.subtle.digest("SHA-256", enc);
-//   return Array.from(new Uint8Array(buffer))
-//     .map(b => b.toString(16).padStart(2, "0"))
-//     .join("");
-// };
-
-
-
 const hashPassword = (password) => {
   return SHA256(password).toString();
 };
@@ -87,8 +77,7 @@ let pass=await hashPassword(formData.password);
     // Admin found, redirect to AdminPage
          sessionStorage.setItem("role", "admin");
          sessionStorage.setItem("username", adminData[0].name);
-    alert(`Welcome Admin, ${adminData[0].name}! you are a ${sessionStorage.getItem("role")}`);
-    // Your AdminPage redirect logic here, e.g.:
+   
     navigate("/adminpage");
   } else {
     // Not an admin, check user table
@@ -123,9 +112,7 @@ let pass=await hashPassword(formData.password);
         sessionStorage.setItem("username", data2[0].name);
         navigate("/movielistpage");
      
-}
-
-       
+}  
       }
     }
     } catch (err) {
@@ -203,16 +190,12 @@ let pass=await hashPassword(formData.password);
     )}
   </span>
 </div>
-
-
-
           {error && <p className="error-text">{error}</p>}
 
           <button className="login-btn" type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
         <p className="signup-text">
           Don’t have an account?{" "}
           <Link to="/Reg" className="signup-link">
