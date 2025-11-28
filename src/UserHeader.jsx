@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import "./UserHeader.css";
-
+import { useNavigate } from "react-router-dom";
 const UserHeader = () => {
+  const role=sessionStorage.getItem("role");
+  const navigate = useNavigate();
+  if (role!=="user"){
+    navigate("/Login");
+  }
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 const defaultAvatar =
   "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
