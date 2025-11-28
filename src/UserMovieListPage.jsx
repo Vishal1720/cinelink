@@ -20,7 +20,15 @@ const UserMovieListPage = () => {
     };
 
     const fetchMovies = async () => {
-      const { data, error } = await supabase.from('movies').select('*');
+     const { data, error } = await supabase
+  .from("movies")
+  .select(`
+    *,
+    genre_in_movies (
+      genre_name
+    )
+  `);
+console.log(data);//genre_name comes as array of objects
       if (error) {
         console.error('Error fetching movies:', error);
       } else {
@@ -32,11 +40,27 @@ const UserMovieListPage = () => {
     fetchMovies();
   }, []);
 
-  const filteredMovies = movies.filter(movie => {
-    const matchesGenre = selectedGenre === "All Genres" || movie.genre === selectedGenre;
-    const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesGenre && matchesSearch;
-  });
+  // Filter movies based on selected genre and search text
+const filteredMovies = movies.filter(movie => {
+
+  // Extract all genres for the current movie
+  // Example: ["Action", "Drama", "Comedy"]
+  const movieGenres = movie.genre_in_movies.map(g => g.genre_name);
+
+  // Check if the selected genre matches:
+  // - "All Genres" means show everything
+  // - otherwise check if selectedGenre exists in this movie's genres
+  const matchesGenre =
+    selectedGenre === "All Genres" || movieGenres.includes(selectedGenre);
+
+  // Check if movie title contains the search text (case-insensitive)
+  const matchesSearch = movie.title
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase());
+
+  // Include this movie only if BOTH genre and search match
+  return matchesGenre && matchesSearch;
+});
 
   return (
     <div>
