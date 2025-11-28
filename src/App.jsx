@@ -17,9 +17,10 @@ function App() {
         <Route path="/" element={<LandingPage/>} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/Reg" element={<Reg/>} />
+         <Route path="/movielistpage" element={<UserMovieListPage/>} />
+{/*    admin routes below */}
           <Route path="/adminpage" element={<AdminPage/>} />
           <Route path="/castgenre" element={<CastGenre/>} />
-          <Route path="/movielistpage" element={<UserMovieListPage/>} />
       </Routes>
     </BrowserRouter>
   );

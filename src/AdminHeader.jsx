@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './AdminHeader.css';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
+
 
 const AdminHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +30,12 @@ const imgSrc = userimg || defaultAvatar;
     sessionStorage.clear();
     navigate("/Login");
   };
+const location = useLocation();
+
+// selecting tab when page change
+const isActive = (path) =>
+  location.pathname === path ? "active" : "";
+
 
   return (
     <>
@@ -61,20 +69,20 @@ const imgSrc = userimg || defaultAvatar;
           />
           <div>
             <h2 className="admin-title">CineVerse Admin</h2>
-            <p className="admin-subtitle">Content Management</p>
+            <p className="admin-subtitle">{sessionStorage.getItem("username")}</p>
           </div>
         </div>
 
         <nav className="nav-menu">
           <ul>
             <li>
-              <button className="admin-nav-item" onClick={toggleMenu}>
+              <button className="admin-nav-item " onClick={toggleMenu}>
                 <span className="admin-icon">📊</span>
                 Dashboard
               </button>
             </li>
             <li>
-              <button className="admin-nav-item active" onClick={movie_page}>
+              <button className={`admin-nav-item ${isActive("/adminpage")}`} onClick={movie_page}>
                 <span className="admin-icon">🎬</span>
                 Movies
               </button>
@@ -92,7 +100,7 @@ const imgSrc = userimg || defaultAvatar;
               </button>
             </li>
             <li>
-              <button className="admin-nav-item" onClick={genre_caste}>
+              <button className={`admin-nav-item ${isActive("/castgenre")}`} onClick={genre_caste}>
                 <span className="admin-icon">➕</span>
                 Genre & Cast
               </button>
