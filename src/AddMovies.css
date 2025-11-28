@@ -359,6 +359,10 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+  .content-card{
+    width: 90vw;
+   
+  }
   .form-row {
     grid-template-columns: 1fr;
   }
