@@ -3,7 +3,10 @@ import "./UserHeader.css";
 
 const UserHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+const defaultAvatar =
+  "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
 
+const storedImg = sessionStorage.getItem("userimage");
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -63,12 +66,13 @@ const UserHeader = () => {
           <a href="#" className="nav-link">Community</a>
           <a href="#" className="nav-link">Lists</a>
         </nav>
+        
         <div className="header-right">
           <button
             className="user-avatar"
             style={{
-              backgroundImage:
-                "url('https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg')",
+
+ backgroundImage: `url('${storedImg || defaultAvatar}')`,
             }}
           ></button>
         </div>
