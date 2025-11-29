@@ -170,9 +170,9 @@
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(135deg, rgba(15, 15, 25, 0.5) 0%, rgba(30, 30, 50, 0.5) 100%);
-  min-height: 280px;
-  max-height: 320px;
-  height: 100%;
+  
+    width: 200px;        /* fixed width */
+  height: 315px;       /* automatic 2:3 ratio */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -445,5 +445,104 @@
   .tab.active {
     border-left-color: #667eea;
     border-bottom-color: transparent;
+  }
+}
+
+.left-extra-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title-year-group {
+display: grid;
+grid-template-columns: 1fr 1fr;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 280px;
+  gap: 30px;
+  width: 100%;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+/* ----------- TABLET (max-width: 1024px) ----------- */
+@media (max-width: 1024px) {
+
+  .three-col {
+    grid-template-columns: 1fr 1fr; /* poster goes below */
+  }
+
+  .col-right {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .poster-upload .upload-area {
+    width: 180px !important;
+    height: 270px !important; /* maintain 2:3 ratio */
+  }
+
+  .poster-preview {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* ----------- MOBILE (max-width: 768px) ----------- */
+@media (max-width: 768px) {
+
+  .three-col {
+    grid-template-columns: 1fr; /* stack all inputs */
+    gap: 2rem;
+  }
+
+  .col-right {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .poster-upload .upload-area {
+    width: 150px !important;
+    height: 225px !important; /* perfect ratio for small mobiles */
+    padding: 0;
+  }
+
+  .poster-preview {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .col {
+    gap: 1rem;
+  }
+
+  .input-field,
+  .textarea-field {
+    font-size: 0.9rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .add-movie-container {
+    padding: 1rem;
+    width: 100vw;
+  }
+
+  .content-card {
+    padding: 1.25rem;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+    text-align: center;
   }
 }
