@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./UserHeader.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 const UserHeader = () => {
   const role=sessionStorage.getItem("role");
   const navigate = useNavigate();
@@ -66,7 +66,9 @@ const storedImg = sessionStorage.getItem("userimage");
           </button>
         </div>
         <nav className="nav-links">
-          <a href="#" className="nav-link active">Home</a>
+          
+          <Link to="/movielistpage" className="nav-link active">Home</Link>
+          
           <a href="#" className="nav-link">Discover</a>
           <a href="#" className="nav-link">Community</a>
           <a href="#" className="nav-link">Lists</a>
@@ -82,7 +84,7 @@ const storedImg = sessionStorage.getItem("userimage");
           ></button>
         </div>
       </header>
-      <div className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`} onClick={closeSidebar}></div>
+      <div className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`} ></div>
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <button className="close-sidebar" onClick={closeSidebar} aria-label="Close menu">
