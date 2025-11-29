@@ -151,7 +151,7 @@
 }
 
 /* Sidebar overlay */
-.sidebar-overlay {
+/* .sidebar-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -167,7 +167,7 @@
 .sidebar-overlay.open {
   opacity: 0.6;
   visibility: visible;
-}
+} */
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

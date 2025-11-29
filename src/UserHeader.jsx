@@ -84,7 +84,7 @@ const storedImg = sessionStorage.getItem("userimage");
           ></button>
         </div>
       </header>
-      <div className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`} ></div>
+      {/* <div className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`} ></div> */}
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <button className="close-sidebar" onClick={closeSidebar} aria-label="Close menu">
@@ -104,7 +104,7 @@ const storedImg = sessionStorage.getItem("userimage");
           </button>
         </div>
         <nav className="sidebar-nav">
-          <a href="#" className="sidebar-link active" onClick={closeSidebar}>Home</a>
+          <Link to="/movielistpage" className="sidebar-link active" onClick={closeSidebar}>Home</Link>
           <a href="#" className="sidebar-link" onClick={closeSidebar}>Discover</a>
           <a href="#" className="sidebar-link" onClick={closeSidebar}>Community</a>
           <a href="#" className="sidebar-link" onClick={closeSidebar}>Lists</a>
