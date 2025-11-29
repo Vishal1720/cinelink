@@ -108,8 +108,8 @@ const AddMovies = () => {
       newErrors.releaseYear = "Enter a valid year.";
 
     if (!formData.duration.trim()) newErrors.duration = "Duration is required.";
-    else if (isNaN(formData.duration) || formData.duration <= 0)
-      newErrors.duration = "Enter a valid duration.";
+    else if (!formData.duration)
+      newErrors.duration = "Enter duration";
 
     if (!formData.description.trim()) newErrors.description = "Description is required.";
     if (!posterFile) newErrors.poster = "Poster image is required.";
@@ -237,8 +237,8 @@ const AddMovies = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Duration (minutes)</label>
-                  <input type="number" name="duration" placeholder="e.g. 120"
+                  <label>Duration </label>
+                  <input type="text" name="duration" placeholder="e.g.2h 15m"
                     value={formData.duration} onChange={handleInputChange} className="input-field" />
                   {errors.duration && <p className="error-text">{errors.duration}</p>}
                 </div>
