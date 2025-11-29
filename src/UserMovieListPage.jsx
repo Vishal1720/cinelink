@@ -11,7 +11,7 @@ const UserMovieListPage = () => {
 
   useEffect(() => {
     const fetchGenres = async () => {
-      const { data, error } = await supabase.from('genre').select('*');
+      const { data, error } = await supabase.from('genre').select('*').order('genre_name', { ascending: true });
       if (error) {
         console.error('Error fetching genres:', error);
       } else {
@@ -93,9 +93,9 @@ const filteredMovies = movies.filter(movie => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <button className="filter-button" title="Advanced Filters">
+                {/* <button className="filter-button" title="Advanced Filters">
                   <span className="filter-icon">filter_alt</span>
-                </button>
+                </button> */}
               </div>
             </div>
           </section>
