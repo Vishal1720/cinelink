@@ -27,6 +27,64 @@ const [formData, setFormData] = useState({
 //     .join("");
 // };
 
+const disposableDomains = [
+  "bialode.com",
+  "denipl.net",
+  "mailshan.com",
+  "comfythings.com",
+  "necub.com",
+  "nespj.com",
+  "10minutemail.com",
+  "10minutemail.net",
+  "temp-mail.org",
+  "tempmail.com",
+  "tempmail.net",
+  "tempmailo.com",
+  "guerrillamail.com",
+  "guerrillamail.net",
+  "yopmail.com",
+  "yopmail.net",
+  "yopmail.org",
+  "mailinator.com",
+  "maildrop.cc",
+  "mailnesia.com",
+  "getnada.com",
+  "nada.email",
+  "discard.email",
+  "dispostable.com",
+  "sharklasers.com",
+  "trashmail.com",
+  "throwawaymail.com",
+  "fakeinbox.com",
+  "mohmal.com",
+  "anonymbox.com",
+  "inboxbear.com",
+  "anonaddy.me",
+  "grr.la",
+  "spam4.me",
+  "mintemail.com",
+  "tempinbox.com",
+  "mail-temp.com",
+  "mytemp.email",
+  "mailnull.com",
+  "trashmail.me",
+  "uacro.com",
+  "spamdecoy.net",
+  "temporarymail.com",
+  "fleckens.hu",
+  "mailcatch.com",
+  "spambog.com",
+  "spambog.ru",
+  "kurzepost.de",
+  "vermutlich.net",
+];
+
+function isDisposableEmail(email) {
+  const domain = email.split("@")[1].toLowerCase();
+  return disposableDomains.includes(domain);
+}
+
+
 const hashPassword = (password) => {
   return SHA256(password).toString();
 };
@@ -56,7 +114,11 @@ const hashPassword = (password) => {
 async function uploadImageAndInsertUser() {
   setRegistering(true);
   let imageUrl = "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";  // 👈 default value if no image
-
+if (isDisposableEmail(formData.email)) {
+    setPasswordError("❌ Disposable email addresses are not allowed.");
+    setRegistering(false);
+    return;
+  }
   // 1️⃣ If user selected an image → Upload to Supabase
   if (imageFile) {
     const fileName = `${Date.now()}_${imageFile.name}`;
