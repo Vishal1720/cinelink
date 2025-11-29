@@ -4,6 +4,7 @@ import Login from "./Login";
 import LandingPage from "./LandingPage";
 import AdminPage from "./AdminPage";
 import UserHeader from "./UserHeader";
+import MovieDetails from "./MovieDetails";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CastGenre from "./CastGenre";
@@ -21,6 +22,7 @@ function App() {
 {/*    admin routes below */}
           <Route path="/adminpage" element={<AdminPage/>} />
           <Route path="/castgenre" element={<CastGenre/>} />
+          <Route path="/movie/:id" element={<MovieDetails/>} />
       </Routes>
     </BrowserRouter>
   );

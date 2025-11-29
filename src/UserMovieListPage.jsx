@@ -2,13 +2,18 @@ import React, { useEffect, useState } from "react";
 import "./UserMovieListPage.css";
 import UserHeader from "./UserHeader";
 import { supabase } from './supabase';
+import { useNavigate } from "react-router-dom";
 
 const UserMovieListPage = () => {
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState("All Genres");
   const [searchTerm, setSearchTerm] = useState("");
+const navigate = useNavigate();
 
+function showmovieDetails(id){
+  navigate(`/movie/${id}`);
+}
   useEffect(() => {
     const fetchGenres = async () => {
       const { data, error } = await supabase.from('genre').select('*').order('genre_name', { ascending: true });
@@ -102,7 +107,7 @@ const filteredMovies = movies.filter(movie => {
           <section className="movies-section">
             <div className="movies-grid">
               {filteredMovies.map((movie, index) => (
-                <div key={movie.id} className="movie-card">
+                <div key={movie.id} className="movie-card" onClick={()=>showmovieDetails(movie.id)}>
                   <img
                     src={movie.poster_url}
                     alt={`Movie poster for ${movie.title}`}
