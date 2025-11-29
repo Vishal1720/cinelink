@@ -22,7 +22,7 @@ const AddMovies = () => {
   });
 
   const languageOptions = [
-    "English", "Hindi", "Kannada", "Tamil", "Telugu", "Malayalam",
+    "English", "Hindi", "Kannada", "Tulu","Tamil", "Telugu", "Malayalam",
     "Marathi", "Gujarati", "Bengali", "Punjabi",
     "Korean", "Japanese", "French", "Spanish", "German", "Chinese"
   ];
