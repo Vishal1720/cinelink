@@ -27,7 +27,7 @@ const UserMovieListPage = () => {
     genre_in_movies (
       genre_name
     )
-  `);
+  `).order('title', { ascending: true });
 console.log(data);//genre_name comes as array of objects
       if (error) {
         console.error('Error fetching movies:', error);
