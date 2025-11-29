@@ -38,7 +38,7 @@ const MovieDetails = () => {
         .select(`
             genre_name
         `)
-        .eq("movie_id", id);
+        .eq("movie_id", id).order('genre_name', { ascending: true });
 
       if (genreError) throw genreError;
 
