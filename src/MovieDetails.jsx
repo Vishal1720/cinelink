@@ -222,7 +222,7 @@ const MovieDetails = () => {
             </div>
           </div>
         </div>
-
+        {cast.length > 0 && (
         <div className="moviedetails-cast-section">
           <h3 className="moviedetails-section-title">Cast</h3>
           <div className="moviedetails-cast-list">
@@ -235,11 +235,12 @@ const MovieDetails = () => {
                   }}
                 ></div>
                 <p className="moviedetails-cast-name">{member.cast?.cast_name}</p>
-                <p className="moviedetails-cast-role">as {member.role_in_movie}</p>
+               { member.role_in_movie && (
+                <p className="moviedetails-cast-role">as {member.role_in_movie}</p>)}
               </div>
             ))}
           </div>
-        </div>
+        </div>)}
 
         <div className="moviedetails-reviews-section">
           <h3 className="moviedetails-section-title">Reviews</h3>
