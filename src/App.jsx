@@ -9,12 +9,14 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CastGenre from "./CastGenre";
 import UserMovieListPage from "./UserMovieListPage";
+import ReviewsSection from "./ReviewsSection";
 function App() {
   
 
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/morie" element={<ReviewsSection movieId={15} />} />
         <Route path="/" element={<LandingPage/>} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/Reg" element={<Reg/>} />

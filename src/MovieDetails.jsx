@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { supabase } from './supabase';
 import UserHeader from './UserHeader';
 import './MovieDetails.css';
-
+import ReviewsSection from './ReviewsSection';
 const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
@@ -242,12 +242,7 @@ const MovieDetails = () => {
           </div>
         </div>)}
 
-        <div className="moviedetails-reviews-section">
-          <h3 className="moviedetails-section-title">Reviews</h3>
-          <div className="moviedetails-reviews-placeholder">
-            <p>Reviews coming soon...</p>
-          </div>
-        </div>
+        <ReviewsSection movieId={id} />
       </div>
     </div>
   );
