@@ -111,6 +111,7 @@ let pass=await hashPassword(formData.password);
 } else {
   console.log(data2);
    sessionStorage.setItem("role", "user");
+   sessionStorage.setItem("userEmail", data2[0].email);
         sessionStorage.setItem("username", data2[0].name);
         sessionStorage.setItem("userimage", data2[0].avatar_url);
         navigate("/movielistpage");
