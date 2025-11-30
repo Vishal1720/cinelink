@@ -71,13 +71,7 @@ const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
 console.log("Fetched Reviews:", reviewsData); // Debug log
       if (error) throw error;
 
-       // ---- CHECK IF USER HAS ALREADY REVIEWED ---- //
-    if (user && reviewsData) {
-      const userAlreadyReviewed = reviewsData.some(
-        (review) => review.email === user.email
-      );
-      setAlreadyReviewed(userAlreadyReviewed);
-    }
+   
 
       // Fetch likes count for each review
       const reviewsWithLikes = await Promise.all(
@@ -206,11 +200,22 @@ console.log("Fetched Reviews:", reviewsData); // Debug log
     const diffInSeconds = Math.floor((now - reviewDate) / 1000);
 
     if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} mins ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hrs ago`;
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
     return reviewDate.toLocaleDateString();
   };
+
+  useEffect(() => {
+  if (!user || reviews.length === 0) return;
+
+  const userAlreadyReviewed = reviews.some(
+    (review) => review.email === user.email
+  );
+
+  setAlreadyReviewed(userAlreadyReviewed);
+}, [user, reviews]);
+
 
   return (
     <div className="reviews-section">
