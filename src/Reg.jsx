@@ -16,7 +16,8 @@ const [formData, setFormData] = useState({
     phone: '',
     password: '',
     confirmpassword:"",
-    avatar_url: ""
+    avatar_url: "",
+    gender: ""   
   });
 
 //   const hashPassword = async (password) => {
@@ -149,6 +150,7 @@ const hashed = await hashPassword(formData.password);
     phone: formData.phone ? Number(formData.phone) : null,
     password:hashed,
     avatar_url: imageUrl,   // 👈 will be default one OR uploaded URL
+    gender: formData.gender
   };
 
   const { data, error } = await supabase
@@ -181,7 +183,8 @@ navigate("/Login");
       phone: "",
       password: "",
       confirmpassword: "",
-      avatar_url: ""
+      avatar_url: "",
+      gender: ""
     });
 
     setImageFile(null);
@@ -279,6 +282,22 @@ setRegistering(false);
             onChange={handleChange}
             required
           />
+
+<label className='reglabel' htmlFor="gender">Gender</label>
+<select
+  id="gender"
+  name="gender"
+  value={formData.gender}
+  onChange={handleChange}
+   className="gender-select"
+  required
+>
+  <option value="">Select Gender</option>
+  <option value="Male">Male</option>
+  <option value="Female">Female</option>
+  <option value="Other">Other</option>
+</select>
+
 
           {/* PASSWORD */}
           <label className='reglabel' htmlFor="password">Password</label>
