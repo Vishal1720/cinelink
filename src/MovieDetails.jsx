@@ -45,11 +45,20 @@ const MovieDetails = () => {
       console.log("Genre Data:", genreData); // Debug log
 
       // 3️⃣ Fetch cast (join cast table)
-      const { data: castData, error: castError } = await supabase
-        .from("cast_in_movies")
-        .select("role_in_movie, cast(id, cast_name, avatar_url)")
-        .eq("movie_id", id);
+    const { data: castData, error: castError } = await supabase
+  .from("cast_in_movies")
+  .select(`
+    role_in_movie,
+    cast:cast_id (
+      id,
+      cast_name,
+      avatar_url
+    )
+  `)
+  .eq("movie_id", id);
 
+
+          console.log("Cast Data:", castData); // Debug log
       if (castError) throw castError;
 
       // 4️⃣ Fetch OTT platforms (join with urls table)
