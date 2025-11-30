@@ -19,8 +19,8 @@ const AddMovies = () => {
     poster: "",
     trailer_link: "",
     language: "",
-    castList: []   // { cast_id, role_in_movie }
-
+    castList: [],  // { cast_id, role_in_movie }
+    type:""
   });
 
   const languageOptions = [
@@ -146,6 +146,8 @@ const fetchAllCast = async () => {
 
     if (!formData.genres || formData.genres.length === 0) 
       newErrors.genres = "Select at least one genre.";
+    if (!formData.type.trim())
+  newErrors.type = "Select Movie or Series.";
 
     if (formData.trailer_link && !/^https?:\/\/\S+\.\S+/.test(formData.trailer_link))
       newErrors.trailer_link = "Enter a valid trailer link.";
@@ -193,7 +195,8 @@ const fetchAllCast = async () => {
       duration: formData.duration,
       poster_url: posterUrl,
       trailer_link: formData.trailer_link,
-      language: formData.language
+      language: formData.language,
+        type: formData.type 
     }]).select();
 
     if (!error) {
@@ -233,7 +236,8 @@ for (const castItem of formData.castList) {
         genres: [],
         poster: "",
         trailer_link: "",
-        language: ""
+        language: "",
+          type:"",castList: []
       });
 
       setPosterFile(null);
@@ -303,6 +307,23 @@ for (const castItem of formData.castList) {
                   />
                   {errors.trailer_link && <p className="error-text">{errors.trailer_link}</p>}
                 </div>
+
+                <div className="form-group">
+  <label>Type</label>
+  <select
+    name="type"
+    value={formData.type}
+    onChange={handleInputChange}
+    className="input-field"
+  >
+    <option value="">-- Select Type --</option>
+    <option value="Movie">Movie</option>
+    <option value="Series">Series</option>
+  </select>
+
+  {errors.type && <p className="error-text">{errors.type}</p>}
+</div>
+
 
                 <div className="form-group">
                   <label>Language</label>
@@ -421,9 +442,7 @@ for (const castItem of formData.castList) {
                 Next: Crew & Cast →
               </button>
 
-              <button type="button" className="btn-next" onClick={handleSubmit}>
-                Submit movie details
-              </button>
+              
             </div>
 
           </div>
@@ -477,7 +496,7 @@ for (const castItem of formData.castList) {
             <input
               className="input-field"
               type="text"
-              placeholder="Hero, Villain, Director..."
+              placeholder="e.g Lead/Character Name"
               value={item.role_in_movie}
               onChange={(e) => updateCastField(index, "role_in_movie", e.target.value)}
             />
@@ -493,6 +512,11 @@ for (const castItem of formData.castList) {
     <button className="add-cast-btn" onClick={addCastMember}>
       + Add Cast Member
     </button>
+    <div className="form-actions">
+    <button type="button" className="btn-next" onClick={handleSubmit}>
+                Submit movie/series details
+              </button>
+              </div>
 
   </div>
 )}
