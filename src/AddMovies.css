@@ -546,3 +546,125 @@ grid-template-columns: 1fr 1fr;
     text-align: center;
   }
 }
+
+/* CAST CARD  */
+
+.cast-card {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr 110px;
+  gap: 1.2rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  align-items: center;
+}
+
+/* Cast Preview Column */
+.cast-preview {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cast-avatar-preview {
+  width: 85px;
+  height: 85px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  margin-bottom: 0.4rem;
+}
+
+.cast-name-display {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  opacity: 0.9;
+}
+
+.cast-placeholder {
+  font-size: 0.9rem;
+  opacity: 0.55;
+}
+
+/* Input Fields */
+.cast-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* Remove Button */
+.remove-cast-btn {
+  background: rgba(255, 80, 80, 0.25);
+  color: #ff8585;
+  border: 1px solid rgba(255, 80, 80, 0.5);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.remove-cast-btn:hover {
+  background: rgba(255, 80, 80, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Add Cast Button */
+.add-cast-btn {
+  background: rgba(102, 126, 234, 0.22);
+  color: #fff;
+  padding: 0.9rem 1.8rem;
+  border-radius: 12px;
+  border: 1px solid rgba(102, 126, 234, 0.45);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.3s ease;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.add-cast-btn:hover {
+  background: rgba(102, 126, 234, 0.38);
+  transform: translateY(-2px);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1024px) {
+  .cast-card {
+    grid-template-columns: 100px 1fr 1fr 90px;
+  }
+
+  .cast-avatar-preview {
+    width: 75px;
+    height: 75px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cast-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .remove-cast-btn {
+    width: 100%;
+  }
+
+  .cast-field label {
+    text-align: left;
+  }
+}

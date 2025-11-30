@@ -18,7 +18,9 @@ const AddMovies = () => {
     genres: [],
     poster: "",
     trailer_link: "",
-    language: ""
+    language: "",
+    castList: []   // { cast_id, role_in_movie }
+
   });
 
   const languageOptions = [
@@ -29,6 +31,33 @@ const AddMovies = () => {
 
   const [genres, setGenres] = useState([]);
   const [urlnames, setUrlNames] = useState([]);
+const [allCast, setAllCast] = useState([]);
+
+
+const addCastMember = () => {
+  setFormData(prev => ({
+    ...prev,
+    castList: [...prev.castList, { cast_id: "", role_in_movie: "" }]
+  }));
+};
+
+const removeCastMember = (index) => {
+  setFormData(prev => ({
+    ...prev,
+    castList: prev.castList.filter((_, i) => i !== index)
+  }));
+};
+
+const updateCastField = (index, field, value) => {
+  const updated = [...formData.castList];
+  updated[index][field] = value;
+  setFormData(prev => ({ ...prev, castList: updated }));
+};
+
+const fetchAllCast = async () => {
+  const { data, error } = await supabase.from("cast").select("*").order("cast_name");
+  if (!error) setAllCast(data);
+};
 
   const fetchGenres = async () => {
     const { data, error } = await supabase.from("genre").select("*").order("genre_name", { ascending: true });
@@ -53,6 +82,7 @@ const AddMovies = () => {
   useEffect(() => {
     fetchGenres();
     fetchUrlNames();
+      fetchAllCast();   
   }, []);
 
   const handleGenreToggle = (genreName) => {
@@ -180,6 +210,19 @@ const AddMovies = () => {
           await supabase.from("url_in_movies").insert([{ movie_id: movieid, ott_name, ott_link }]);
         }
       }
+
+      // Insert selected cast into cast_in_movies
+for (const castItem of formData.castList) {
+  if (!castItem.cast_id) continue;
+
+  await supabase.from("cast_in_movies").insert([
+    {
+      movie_id: movieid,
+      cast_id: castItem.cast_id,
+      role_in_movie: castItem.role_in_movie
+    }
+  ]);
+}
 
       setFormData({
         title: "",
@@ -387,11 +430,73 @@ const AddMovies = () => {
         )}
 
         {/* CREW TAB */}
-        {activeTab === "crew" && (
-          <div className="form-content">
-            <p className="placeholder-text">Crew & Cast section content goes here...</p>
+       {/* CREW TAB */}
+{activeTab === "crew" && (
+  <div className="form-content">
+
+    <h2 className="section-title">Select Cast Members</h2>
+
+    {formData.castList.map((item, index) => {
+      const selectedCast = allCast.find(c => c.id === Number(item.cast_id));
+
+      return (
+        <div className="cast-card" key={index}>
+
+          {/* Avatar + Name Preview */}
+          <div className="cast-preview">
+            {selectedCast ? (
+              <>
+                <img src={selectedCast.avatar_url} className="cast-avatar-preview" />
+                <p className="cast-name-display">{selectedCast.cast_name}</p>
+              </>
+            ) : (
+              <p className="cast-placeholder">Select cast</p>
+            )}
           </div>
-        )}
+
+          {/* Cast Selector */}
+          <div className="cast-field">
+            <label>Select Cast</label>
+            <select
+              className="input-field"
+              value={item.cast_id}
+              onChange={(e) => updateCastField(index, "cast_id", e.target.value)}
+            >
+              <option value="">-- Choose Cast --</option>
+              {allCast.map(c => (
+                <option key={c.id} value={c.id}>
+                  {c.cast_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Role */}
+          <div className="cast-field">
+            <label>Role in Movie</label>
+            <input
+              className="input-field"
+              type="text"
+              placeholder="Hero, Villain, Director..."
+              value={item.role_in_movie}
+              onChange={(e) => updateCastField(index, "role_in_movie", e.target.value)}
+            />
+          </div>
+
+          <button className="remove-cast-btn" onClick={() => removeCastMember(index)}>
+            Remove
+          </button>
+        </div>
+      );
+    })}
+
+    <button className="add-cast-btn" onClick={addCastMember}>
+      + Add Cast Member
+    </button>
+
+  </div>
+)}
+
 
       </div>
     </div>
