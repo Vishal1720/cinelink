@@ -279,8 +279,8 @@ console.log("Fetched Reviews:", reviewsData); // Debug log
               
               <div className="reviews-item-content">
                 <div className="reviews-item-header">
-                  <p className="reviews-item-username">{review.user.name}</p>
-                  <p className="reviews-item-time">· {getTimeAgo(review.created_at)}</p>
+                  <p className="reviews-item-username">{review.user.name.split(" ")[0]}</p>
+                  <p className="reviews-item-time">{getTimeAgo(review.created_at)}</p>
                   <div className={`reviews-item-rating ${getRatingClass(review.rating.cat_name)}`}>
                     <span>{getRatingEmoji(review.rating.cat_name)}</span>
                     <span>{review.rating.cat_name}</span>
