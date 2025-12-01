@@ -8,6 +8,22 @@ const LandingPage = () => {
   const navigate = useNavigate();
   console.log("Going in to Landing Page");
     useEffect(() => {
+
+      //adding check if email is already logged in instead of showing alert again and again
+
+      const role = sessionStorage.getItem("role");
+    const email = sessionStorage.getItem("userEmail");
+    const name=sessionStorage.getItem("username");//this is only for admin for now 
+    // 🔹 If user is already logged in, redirect to movie list page
+    if (role === "user" && email) {
+      navigate("/movielistpage");
+    }else if (role === "admin" && name)  {
+      navigate("/adminpage");
+    }
+    else {
+      // 🔹 If no logged-in user, stay on landing and show console message
+      console.log("No user logged in from landing header");
+    }
       console.log("Verifying user email status...");
     async function verifyUser() {
       const { data, error } = await supabase.auth.getUser();
