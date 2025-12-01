@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import './UserHeader.css';
 const UserHeader = () => {
   const role = sessionStorage.getItem("role");
@@ -12,6 +13,10 @@ const UserHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showLogoutMenu, setShowLogoutMenu] = useState(false);
   
+  // selecting tab when page change
+const isActive = (path) =>
+  location.pathname === path ? "active" : "";
+
   const defaultAvatar =
     "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
   const storedImg = sessionStorage.getItem("userimage");
@@ -82,9 +87,9 @@ const UserHeader = () => {
         </div>
         
         <nav className="nav-links">
-          <Link to="/movielistpage" className="nav-link active">Home</Link>
-          <Link to="/moviespage" className="nav-link">Movies</Link>
-          <Link to="/seriespage" className="nav-link">Series</Link>
+          <Link to="/movielistpage" className={`nav-link ${isActive('/movielistpage')}`}>Home</Link>
+          <Link to="/moviespage" className={`nav-link ${isActive('/moviespage')}`}>Movies</Link>
+          <Link to="/seriespage" className={`nav-link ${isActive('/seriespage')}`}>Series</Link>
           <a href="#" className="nav-link">Lists</a>
         </nav>
         
@@ -144,13 +149,13 @@ const UserHeader = () => {
         </div>
         
         <nav className="sidebar-nav">
-          <Link to="/movielistpage" className="sidebar-link active" onClick={closeSidebar}>
+          <Link to="/movielistpage"  className={`sidebar-link ${isActive('/movielistpage')}`} onClick={closeSidebar}>
             Home
           </Link>
-          <Link to="/moviespage" className="sidebar-link" onClick={closeSidebar}>
+          <Link to="/moviespage" className={`sidebar-link ${isActive('/moviespage')}`} onClick={closeSidebar}>
             Movies
           </Link>
-          <Link to="/seriespage" className="sidebar-link" onClick={closeSidebar}>
+          <Link to="/seriespage" className={`sidebar-link ${isActive('/seriespage')}`} onClick={closeSidebar}>
             Series
           </Link>
           
