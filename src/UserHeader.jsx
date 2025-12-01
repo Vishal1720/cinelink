@@ -1,23 +1,38 @@
 import React, { useState } from "react";
-import "./UserHeader.css";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import './UserHeader.css';
 const UserHeader = () => {
-  const role=sessionStorage.getItem("role");
+  const role = sessionStorage.getItem("role");
   const navigate = useNavigate();
-  if (role!=="user"){
+  
+  if (role !== "user") {
     navigate("/Login");
   }
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-const defaultAvatar =
-  "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
+  const [showLogoutMenu, setShowLogoutMenu] = useState(false);
+  
+  const defaultAvatar =
+    "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
+  const storedImg = sessionStorage.getItem("userimage");
 
-const storedImg = sessionStorage.getItem("userimage");
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const handleLogout = () => {
+    // Clear session storage
+    sessionStorage.clear();
+    // Navigate to login page
+    navigate("/Login");
+  };
+
+  const toggleLogoutMenu = () => {
+    setShowLogoutMenu(!showLogoutMenu);
   };
 
   return (
@@ -65,26 +80,50 @@ const storedImg = sessionStorage.getItem("userimage");
             </svg>
           </button>
         </div>
+        
         <nav className="nav-links">
-          
           <Link to="/movielistpage" className="nav-link active">Home</Link>
-          
-               <Link to="/moviespage" className="sidebar-link ">Movies</Link>
-          <Link to="/seriespage" className="sidebar-link " >Series</Link>
+          <Link to="/moviespage" className="nav-link">Movies</Link>
+          <Link to="/seriespage" className="nav-link">Series</Link>
           <a href="#" className="nav-link">Lists</a>
         </nav>
         
         <div className="header-right">
-          <button
-            className="user-avatar"
-            style={{
-
- backgroundImage: `url('${storedImg || defaultAvatar}')`,
-            }}
-          ></button>
+          <div className="user-menu-container">
+            <button
+              className="user-avatar"
+              onClick={toggleLogoutMenu}
+              style={{
+                backgroundImage: `url('${storedImg || defaultAvatar}')`,
+              }}
+              aria-label="User menu"
+            ></button>
+            
+            {showLogoutMenu && (
+              <div className="logout-menu">
+                <button onClick={handleLogout} className="logout-button">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="logout-icon"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
-      {/* <div className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`} ></div> */}
+      
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <button className="close-sidebar" onClick={closeSidebar} aria-label="Close menu">
@@ -103,12 +142,35 @@ const storedImg = sessionStorage.getItem("userimage");
             </svg>
           </button>
         </div>
+        
         <nav className="sidebar-nav">
-          <Link to="/movielistpage" className="sidebar-link active" onClick={closeSidebar}>Home</Link>
-          <Link to="/moviespage" className="sidebar-link" onClick={closeSidebar}>Movies</Link>
-          <Link to="/seriespage" className="sidebar-link " onClick={closeSidebar}>Series</Link>
-         
-         
+          <Link to="/movielistpage" className="sidebar-link active" onClick={closeSidebar}>
+            Home
+          </Link>
+          <Link to="/moviespage" className="sidebar-link" onClick={closeSidebar}>
+            Movies
+          </Link>
+          <Link to="/seriespage" className="sidebar-link" onClick={closeSidebar}>
+            Series
+          </Link>
+          
+          <button onClick={handleLogout} className="sidebar-logout-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="logout-icon"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
         </nav>
       </div>
     </>
