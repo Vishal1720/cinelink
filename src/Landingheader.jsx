@@ -23,11 +23,11 @@ const navigate = useNavigate();
 useEffect(() => {
     const role = sessionStorage.getItem("role");
     const email = sessionStorage.getItem("userEmail");
-
+    const name=sessionStorage.getItem("username");//this is only for admin for now 
     // 🔹 If user is already logged in, redirect to movie list page
     if (role === "user" && email) {
       navigate("/movielistpage");
-    }else if (role === "admin" && email) {
+    }else if (role === "admin" && name)  {
       navigate("/adminpage");
     }
     else {
