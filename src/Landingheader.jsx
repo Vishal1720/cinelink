@@ -1,4 +1,4 @@
-import React from 'react';
+import {React,useEffect} from 'react';
 import './Landingheader.css';
 import Reg from "./Reg";
 import Login from "./Login"; 
@@ -19,6 +19,22 @@ const navigate = useNavigate();
     navigate("/Reg");  // manually go to /community route
   };
 
+// 🔹 Check login status ONLY after component mounts
+useEffect(() => {
+    const role = sessionStorage.getItem("role");
+    const email = sessionStorage.getItem("userEmail");
+
+    // 🔹 If user is already logged in, redirect to movie list page
+    if (role === "user" && email) {
+      navigate("/movielistpage");
+    }else if (role === "admin" && email) {
+      navigate("/adminpage");
+    }
+    else {
+      // 🔹 If no logged-in user, stay on landing and show console message
+      console.log("No user logged in from landing header");
+    }
+  }, [navigate]); // dependency so effect runs once after render
   return (
     <header className="cineverse-header">
       <div className="left-section" onClick={navigateToLanding}>
