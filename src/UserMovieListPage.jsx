@@ -3,8 +3,8 @@ import "./UserMovieListPage.css";
 import UserHeader from "./UserHeader";
 import { supabase } from './supabase';
 import { useNavigate } from "react-router-dom";
-
-const UserMovieListPage = () => {
+import { useParams } from "react-router-dom";
+const UserMovieListPage = ({type}) => {
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState("All Genres");
@@ -25,25 +25,38 @@ function showmovieDetails(id){
     };
 
     const fetchMovies = async () => {
-     const { data, error } = await supabase
+      let movdata,moverror;
+      if(type==="Movie" || type==="Series"){
+        ({ data:movdata, error:moverror } = await supabase
   .from("movies")
   .select(`
     *,
     genre_in_movies (
       genre_name
     )
-  `).order('title', { ascending: true });
-console.log(data);//genre_name comes as array of objects
-      if (error) {
+  `).eq("type",type).order('title', { ascending: true }));
+      }
+      else{
+      ({ data:movdata, error:moverror } = await supabase
+  .from("movies")
+  .select(`
+    *,
+    genre_in_movies (
+      genre_name
+    )
+  `).order('title', { ascending: true }));
+      }
+console.log(movdata);//genre_name comes as array of objects
+      if (moverror) {
         console.error('Error fetching movies:', error);
       } else {
-        setMovies(data);
+        setMovies(movdata);
       }
     };
 
     fetchGenres();
     fetchMovies();
-  }, []);
+  }, [type]);
 
   // Filter movies based on selected genre and search text
 const filteredMovies = movies.filter(movie => {

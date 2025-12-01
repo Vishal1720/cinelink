@@ -69,8 +69,8 @@ const storedImg = sessionStorage.getItem("userimage");
           
           <Link to="/movielistpage" className="nav-link active">Home</Link>
           
-          <a href="#" className="nav-link">Discover</a>
-          <a href="#" className="nav-link">Community</a>
+               <Link to="/moviespage" className="sidebar-link ">Movies</Link>
+          <Link to="/seriespage" className="sidebar-link " >Series</Link>
           <a href="#" className="nav-link">Lists</a>
         </nav>
         
@@ -105,9 +105,10 @@ const storedImg = sessionStorage.getItem("userimage");
         </div>
         <nav className="sidebar-nav">
           <Link to="/movielistpage" className="sidebar-link active" onClick={closeSidebar}>Home</Link>
-          <a href="#" className="sidebar-link" onClick={closeSidebar}>Discover</a>
-          <a href="#" className="sidebar-link" onClick={closeSidebar}>Community</a>
-          <a href="#" className="sidebar-link" onClick={closeSidebar}>Lists</a>
+          <Link to="/moviespage" className="sidebar-link" onClick={closeSidebar}>Movies</Link>
+          <Link to="/seriespage" className="sidebar-link " onClick={closeSidebar}>Series</Link>
+         
+         
         </nav>
       </div>
     </>

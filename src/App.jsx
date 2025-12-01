@@ -20,7 +20,10 @@ function App() {
         <Route path="/" element={<LandingPage/>} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/Reg" element={<Reg/>} />
-         <Route path="/movielistpage" element={<UserMovieListPage/>} />
+             <Route path="/movielistpage" element={<UserMovieListPage />} />
+       
+         <Route path="/seriespage" element={<UserMovieListPage type="Series"/>} />
+          <Route path="/moviespage" element={<UserMovieListPage type="Movie"/>} />
 {/*    admin routes below */}
           <Route path="/adminpage" element={<AdminPage/>} />
           <Route path="/castgenre" element={<CastGenre/>} />
