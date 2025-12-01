@@ -17,8 +17,10 @@ const LandingPage = () => {
     // 🔹 If user is already logged in, redirect to movie list page
     if (role === "user" && email) {
       navigate("/movielistpage");
+      return;
     }else if (role === "admin" && name)  {
       navigate("/adminpage");
+      return;
     }
     else {
       // 🔹 If no logged-in user, stay on landing and show console message
