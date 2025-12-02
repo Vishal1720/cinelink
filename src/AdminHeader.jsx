@@ -10,7 +10,7 @@ const AdminHeader = () => {
 const defaultAvatar =
   "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
 
-const userimg= sessionStorage.getItem("userimage");
+const userimg= localStorage.getItem("userimage");
 const imgSrc = userimg || defaultAvatar;
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -27,7 +27,7 @@ const imgSrc = userimg || defaultAvatar;
   };
 
   const logout = () => {
-    sessionStorage.clear();
+    localStorage.clear();
     navigate("/Login");
   };
 const location = useLocation();
@@ -69,7 +69,7 @@ const isActive = (path) =>
           />
           <div>
             <h2 className="admin-title">CineVerse Admin</h2>
-            <p className="admin-subtitle">{sessionStorage.getItem("username")}</p>
+            <p className="admin-subtitle">{localStorage.getItem("username")}</p>
           </div>
         </div>
 

@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import './UserHeader.css';
 const UserHeader = () => {
-  const role = sessionStorage.getItem("role");
+  const role = localStorage.getItem("role");
   const navigate = useNavigate();
   
   if (role !== "user") {
@@ -19,7 +19,7 @@ const isActive = (path) =>
 
   const defaultAvatar =
     "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
-  const storedImg = sessionStorage.getItem("userimage");
+  const storedImg = localStorage.getItem("userimage");
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -31,7 +31,7 @@ const isActive = (path) =>
 
   const handleLogout = () => {
     // Clear session storage
-    sessionStorage.clear();
+    localStorage.clear();
     // Navigate to login page
     navigate("/Login");
   };

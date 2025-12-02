@@ -76,9 +76,9 @@ let pass=await hashPassword(formData.password);
   } else if (adminData && adminData.length > 0) {
     // Admin found, redirect to AdminPage
     console.log("Admin login data:", adminData);
-         sessionStorage.setItem("role", "admin");
-         sessionStorage.setItem("username", adminData[0].name);
-        sessionStorage.setItem("userimage", adminData[0].avatar_url);
+         localStorage.setItem("role", "admin");
+         localStorage.setItem("username", adminData[0].name);
+        localStorage.setItem("userimage", adminData[0].avatar_url);
     navigate("/adminpage");
   } else {
     // Not an admin, check user table
@@ -110,10 +110,10 @@ let pass=await hashPassword(formData.password);
   setError("Please verify your email before logging in.Check email for verification link.");
 } else {
   console.log(data2);
-   sessionStorage.setItem("role", "user");
-   sessionStorage.setItem("userEmail", data2[0].email);
-        sessionStorage.setItem("username", data2[0].name);
-        sessionStorage.setItem("userimage", data2[0].avatar_url);
+   localStorage.setItem("role", "user");
+   localStorage.setItem("userEmail", data2[0].email);
+        localStorage.setItem("username", data2[0].name);
+        localStorage.setItem("userimage", data2[0].avatar_url);
         navigate("/movielistpage");
      
 }  

@@ -13,7 +13,7 @@ const ReviewsSection = ({ movieId }) => {
   const [ratingCategories, setRatingCategories] = useState([]);
 const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
   const getUser = async () => {
-  const email = sessionStorage.getItem("userEmail");
+  const email = localStorage.getItem("userEmail");
 
   if (!email) return;
 

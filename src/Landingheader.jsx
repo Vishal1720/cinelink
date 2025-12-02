@@ -21,9 +21,9 @@ const navigate = useNavigate();
 
 // 🔹 Check login status ONLY after component mounts
 useEffect(() => {
-    const role = sessionStorage.getItem("role");
-    const email = sessionStorage.getItem("userEmail");
-    const name=sessionStorage.getItem("username");//this is only for admin for now 
+    const role = localStorage.getItem("role");
+    const email = localStorage.getItem("userEmail");
+    const name=localStorage.getItem("username");//this is only for admin for now 
     // 🔹 If user is already logged in, redirect to movie list page
     if (role === "user" && email) {
       navigate("/movielistpage");

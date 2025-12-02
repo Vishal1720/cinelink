@@ -6,8 +6,8 @@ const AdminPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get the user's role stored in sessionStorage
-    const role = sessionStorage.getItem("role");
+    // Get the user's role stored in localStorage
+    const role = localStorage.getItem("role");
 
     // If role is not "admin" OR role does not exist,
     // the user is not allowed to access this page.

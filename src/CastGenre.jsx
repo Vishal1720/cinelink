@@ -8,7 +8,7 @@ const CastGenre = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const role = sessionStorage.getItem("role");
+    const role = localStorage.getItem("role");
     if (role !== "admin") navigate("/Login");
   }, [navigate]);
 
