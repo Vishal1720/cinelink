@@ -427,12 +427,15 @@
   }
   
   .moviedetails-actions {
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
   }
   
   .moviedetails-btn-primary {
-    width: 100%;
+    width: fit-content;
+    font-size: 0.9rem;
+    padding: 0 1.5rem;
+    margin-top: 2%;
   }
   
   .moviedetails-ott-buttons {

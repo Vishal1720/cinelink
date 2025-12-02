@@ -29,7 +29,7 @@ const MovieDetails = () => {
         .select("*")
         .eq("id", id)
         .single();
-
+      
       if (movieError) throw movieError;
 
       // 2️⃣ Fetch genres 
@@ -73,6 +73,7 @@ const MovieDetails = () => {
       setGenres(genreData || []);
       setCast(castData || []);
       setOttPlatforms(ottData || []);
+      
     } catch (error) {
       console.error("Error fetching movie details:", error);
     } finally {
@@ -191,7 +192,7 @@ const MovieDetails = () => {
               </div>
             </div>
 
-            <div className="moviedetails-rating-section">
+            {/* <div className="moviedetails-rating-section">
               <h3>Rate this movie</h3>
               <div className="moviedetails-rating-buttons">
                 <button 
@@ -219,7 +220,7 @@ const MovieDetails = () => {
                   <span className="moviedetails-emoji">🏆</span> Masterpiece
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         {cast.length > 0 && (
