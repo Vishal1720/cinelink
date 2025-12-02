@@ -668,3 +668,47 @@ grid-template-columns: 1fr 1fr;
     text-align: left;
   }
 }
+/* Make react-select look like your existing input fields */
+.react-select-container .react-select__control {
+  background: rgba(15, 15, 25, 0.7) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  padding: 4px !important;
+  min-height: 52px !important;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.react-select-container .react-select__control--is-focused {
+  border-color: #667eea !important;
+  background: rgba(15, 15, 25, 0.9) !important;
+  box-shadow: 0 0 0 3px rgba(102,126,234,0.15) !important;
+}
+
+.react-select-container .react-select__input-container input {
+  color: #fff !important;
+}
+
+.react-select-container .react-select__single-value {
+  color: #fff !important;
+}
+
+.react-select-container .react-select__menu {
+  background: rgba(25, 25, 40, 0.95) !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  z-index: 9999 !important;
+}
+
+.react-select-container .react-select__option {
+  background: transparent !important;
+  color: #fff !important;
+  padding: 10px !important;
+}
+
+.react-select-container .react-select__option--is-focused {
+  background: rgba(255,255,255,0.15) !important;
+}
+
+.react-select-container .react-select__option--is-selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}

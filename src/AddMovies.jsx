@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./AddMovies.css";
 import { supabase } from "./supabase";
+import Select from 'react-select';
 
 const AddMovies = () => {
   const [activeTab, setActiveTab] = useState("core");
@@ -31,7 +32,14 @@ const AddMovies = () => {
 
   const [genres, setGenres] = useState([]);
   const [urlnames, setUrlNames] = useState([]);
+
 const [allCast, setAllCast] = useState([]);
+// Convert cast rows → react-select options
+const castOptions = allCast.map(c => ({
+  value: c.id,
+  label: c.cast_name,
+  avatar_url: c.avatar_url || ""
+}));
 
 
 const addCastMember = () => {
@@ -473,22 +481,22 @@ for (const castItem of formData.castList) {
             )}
           </div>
 
-          {/* Cast Selector */}
-          <div className="cast-field">
-            <label>Select Cast</label>
-            <select
-              className="input-field"
-              value={item.cast_id}
-              onChange={(e) => updateCastField(index, "cast_id", e.target.value)}
-            >
-              <option value="">-- Choose Cast --</option>
-              {allCast.map(c => (
-                <option key={c.id} value={c.id}>
-                  {c.cast_name}
-                </option>
-              ))}
-            </select>
-          </div>
+         
+          {/* REACT-SELECT for search in select */}
+<div className="cast-field">
+  <label>Select Cast</label>
+  <Select
+    options={castOptions}
+      className="react-select-container"
+  classNamePrefix="react-select"
+    value={ castOptions.find(opt => Number(opt.value) === Number(item.cast_id)) || null }
+    onChange={(selected) => updateCastField(index, "cast_id", selected ? selected.value : "")}
+    placeholder="Search cast..."
+    isSearchable={true}
+  isClearable={true}
+    // no custom props/components — plain Select as requested
+  />
+</div>
 
           {/* Role */}
           <div className="cast-field">
