@@ -42,7 +42,7 @@ const MovieDetails = () => {
 
       if (genreError) throw genreError;
 
-      console.log("Genre Data:", genreData); // Debug log
+      
 
       // 3️⃣ Fetch cast (join cast table)
     const { data: castData, error: castError } = await supabase
@@ -58,7 +58,7 @@ const MovieDetails = () => {
   .eq("movie_id", id);
 
 
-          console.log("Cast Data:", castData); // Debug log
+         
       if (castError) throw castError;
 
       // 4️⃣ Fetch OTT platforms (join with urls table)
@@ -182,7 +182,7 @@ const MovieDetails = () => {
                     title={ott.urls?.ott_name}
                   >
                     {ott.urls?.logo_url ? (
-                      <img src={ott.urls.logo_url} alt={ott.urls.ott_name} className="moviedetails-ott-logo" />
+                      <img src={ott.urls.logo_url}  loading="lazy" alt={ott.urls.ott_name} className="moviedetails-ott-logo" />
                     ) : (
                       getOttIcon(ott.urls?.ott_name)
                     )}
@@ -228,7 +228,7 @@ const MovieDetails = () => {
           <div className="moviedetails-cast-list">
             {cast.map((member, index) => (
               <div key={index} className="moviedetails-cast-member">
-                <div 
+                <div
                   className="moviedetails-cast-avatar"
                   style={{
                     backgroundImage: `url(${member.cast?.avatar_url || 'https://via.placeholder.com/144'})`

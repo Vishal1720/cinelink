@@ -46,7 +46,7 @@ function showmovieDetails(id){
     )
   `).order('title', { ascending: true }));
       }
-console.log(movdata);//genre_name comes as array of objects
+
       if (moverror) {
         console.error('Error fetching movies:', error);
       } else {
@@ -125,6 +125,7 @@ const filteredMovies = movies.filter(movie => {
                     src={movie.poster_url}
                     alt={`Movie poster for ${movie.title}`}
                     className="movie-poster"
+                    loading="lazy"
                   />
                   <div className="movie-info">
                     <p className="movie-title">{movie.title}</p>
