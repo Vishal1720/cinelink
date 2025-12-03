@@ -10,6 +10,45 @@ const UserMovieListPage = ({type}) => {
   const [selectedGenre, setSelectedGenre] = useState("All Genres");
   const [searchTerm, setSearchTerm] = useState("");
 const navigate = useNavigate();
+const fetchRatingSummary = async (movieId) => {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select(`
+      id,
+      rating_cat,
+      rating_cat:rating_cat (
+        id,
+        cat_name
+      )
+    `)
+    .eq("movie_id", movieId);
+
+  if (error) return null;
+  if (!data || data.length === 0) return null;
+
+  const total = data.length;
+  const countMap = {};
+
+  data.forEach((r) => {
+    const cat = r.rating_cat.cat_name;
+    countMap[cat] = (countMap[cat] || 0) + 1;
+  });
+
+  // Find highest
+  let bestCat = null;
+  let bestCount = 0;
+  for (const cat in countMap) {
+    if (countMap[cat] > bestCount) {
+      bestCat = cat;
+      bestCount = countMap[cat];
+    }
+  }
+
+  return {
+    category: bestCat,
+    percentage: Math.round((bestCount / total) * 100),
+  };
+};
 
 function showmovieDetails(id){
   navigate(`/movie/${id}`);
@@ -50,7 +89,14 @@ function showmovieDetails(id){
       if (moverror) {
         console.error('Error fetching movies:', error);
       } else {
-        setMovies(movdata);
+         // ⭐ Fetch rating summary for each movie
+    const moviesWithRatings = await Promise.all(
+      movdata.map(async (m) => {
+        const summary = await fetchRatingSummary(m.id);
+        return { ...m, ratingSummary: summary };
+      })
+    );
+        setMovies(moviesWithRatings);
       }
     };
 
@@ -129,7 +175,13 @@ const filteredMovies = movies.filter(movie => {
                   />
                   <div className="movie-info">
                     <p className="movie-title">{movie.title}</p>
-                    <p className="movie-rating">Unrated</p>
+                    {movie.ratingSummary ? (
+  <p className="movie-rating">
+    ⭐ {movie.ratingSummary.category} ({movie.ratingSummary.percentage}%)
+  </p>
+) : (
+  <p className="movie-rating">Unrated</p>
+)}
                   </div>
                 </div>
               ))}
