@@ -9,6 +9,7 @@ const AddMovies = () => {
 
   const [posterFile, setPosterFile] = useState(null);
   const [posterPreview, setPosterPreview] = useState(null);
+const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -176,8 +177,8 @@ const fetchAllCast = async () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
+setSubmitting(true); // disabling submit  button 
+    if (!validateForm()) {setSubmitting(false);return};
 
     let posterUrl = null;
 
@@ -206,6 +207,11 @@ const fetchAllCast = async () => {
       language: formData.language,
         type: formData.type 
     }]).select();
+if(error){
+  setSubmitting(false);
+  console.error("Error inserting movie:", error);
+  return;
+}
 
     if (!error) {
       const movieid = data[0].id;
@@ -251,6 +257,7 @@ for (const castItem of formData.castList) {
       setPosterFile(null);
       setPosterPreview(null);
       setErrors({});
+       setSubmitting(false); // re-enable button after success
       alert("Movie added successfully!");
     }
   };
@@ -521,8 +528,9 @@ for (const castItem of formData.castList) {
       + Add Cast Member
     </button>
     <div className="form-actions">
-    <button type="button" className="btn-next" onClick={handleSubmit}>
-                Submit movie/series details
+    <button type="button" className="btn-next" onClick={handleSubmit}
+    disabled={submitting}>
+                {submitting ? "Submitting..." : "Submit movie/series details"}
               </button>
               </div>
 
