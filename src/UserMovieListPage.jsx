@@ -18,7 +18,8 @@ const fetchRatingSummary = async (movieId) => {
       rating_cat,
       rating_cat:rating_cat (
         id,
-        cat_name
+        cat_name,
+        cat_emoji
       )
     `)
     .eq("movie_id", movieId);
@@ -28,25 +29,30 @@ const fetchRatingSummary = async (movieId) => {
 
   const total = data.length;
   const countMap = {};
-
+const emojiMap = {};
   data.forEach((r) => {
     const cat = r.rating_cat.cat_name;
     countMap[cat] = (countMap[cat] || 0) + 1;
+   emojiMap[cat] = r.rating_cat.cat_emoji; // store emoji for that category
+
   });
 
   // Find highest
   let bestCat = null;
   let bestCount = 0;
+  let emoji=""
   for (const cat in countMap) {
     if (countMap[cat] > bestCount) {
       bestCat = cat;
       bestCount = countMap[cat];
+   emoji = emojiMap[cat]; // setting emoji here
     }
   }
 
   return {
     category: bestCat,
     percentage: Math.round((bestCount / total) * 100),
+    emoji_pic: emoji
   };
 };
 
@@ -166,6 +172,7 @@ const filteredMovies = movies.filter(movie => {
           <section className="movies-section">
             <div className="movies-grid">
               {filteredMovies.map((movie, index) => (
+               
                 <div key={movie.id} className="movie-card" onClick={()=>showmovieDetails(movie.id)}>
                   <img
                     src={movie.poster_url}
@@ -177,10 +184,10 @@ const filteredMovies = movies.filter(movie => {
                     <p className="movie-title">{movie.title}</p>
                     {movie.ratingSummary ? (
   <p className="movie-rating">
-    ⭐ {movie.ratingSummary.category} ({movie.ratingSummary.percentage}%)
+    {movie.ratingSummary.emoji_pic} {movie.ratingSummary.category} ({movie.ratingSummary.percentage}%)
   </p>
 ) : (
-  <p className="movie-rating">Unrated</p>
+  <p className="movie-rating">No ratings yet</p>
 )}
                   </div>
                 </div>
