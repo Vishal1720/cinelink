@@ -10,6 +10,51 @@ const Reg = () => {
   const navigate = useNavigate();
 const [imageFile, setImageFile] = useState(null);
 const [registering, setRegistering] = useState(false);
+const generateAvatar = () => {
+  if (!formData.gender) {
+    setAvatarError("⚠️ Please select gender to generate an avatar.");
+    return;
+  }
+
+  let randomAvatar = "";
+
+  if (formData.gender === "Male") {
+    randomAvatar =
+      maleimageurls[Math.floor(Math.random() * maleimageurls.length)];
+  } else if (formData.gender === "Female") {
+    randomAvatar =
+      femaleimageurls[Math.floor(Math.random() * femaleimageurls.length)];
+  } else {
+    randomAvatar =
+      "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
+  }
+  setImageFile(null);//removing file inserted if random generation clicked
+  // Clear uploaded image + update generated avatar
+ 
+  setFormData(prev => ({
+    ...prev,
+    avatar_url: randomAvatar
+  }));
+
+  setAvatarError(""); // remove any previous message
+};
+const maleimageurls=[
+  "https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp1.png",
+"https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp2.png",
+"https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp8.png",
+"https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp9.png",
+"https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp11.jpg",
+"https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp12.jpg"
+];
+
+const femaleimageurls=[
+  "https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp10.png",
+  "https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp3.png",
+  "https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp4.png",
+  "https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp5.png",
+  "https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp6.png",
+  "https://lhrpamwxodkgnplmsyfk.supabase.co/storage/v1/object/public/Default%20avatars/pfp10.png"
+];
 const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,13 +65,7 @@ const [formData, setFormData] = useState({
     gender: ""   
   });
 
-//   const hashPassword = async (password) => {
-//   const enc = new TextEncoder().encode(password);
-//   const buffer = await crypto.subtle.digest("SHA-256", enc);
-//   return Array.from(new Uint8Array(buffer))
-//     .map(b => b.toString(16).padStart(2, "0"))
-//     .join("");
-// };
+
 
 const disposableDomains = [
   "bialode.com",
@@ -114,7 +153,9 @@ const hashPassword = (password) => {
 
 async function uploadImageAndInsertUser() {
   setRegistering(true);
-  let imageUrl = "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";  // 👈 default value if no image
+  let imageUrl = formData.avatar_url && formData.avatar_url.trim() !== ""
+  ? formData.avatar_url
+  : "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
 if (isDisposableEmail(formData.email)) {
     setPasswordError("❌ Disposable email addresses are not allowed.");
     setRegistering(false);
@@ -195,7 +236,7 @@ setRegistering(false);
 
 
   
-
+const [avatarError, setAvatarError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -235,16 +276,25 @@ setRegistering(false);
       
         <form onSubmit={handleSubmit} method="POST">
 <div className="avatar-upload">
-  <label htmlFor="avatarInput">
+  <label htmlFor="avatarInput"  className="avatar-wrapper">
     <img
       src={
         imageFile
           ? URL.createObjectURL(imageFile)
-          : "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg"
+          : formData.avatar_url ||
+        "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg"
       }
       alt="avatar"
       className="avatar-image"
     />
+    <div className="avatar-plus">+</div>
+     <div
+
+  className="avatar-refresh"
+  onClick={generateAvatar}
+>
+ ↻
+</div>
   </label>
 
   <input
@@ -254,8 +304,14 @@ setRegistering(false);
     onChange={(e) => setImageFile(e.target.files[0])}
     style={{ display: "none" }}
   />
-</div>
+ 
 
+</div>
+{avatarError && (
+            <p style={{ color: "red", fontSize: "14px", marginTop: "5px" }}>
+              {avatarError}
+            </p>
+          )}
           <label className='reglabel' htmlFor="fullname">Name</label>
           <input type="text" id="fullname"
             name='name'
