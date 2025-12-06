@@ -276,25 +276,29 @@ const [avatarError, setAvatarError] = useState("");
       
         <form onSubmit={handleSubmit} method="POST">
 <div className="avatar-upload">
-  <label htmlFor="avatarInput"  className="avatar-wrapper">
+
+  {/* Generate Avatar button ABOVE */}
+  <button
+    type="button"
+    className="avatar-refresh"
+    onClick={generateAvatar}
+  >
+    ↻
+  </button>
+
+  {/* Avatar image + upload */}
+  <label htmlFor="avatarInput" className="avatar-wrapper">
     <img
       src={
         imageFile
           ? URL.createObjectURL(imageFile)
           : formData.avatar_url ||
-        "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg"
+            "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg"
       }
       alt="avatar"
       className="avatar-image"
     />
     <div className="avatar-plus">+</div>
-     <div
-
-  className="avatar-refresh"
-  onClick={generateAvatar}
->
- ↻
-</div>
   </label>
 
   <input
@@ -304,9 +308,9 @@ const [avatarError, setAvatarError] = useState("");
     onChange={(e) => setImageFile(e.target.files[0])}
     style={{ display: "none" }}
   />
- 
-
 </div>
+
+
 {avatarError && (
             <p style={{ color: "red", fontSize: "14px", marginTop: "5px" }}>
               {avatarError}

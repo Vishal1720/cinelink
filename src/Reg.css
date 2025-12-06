@@ -176,9 +176,10 @@
 }
 
 .avatar-upload {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+  position: relative;      /* REQUIRED for absolute children */
+  width: 130px;
+  height: 130px;
+  margin: auto;
 }
 
 .avatar-image {
@@ -299,31 +300,24 @@
   transform: scale(1.12);
 }
 
-/* LEFT SIDE: ↻ Regenerate icon */
 .avatar-refresh {
   position: absolute;
-    bottom: 0px;
-  left: 10px;
+  top: 75px;         
+  left: 10px;        /* Opposite side of + icon */
   width: 28px;
   height: 28px;
-  background-color: #10b981; /* green */
-color: white;
+  border-radius: 50%;
+  border: 2px solid white;
+  background-color: #10b981;
+  color: white;
   font-size: 20px;
-  font-weight: bold;
-
-  border-radius: 50%;
-  border: 2px solid white;
-
-  border-radius: 50%;
-  border: 2px solid white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transition: 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: 0.2s ease-in-out;
+  z-index: 20;
 }
 
 .avatar-refresh:hover {
