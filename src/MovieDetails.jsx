@@ -4,6 +4,8 @@ import { supabase } from './supabase';
 import UserHeader from './UserHeader';
 import './MovieDetails.css';
 import ReviewsSection from './ReviewsSection';
+import RatingDonutChart from "./RatingDonutChart";
+
 const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
@@ -12,10 +14,56 @@ const MovieDetails = () => {
   const [ottPlatforms, setOttPlatforms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRating, setSelectedRating] = useState(null);
+  const [reviewCounts, setReviewCounts] = useState({});
+
+
+
+  const [ratingCategories, setRatingCategories] = useState([]);//for pie chart
+const pieData = ratingCategories.map((cat) => ({
+  id: cat.id ,
+  name: cat.cat_name,
+  value: reviewCounts[cat.id] || 0,
+  emoji: cat.cat_emoji
+})).filter((item) => item.value > 0); // ❗ remove zero-value categories;
+
+const totalReviews = Object.values(reviewCounts).reduce((a, b) => a + b, 0);
+
+
+const fetchRatingCategories = async () => {//rating details for pie chart
+  const { data, error } = await supabase
+    .from("ratingnames")
+    .select("id, cat_name, cat_emoji")
+    .order("id", { ascending: true });
+
+  if (!error) setRatingCategories(data);
+};
+
+  
+const countCategoryById = async (movieId, catId) => {
+  const { count } = await supabase
+    .from("reviews")
+    .select("id", { count: "exact", head: true })
+    .eq("movie_id", movieId)
+    .eq("rating_cat", catId);
+
+  return count || 0;
+};
+
+const fetchReviewCounts = async () => {
+        const counts = {};
+        for (let catId = 1; catId <= 4; catId++) {
+          counts[catId] = await countCategoryById(id, catId);
+        }
+        setReviewCounts(counts);
+        console.log("Review Counts:", counts)
+      };
 
   useEffect(() => {
     if (id) {
       fetchMovieDetails();
+      // Fetch review counts for each category
+      fetchReviewCounts();
+       fetchRatingCategories(); 
     }
   }, [id]);
 
@@ -83,7 +131,6 @@ const MovieDetails = () => {
 
   const handleRating = (rating) => {
     setSelectedRating(rating);
-    // TODO: Save rating to database
     console.log(`Rated as: ${rating}`);
   };
 
@@ -223,6 +270,8 @@ const MovieDetails = () => {
             </div> */}
           </div>
         </div>
+       
+
         {cast.length > 0 && (
         <div className="moviedetails-cast-section">
           <h3 className="moviedetails-section-title">Cast</h3>
@@ -242,8 +291,13 @@ const MovieDetails = () => {
             ))}
           </div>
         </div>)}
+ {/* {totalReviews > 0 ? (
+  <RatingDonutChart data={pieData} />
+) : (
+  <div className="moviedetails-no-reviews">No reviews available yet.</div>
+)} */}
 
-        <ReviewsSection movieId={id} />
+        <ReviewsSection movieId={id} pieData={pieData} totalreviews={totalReviews}/>
       </div>
     </div>
   );

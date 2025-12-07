@@ -1,34 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './supabase';
+import RatingDonutChart from "./RatingDonutChart";
 import './ReviewsSection.css';
 
-const ReviewsSection = ({ movieId }) => {
+const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newReview, setNewReview] = useState('');
   const [selectedRating, setSelectedRating] = useState(null);
   const [user, setUser] = useState(null);
-
-  const [userEmail, setUserEmail] = useState('');
   const [ratingCategories, setRatingCategories] = useState([]);
-const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
+  const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
+
+  // Fetch user
   const getUser = async () => {
-  const email = localStorage.getItem("userEmail");
+    const email = localStorage.getItem("userEmail");
+    if (!email) return;
 
-  if (!email) return;
+    const { data, error } = await supabase
+      .from("user")
+      .select("*")
+      .eq("email", email)
+      .single();
 
-  const { data, error } = await supabase
-    .from("user")
-    .select("*")
-    .eq("email", email)
-    .single();
-
-  if (!error && data) {
-    setUser(data); // store full user row
-     setUserEmail(email);
-  }
-  console.log("Fetched User:", data); // Debug log
-};
+    if (!error) setUser(data);
+  };
 
   useEffect(() => {
     fetchReviews();
@@ -37,257 +33,248 @@ const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
   }, [movieId]);
 
   const fetchRatingCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('ratingnames')
-        .select('*')
-        .order('id', { ascending: true });
+    const { data } = await supabase
+      .from('ratingnames')
+      .select('*')
+      .order('id', { ascending: true });
 
-      if (error) throw error;
-      setRatingCategories(data || []);
-    } catch (error) {
-      console.error('Error fetching rating categories:', error);
-      // Fallback to default categories
-      setRatingCategories([
-        { id: 1, cat_name: 'Unbearable' },
-        { id: 2, cat_name: 'One Time Watch' },
-        { id: 3, cat_name: 'Amazing' },
-        { id: 4, cat_name: 'Masterpiece' }
-      ]);
-    }
+    setRatingCategories(data || []);
   };
-
- 
 
   const fetchReviews = async () => {
     try {
       setLoading(true);
-      
-      const { data: reviewsData, error } = await supabase
+
+      const { data, error } = await supabase
         .from('reviews')
-        .select(`*,user:email ( avatar_url,name ),rating:rating_cat ( cat_name )`)
+        .select(`*, user:email ( avatar_url, name ), rating:rating_cat ( cat_name )`)
         .eq('movie_id', movieId)
         .order('created_at', { ascending: false });
-console.log("Fetched Reviews:", reviewsData); // Debug log
+
       if (error) throw error;
 
-   
-
-      // Fetch likes count for each review
       const reviewsWithLikes = await Promise.all(
-        reviewsData.map(async (review) => {
-          const { count, error: likesError } = await supabase
+        data.map(async (review) => {
+          const { count } = await supabase
             .from('like_in_reviews')
             .select('*', { count: 'exact', head: true })
             .eq('review_id', review.id);
 
-          return {
-            ...review,
-            likes: count || 0
-          };
+          return { ...review, likes: count || 0 };
         })
       );
 
       setReviews(reviewsWithLikes);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
+     
     } finally {
       setLoading(false);
     }
   };
 
   const handlePostReview = async () => {
-    if (!newReview.trim() || !selectedRating) {
-      alert('Please write a review and select a rating');
-      return;
-    }
+    if (!newReview.trim() || !selectedRating) return alert('Write a review & select rating');
+    if (!user) return alert('Please sign in');
 
-    try {
-      
-      
-      if (!user) {
-        alert('Please sign in to post a review');
-        return;
+    await supabase.from('reviews').insert([
+      {
+        movie_id: movieId,
+        email: user.email,
+        review_text: newReview,
+        rating_cat: selectedRating
       }
+    ]);
 
-      const { data, error } = await supabase
-        .from('reviews')
-        .insert([
-          {
-            movie_id: movieId,
-            email: user.email,
-            review_text: newReview,
-            rating_cat: selectedRating
-          }
-        ])
-        .select();
-
-      if (error) throw error;
-
-      // Reset form
-      setNewReview('');
-      setSelectedRating(null);
-      
-      // Refresh reviews
-      fetchReviews();
-    } catch (error) {
-      console.error('Error posting review:', error);
-      alert('Error posting review. Please try again.');
-    }
+    setNewReview('');
+    setSelectedRating(null);
+    fetchReviews();
   };
 
   const handleLikeReview = async (reviewId) => {
-    try {
-      
+    const { data: existingLike } = await supabase
+      .from("like_in_reviews")
+      .select("*")
+      .eq("review_id", reviewId)
+      .eq("email_of_liker", user.email)
+      .single();
 
-      // Check if already liked
-      const { data: existingLike } = await supabase
-        .from('like_in_reviews')
-        .select('*')
-        .eq('review_id', reviewId)
-        .eq('email_of_liker', user.email)
-        .single();
-
-      if (existingLike) {
-        // Unlike
-        await supabase
-          .from('like_in_reviews')
-          .delete()
-          .eq('review_id', reviewId)
-          .eq('email_of_liker', user.email);
-      } else {
-        // Like
-        await supabase
-          .from('like_in_reviews')
-          .insert([
-            {
-              review_id: reviewId,
-              email_of_liker: user.email
-            }
-          ]);
-      }
-
-      // Refresh reviews to update like count
-      fetchReviews();
-    } catch (error) {
-      console.error('Error liking review:', error);
+    if (existingLike) {
+      await supabase
+        .from("like_in_reviews")
+        .delete()
+        .eq("review_id", reviewId)
+        .eq("email_of_liker", user.email);
+    } else {
+      await supabase.from("like_in_reviews").insert([
+        { review_id: reviewId, email_of_liker: user.email }
+      ]);
     }
+
+    fetchReviews();
   };
 
-  const getRatingEmoji = (rating) => {
-    const emojis = {
-      'Unbearable': '😫',
-      'One Time Watch': '👍',
-      'Amazing': '🤩',
-      'Masterpiece': '🏆'
-    };
-    return emojis[rating] || '⭐';
-  };
+  const getRatingEmoji = (rating) => ({
+    'Unbearable': '😫',
+    'One Time Watch': '👍',
+    'Amazing': '🤩',
+    'Masterpiece': '🏆'
+  }[rating] || '⭐');
 
-  const getRatingClass = (rating) => {
-    const classes = {
-      'Unbearable': 'reviews-rating-unbearable',
-      'One Time Watch': 'reviews-rating-onetime',
-      'Amazing': 'reviews-rating-amazing',
-      'Masterpiece': 'reviews-rating-masterpiece'
-    };
-    return classes[rating] || '';
-  };
+  const getRatingClass = (rating) => ({
+    'Unbearable': 'reviews-rating-unbearable',
+    'One Time Watch': 'reviews-rating-onetime',
+    'Amazing': 'reviews-rating-amazing',
+    'Masterpiece': 'reviews-rating-masterpiece'
+  }[rating] || '');
 
   const getTimeAgo = (timestamp) => {
     const now = new Date();
-    const reviewDate = new Date(timestamp);
-    const diffInSeconds = Math.floor((now - reviewDate) / 1000);
+    const t = new Date(timestamp);
+    const diff = Math.floor((now - t) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} mins ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hrs ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
-    return reviewDate.toLocaleDateString();
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return Math.floor(diff / 60) + " mins ago";
+    if (diff < 86400) return Math.floor(diff / 3600) + " hrs ago";
+    if (diff < 604800) return Math.floor(diff / 86400) + " days ago";
+    return t.toLocaleDateString();
   };
 
+  // Detect user review
   useEffect(() => {
-  if (!user || reviews.length === 0) return;
-
-  const userAlreadyReviewed = reviews.some(
-    (review) => review.email === user.email
-  );
-
-  setAlreadyReviewed(userAlreadyReviewed);
-}, [user, reviews]);
-
+    if (!user) return;
+    setAlreadyReviewed(reviews.some(r => r.email === user.email));
+  }, [user, reviews]);
 
   return (
     <div className="reviews-section">
       <h3 className="reviews-section-title">Reviews</h3>
 
-      {/* New Review Form */}
-      {!AlreadyReviewed &&
-      <div className="reviews-new-review">
-        <div className="reviews-avatar-placeholder">
-           <img
-  src={user?.avatar_url || "/default-avatar.png"}
-  alt="User Avatar"
-  className="reviews-item-avatar"
-/>
-        </div>
-        <div className="reviews-form-container">
-          <textarea
-            className="reviews-textarea"
-            placeholder="Write a quick comment..."
-            value={newReview}
-            onChange={(e) => setNewReview(e.target.value)}
-          />
-          <div className="reviews-form-actions">
-            <div className="reviews-rating-buttons-small">
-              {ratingCategories.map((category) => (
-                <button
-                  key={category.id}
-                  className={`reviews-rating-btn-small ${getRatingClass(category.cat_name)} ${selectedRating === category.cat_name ? 'reviews-selected' : ''}`}
-                  onClick={() => setSelectedRating(category.id)}
-                >
-                  <span className="reviews-emoji">{getRatingEmoji(category.cat_name)}</span>
-                  <span className="reviews-rating-text">{category.cat_name}</span>
-                </button>
-              ))}
-            </div>
-            <button className="reviews-post-btn" onClick={handlePostReview}>
-              <span>Post</span>
-              <span className="material-symbols-outlined">send</span>
-            </button>
-          </div>
-        </div>
-      </div>}
+      {/* ⭐ CASE 1: User has NOT reviewed → Input + Chart */}
+      {!AlreadyReviewed && (
+        <div className="reviews-top-row">
+          {/* Input */}
+          <div className="reviews-new-review">
+            <img
+              src={user?.avatar_url || "/default-avatar.png"}
+              className="reviews-item-avatar"
+              alt=""
+            />
 
-      {/* Reviews List */}
+            <div className="reviews-form-container">
+              <textarea
+                className="reviews-textarea"
+                placeholder="Write a quick comment..."
+                value={newReview}
+                onChange={(e) => setNewReview(e.target.value)}
+              />
+
+              <div className="reviews-form-actions">
+                <div className="reviews-rating-buttons-small">
+                  {ratingCategories.map((category) => (
+                    <button
+                      key={category.id}
+                      className={`reviews-rating-btn-small ${getRatingClass(category.cat_name)} ${selectedRating === category.id ? 'reviews-selected' : ''}`}
+                      onClick={() => setSelectedRating(category.id)}
+                    >
+                      <span className="reviews-emoji">
+                        {getRatingEmoji(category.cat_name)}
+                      </span>
+                      {category.cat_name}
+                    </button>
+                  ))}
+                </div>
+
+                <button className="reviews-post-btn" onClick={handlePostReview}>
+                  Post <span className="material-symbols-outlined">send</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Chart */}
+          {totalreviews>0&& <div className="reviews-chart-box">
+            <RatingDonutChart data={pieData} />
+          </div>}
+         
+        </div>
+      )}
+
+      {/* ⭐ CASE 2: REVIEWS LIST */}
       <div className="reviews-list">
         {loading ? (
-          <div className="reviews-loading">Loading reviews...</div>
+          <p className="reviews-loading">Loading...</p>
         ) : reviews.length === 0 ? (
-          <div className="reviews-empty">No reviews yet. Be the first to review!</div>
+          <div className="reviews-chart-full">
+            //no reviews here
+           
+          </div>
         ) : (
-          reviews.map((review) => (
-            <div key={review.id} className="reviews-item">
-              
-               <img
-  src={review.user?.avatar_url || "/default-avatar.png"}
-  alt="User Avatar"
-  className="reviews-item-avatar"
-/>
+          <>
+            {/* ⭐ User HAS reviewed → First review + Chart */}
+            {AlreadyReviewed && (
+              <div className="reviews-first-row">
+                <div className="reviews-item first-review">
+                  <img
+                    src={reviews[0].user?.avatar_url || "/default-avatar.png"}
+                    className="reviews-item-avatar"
+                    alt=""
+                  />
 
+                  <div className="reviews-item-content">
+                    <div className="reviews-item-header">
+                      <p className="reviews-item-username">
+                        {reviews[0].user.name.split(" ")[0]}
+                      </p>
 
-              
-              <div className="reviews-item-content">
-                <div className="reviews-item-header">
-                  <p className="reviews-item-username">{review.user.name.split(" ")[0]}</p>
-                  <p className="reviews-item-time">{getTimeAgo(review.created_at)}</p>
-                  <div className={`reviews-item-rating ${getRatingClass(review.rating.cat_name)}`}>
-                    <span>{getRatingEmoji(review.rating.cat_name)}</span>
-                    <span>{review.rating.cat_name}</span>
+                      <p className="reviews-item-time">
+                        {getTimeAgo(reviews[0].created_at)}
+                      </p>
+
+                      <div className={`reviews-item-rating ${getRatingClass(reviews[0].rating.cat_name)}`}>
+                        {getRatingEmoji(reviews[0].rating.cat_name)} {reviews[0].rating.cat_name}
+                      </div>
+                    </div>
+
+                    <p className="reviews-item-text">
+                      {reviews[0].review_text}
+                    </p>
+
+                    <span className="material-symbols-outlined" onClick={() => handleLikeReview(reviews[0].id)}>favorite</span>
+                    <span className="reviews-like-count">{reviews[0].likes} Likes</span>
                   </div>
                 </div>
-                <p className="reviews-item-text">{review.review_text}</p>
-                <div className="reviews-item-actions">
+                {totalreviews>0&&<div className="reviews-chart-box">
+                  <RatingDonutChart data={pieData} />
+                </div>}
+                
+              </div>
+            )}
+
+            {/* ⭐ Remaining reviews */}
+            {reviews.slice(AlreadyReviewed ? 1 : 0).map((review) => (
+              <div key={review.id} className="reviews-item">
+                <img
+                  src={review.user?.avatar_url || "/default-avatar.png"}
+                  className="reviews-item-avatar"
+                  alt=""
+                />
+
+                <div className="reviews-item-content">
+                  <div className="reviews-item-header">
+                    <p className="reviews-item-username">
+                      {review.user.name.split(" ")[0]}
+                    </p>
+
+                    <p className="reviews-item-time">
+                      {getTimeAgo(review.created_at)}
+                    </p>
+
+                    <div className={`reviews-item-rating ${getRatingClass(review.rating.cat_name)}`}>
+                      {getRatingEmoji(review.rating.cat_name)} {review.rating.cat_name}
+                    </div>
+                  </div>
+
+                  <p className="reviews-item-text">{review.review_text}</p>
+
                   <button
                     className="reviews-like-btn"
                     onClick={() => handleLikeReview(review.id)}
@@ -297,8 +284,8 @@ console.log("Fetched Reviews:", reviewsData); // Debug log
                   </button>
                 </div>
               </div>
-            </div>
-          ))
+            ))}
+          </>
         )}
       </div>
     </div>
