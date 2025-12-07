@@ -59,7 +59,7 @@ export default function RatingDonutChart({ data }) {
             cx="50%"
             cy="50%"
             innerRadius={55}
-            outerRadius={75}
+            outerRadius={79}
             stroke="none"
             paddingAngle={2}
             label={renderEmojiLabel}

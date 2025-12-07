@@ -178,7 +178,10 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
                       <span className="reviews-emoji">
                         {getRatingEmoji(category.cat_name)}
                       </span>
-                      {category.cat_name}
+                      <span className="reviews-rating-text">
+  {category.cat_name}
+</span>
+                    
                     </button>
                   ))}
                 </div>
