@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
 import "./GenreRecommendationSection.css";
-
+import { useNavigate } from "react-router-dom";
 export default function GenreRecommendationSection({ genres ,movieid}) {
   const [suggested, setSuggested] = useState([]);
   const scrollRef = useRef(null);
- 
+ const navigate=useNavigate();
 
  const fetchSuggestions = async () => {
   const { data: genreRows, error: gError } = await supabase
@@ -66,7 +66,7 @@ export default function GenreRecommendationSection({ genres ,movieid}) {
 
         <div className="genre-rec-scroll" ref={scrollRef}>
           {suggested.map((movie) => (
-            <div className="genre-rec-card" key={movie.id}>
+            <div className="genre-rec-card" key={movie.id}  onClick={() => navigate(`/movie/${movie.id}`)}> 
               <img
                 src={movie.poster_url}
                 className="genre-rec-poster"
