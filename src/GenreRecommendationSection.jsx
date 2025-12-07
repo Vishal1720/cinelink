@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
+
 import "./GenreRecommendationSection.css";
 import { useNavigate } from "react-router-dom";
 export default function GenreRecommendationSection({ genres ,movieid}) {
@@ -26,16 +27,20 @@ export default function GenreRecommendationSection({ genres ,movieid}) {
     return;
   }
 
-  // Step 2: Fetch actual movie data
+  //Fetch actual movie data
   const { data: moviesData, error: mError } = await supabase
     .from("movies")
     .select("*, genre_in_movies (genre_name)")
     .in("id", movieIds)
-    .limit(10);
+
+    ;
+const randomTen = moviesData
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 10);
 
   if (!mError) {
-    setSuggested(moviesData);
-    console.log(moviesData);
+    setSuggested(randomTen);
+
   }
 };
 
