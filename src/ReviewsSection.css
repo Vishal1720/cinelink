@@ -349,9 +349,7 @@
   font-size: 0.875rem;
 }
 
-.reviews-like-btn:hover {
-  color: #8B5CF6;
-}
+
 
 .reviews-like-btn .material-symbols-outlined {
   font-size: 1.25rem;
@@ -493,4 +491,95 @@
     max-width: 30%;         /* ensures row never overflows */
   }
 }
+
+.reviews-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.reviews-new-review {
+  flex: 1;
+  display: flex;
+  gap: 15px;
+}
+
+.reviews-chart-box {
+  width: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reviews-no-chart {
+  color: gray;
+  font-size: 14px;
+}
+
+.reviews-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+.reviews-top-row,
+.reviews-first-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.reviews-chart-box {
+  width: 320px;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.reviews-chart-full {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.first-review {
+  flex: 1;
+}
+
+/* 📱 MOBILE — Chart FIRST, then Review */
+@media (max-width: 640px) {
+
+  /* CASE 1: User already reviewed → first review + chart */
+  .reviews-first-row {
+    flex-direction: column-reverse !important;   /* REVIEW ⬇  CHART ⬆ */
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* CASE 2: User has NOT reviewed → write-review + chart */
+  .reviews-top-row {
+    flex-direction: column-reverse !important;   /* REVIEW INPUT ⬇  CHART ⬆ */
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* Chart full width on mobile */
+  .reviews-chart-box {
+    width: 100% !important;
+    min-width: unset !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Review box stretches full width */
+  .first-review,
+  .reviews-new-review {
+    width: 100%;
+  }
+}
+
 
