@@ -207,7 +207,7 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
           <p className="reviews-loading">Loading...</p>
         ) : reviews.length === 0 ? (
           <div className="reviews-chart-full">
-            //no reviews here
+            {/* no reviews here */}
            
           </div>
         ) : (
