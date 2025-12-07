@@ -5,7 +5,7 @@ import UserHeader from './UserHeader';
 import './MovieDetails.css';
 import ReviewsSection from './ReviewsSection';
 import RatingDonutChart from "./RatingDonutChart";
-
+import GenreRecommendationSection from './GenreRecommendationSection';
 const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
@@ -64,6 +64,7 @@ const fetchReviewCounts = async () => {
       // Fetch review counts for each category
       fetchReviewCounts();
        fetchRatingCategories(); 
+       
     }
   }, [id]);
 
@@ -299,6 +300,7 @@ const fetchReviewCounts = async () => {
 
         <ReviewsSection movieId={id} pieData={pieData} totalreviews={totalReviews}/>
       </div>
+      <GenreRecommendationSection genres={genres.map(g => g.genre_name || g.genre?.genre_name)} movieid={id}/>  
     </div>
   );
 };
