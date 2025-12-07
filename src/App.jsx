@@ -3,7 +3,7 @@ import Reg from "./Reg";
 import Login from "./Login";
 import LandingPage from "./LandingPage";
 import AdminPage from "./AdminPage";
-import UserHeader from "./UserHeader";
+
 import MovieDetails from "./MovieDetails";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -28,6 +28,7 @@ function App() {
           <Route path="/adminpage" element={<AdminPage/>} />
           <Route path="/castgenre" element={<CastGenre/>} />
           <Route path="/movie/:id" element={<MovieDetails/>} />
+         
       </Routes>
     </BrowserRouter>
   );

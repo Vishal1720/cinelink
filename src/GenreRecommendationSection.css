@@ -1,0 +1,90 @@
+.genre-rec-section {
+  margin-top: 40px;
+  width: 89%;
+  margin:auto;
+}
+
+.genre-rec-title {
+  color: white;
+  margin-bottom: 16px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Wrapper for arrows + scroll row */
+.scroll-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Scrollable row */
+.genre-rec-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 4px;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.genre-rec-scroll::-webkit-scrollbar { display: none; }
+
+/* Item */
+.genre-rec-card {
+  flex: 0 0 auto;
+  width: 220px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.genre-rec-poster {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.genre-rec-card:hover .genre-rec-poster {
+  transform: scale(1.07);
+}
+
+.genre-rec-name {
+  color: #e5e7eb;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Scroll Buttons */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 50px;
+  width: 40px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 20;
+  transition: background 0.2s ease;
+}
+
+.scroll-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.scroll-btn.left { left: -5px; }
+.scroll-btn.right { right: -5px; }
+
+/* Mobile → hide buttons */
+@media (max-width: 640px) {
+  .scroll-btn {
+    display: none;
+  }
+}
