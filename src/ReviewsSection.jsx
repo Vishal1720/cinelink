@@ -12,6 +12,20 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
   const [ratingCategories, setRatingCategories] = useState([]);
   const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
 
+  const handleDeleteReview = async (reviewId) => {
+  const confirmDelete = window.confirm("Are you sure you want to delete your review?");
+  if (!confirmDelete) return;
+
+  await supabase
+    .from("reviews")
+    .delete()
+    .eq("id", reviewId)
+    .eq("email", user.email); // extra safety
+
+  fetchReviews(); // refresh list
+};
+
+
   // Fetch user
   const getUser = async () => {
     const email = localStorage.getItem("userEmail");
@@ -235,14 +249,28 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
                       <div className={`reviews-item-rating ${getRatingClass(reviews[0].rating.cat_name)}`}>
                         {getRatingEmoji(reviews[0].rating.cat_name)} {reviews[0].rating.cat_name}
                       </div>
+                      {reviews[0].email === user?.email && (
+  <button
+    className="reviews-delete-btn"
+    onClick={() => handleDeleteReview(reviews[0].id)}
+  >
+    <span className="material-symbols-outlined">delete</span>
+  </button>
+)}
                     </div>
-
+                    
                     <p className="reviews-item-text">
                       {reviews[0].review_text}
                     </p>
-
-                    <span className="material-symbols-outlined" onClick={() => handleLikeReview(reviews[0].id)}>favorite</span>
+                    <button
+                    className="reviews-like-btn"
+                    onClick={() => handleLikeReview(reviews[0].id)}
+                  >
+                
+                    <span className="material-symbols-outlined">favorite</span>
                     <span className="reviews-like-count">{reviews[0].likes} Likes</span>
+                  </button>
+                    
                   </div>
                 </div>
                 {totalreviews>0&&<div className="reviews-chart-box">
@@ -274,6 +302,14 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
                     <div className={`reviews-item-rating ${getRatingClass(review.rating.cat_name)}`}>
                       {getRatingEmoji(review.rating.cat_name)} {review.rating.cat_name}
                     </div>
+                      {review.email === user?.email && (
+  <button
+    className="reviews-delete-btn"
+    onClick={() => handleDeleteReview(review.id)}
+  >
+    <span className="material-symbols-outlined">delete</span>
+  </button>
+)}
                   </div>
 
                   <p className="reviews-item-text">{review.review_text}</p>
@@ -282,6 +318,8 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
                     className="reviews-like-btn"
                     onClick={() => handleLikeReview(review.id)}
                   >
+                  
+
                     <span className="material-symbols-outlined">favorite</span>
                     <span className="reviews-like-count">{review.likes} Likes</span>
                   </button>
