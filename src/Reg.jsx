@@ -58,7 +58,7 @@ const femaleimageurls=[
 const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
+    
     password: '',
     confirmpassword:"",
     avatar_url: "",
@@ -188,7 +188,7 @@ const hashed = await hashPassword(formData.password);
   const newUser = {
     name: formData.name,
     email: formData.email,
-    phone: formData.phone ? Number(formData.phone) : null,
+   
     password:hashed,
     avatar_url: imageUrl,   // 👈 will be default one OR uploaded URL
     gender: formData.gender
@@ -221,7 +221,6 @@ navigate("/Login");
     setFormData({
       name: "",
       email: "",
-      phone: "",
       password: "",
       confirmpassword: "",
       avatar_url: "",
@@ -333,15 +332,7 @@ const [avatarError, setAvatarError] = useState("");
             required
           />
 
-          <label className='reglabel' htmlFor="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone"
-            placeholder="Enter your phone number"
-            pattern="[0-9]{10}"
-            title="Phone number must be exactly 10 digits"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
+        
 
 <label className='reglabel' htmlFor="gender">Gender</label>
 <select

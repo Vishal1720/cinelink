@@ -10,6 +10,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CastGenre from "./CastGenre";
 import UserMovieListPage from "./UserMovieListPage";
 import ReviewsSection from "./ReviewsSection";
+import GoogleCallback from "./GoogleCallback";
 function App() {
   
 
@@ -28,7 +29,8 @@ function App() {
           <Route path="/adminpage" element={<AdminPage/>} />
           <Route path="/castgenre" element={<CastGenre/>} />
           <Route path="/movie/:id" element={<MovieDetails/>} />
-         
+          <Route path="/google-callback" element={<GoogleCallback />} />
+
       </Routes>
     </BrowserRouter>
   );
