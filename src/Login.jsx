@@ -207,7 +207,8 @@ let pass=await hashPassword(formData.password);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin + "/google-callback",
+        redirectTo: window.location.origin + "/#/google-callback",
+
       },
     });
 
