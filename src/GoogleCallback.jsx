@@ -25,12 +25,13 @@ const defaultAvatarUrl ="https://wiggitkoxqislzddubuk.supabase.co/storage/v1/obj
 
         const { data: existingUser } = await supabase
   .from("user")
-  .select("email")
+  .select("email, avatar_url, name")
   .eq("email", email)
   .single();
   
   // 2️⃣ If user EXISTS → update only safe fields
 if (existingUser) {
+
   await supabase
     .from("user")
     .update({
@@ -39,10 +40,15 @@ if (existingUser) {
       verified: true,       // ✅ column
     })
     .eq("email", email);    // ✅ condition column
+
+  const finalAvatar = existingUser.avatar_url || avatar_url;
+   // Save avatar to localStorage
+  localStorage.setItem("userimage", finalAvatar);
 } 
 
 // 3️⃣ If NEW user → insert with required columns
 else {
+  localStorage.setItem("userimage", avatar_url);
   await supabase
     .from("user")
     .insert({
@@ -54,11 +60,12 @@ else {
       // gender will take DEFAULT ('male')
       // timestamp will take DEFAULT (now())
     });
+
 }
       localStorage.setItem("role", "user");
       localStorage.setItem("userEmail", email);
       localStorage.setItem("username", name);
-      localStorage.setItem("userimage", avatar_url);
+      
 
       navigate("/movielistpage");
     };
