@@ -238,9 +238,16 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
 
                   <div className="reviews-item-content">
                     <div className="reviews-item-header">
-                      <p className="reviews-item-username">
-                        {reviews[0].user.name.split(" ")[0]}
-                      </p>
+                     <p
+                    className={
+                      reviews[0].email === user?.email
+                        ? "reviews-item-username your-username"
+                        : "reviews-item-username"
+                    }
+                  >
+                  {reviews[0].user.name.split(" ")[0]}
+                </p>
+                      
 
                       <p className="reviews-item-time">
                         {getTimeAgo(reviews[0].created_at)}
@@ -291,9 +298,15 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
 
                 <div className="reviews-item-content">
                   <div className="reviews-item-header">
-                    <p className="reviews-item-username">
-                      {review.user.name.split(" ")[0]}
-                    </p>
+                   <p
+                        className={
+                          review.email === user?.email
+                            ? "reviews-item-username your-username"
+                            : "reviews-item-username"
+                        }
+                      >
+                        {review.user.name.split(" ")[0]}
+                      </p>
 
                     <p className="reviews-item-time">
                       {getTimeAgo(review.created_at)}

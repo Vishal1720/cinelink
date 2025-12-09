@@ -594,3 +594,8 @@
 .reviews-delete-btn .material-symbols-outlined {
   font-size: 20px;
 }
+.your-username {
+  color: #5c9ce5;       /* Green or choose your color */
+  font-weight: 600;
+}
+
