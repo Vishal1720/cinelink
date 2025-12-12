@@ -187,6 +187,7 @@
     width: auto;
     flex-shrink: 0;
   }
+
 }
 
 .search-container {
@@ -388,3 +389,35 @@
 .text-glow {
   text-shadow: 0 0 8px rgba(37, 140, 244, 0.6);
 }
+@media (max-width: 650px) {
+
+  .genre-scroll-wrapper {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .genre-scroll {
+    overflow: auto !important;
+  }
+
+  .genre-buttons {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+  }
+
+  /* Ensure toggle buttons don't shrink */
+  .genre-toggle-button {
+    width: fit-content;
+    justify-content: space-between;
+  }
+}
+.genre-scroll-wrapper.collapsed {
+  max-height: 0 !important;
+  opacity: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+

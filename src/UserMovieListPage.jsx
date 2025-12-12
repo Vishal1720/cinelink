@@ -11,7 +11,15 @@ const UserMovieListPage = ({type}) => {
   const [selectedGenre, setSelectedGenre] = useState("All Genres");
   const [searchTerm, setSearchTerm] = useState("");
   const [genresExpanded, setGenresExpanded] = useState(true);
+  const [expandedFilter, setExpandedFilter] = useState(null);
   const navigate = useNavigate();
+const [selectedLanguage, setSelectedLanguage] = useState("All Languages");
+
+const [languages, setLanguages] = useState([]);
+
+
+const [languageExpanded, setLanguageExpanded] = useState(false);
+
 
   const fetchRatingSummary = async (movieId) => {
     const { data, error } = await supabase
@@ -106,6 +114,10 @@ const UserMovieListPage = ({type}) => {
           })
         );
         setMovies(moviesWithRatings);
+        const uniqueLanguages = ["All Languages", ...new Set(moviesWithRatings.map(m => m.language))];
+setLanguages(uniqueLanguages);
+
+
       }
     };
 
@@ -118,7 +130,11 @@ const UserMovieListPage = ({type}) => {
     const movieGenres = movie.genre_in_movies.map(g => g.genre_name);
     const matchesGenre = selectedGenre === "All Genres" || movieGenres.includes(selectedGenre);
     const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesGenre && matchesSearch;
+     const matchesLanguage = selectedLanguage === "All Languages" || movie.language === selectedLanguage;
+  
+ 
+  
+return matchesGenre && matchesSearch && matchesLanguage;
   });
 
   return (
@@ -127,46 +143,76 @@ const UserMovieListPage = ({type}) => {
       <main className="main-content">
         <div className="content-wrapper">
           <section className="filter-section">
-            <div className="filter-row">
-              <button 
-                className="genre-toggle-button" 
-                onClick={() => setGenresExpanded(!genresExpanded)}
-              >
-                <span>Genres</span>
-                <span className={`toggle-icon ${genresExpanded ? 'expanded' : ''}`}>
-                  ▼
-                </span>
-              </button>
-              
-              <div className="search-section">
-                <div className="search-container">
-                  <input
-                    className="search-input"
-                    placeholder="Search movies..."
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
+  <div className="filter-row">
+    <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1}}>
+      <button 
+        className="genre-toggle-button" 
+        onClick={() => setExpandedFilter(expandedFilter === 'genres' ? null : 'genres')}
+      >
+        <span>Genres</span>
+        <span className={`toggle-icon ${expandedFilter === 'genres' ? 'expanded' : ''}`}>
+          ▼
+        </span>
+      </button>
 
-            <div className={`genre-scroll-wrapper ${genresExpanded ? 'expanded' : 'collapsed'}`}>
-              <div className="genre-scroll">
-                <div className="genre-buttons">
-                  {genres.map((genre, index) => (
-                    <button
-                      key={index}
-                      className={selectedGenre === genre ? "genre-button active" : "genre-button"}
-                      onClick={() => setSelectedGenre(genre)}
-                    >
-                      <p className="genre-text">{genre}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
+      <button 
+        className="genre-toggle-button" 
+        onClick={() => setExpandedFilter(expandedFilter === 'language' ? null : 'language')}
+      >
+        <span>Language</span>
+        <span className={`toggle-icon ${expandedFilter === 'language' ? 'expanded' : ''}`}>
+          ▼
+        </span>
+      </button>
+    </div>
+    
+    <div className="search-section">
+      <div className="search-container">
+        <input
+          className="search-input"
+          placeholder="Search movies..."
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* Genres Content */}
+  <div className={`genre-scroll-wrapper ${expandedFilter === 'genres' ? 'expanded' : 'collapsed'}`}>
+    <div className="genre-scroll">
+      <div className="genre-buttons">
+        {genres.map((genre, index) => (
+          <button
+            key={index}
+            className={selectedGenre === genre ? "genre-button active" : "genre-button"}
+            onClick={() => setSelectedGenre(genre)}
+          >
+            <p className="genre-text">{genre}</p>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* Language Content */}
+  <div className={`genre-scroll-wrapper ${expandedFilter === 'language' ? 'expanded' : 'collapsed'}`}>
+    <div className="genre-scroll">
+      <div className="genre-buttons">
+        {languages.map((lang, index) => (
+          <button 
+            key={index} 
+            className={selectedLanguage === lang ? "genre-button active" : "genre-button"} 
+            onClick={() => setSelectedLanguage(lang)}
+          >
+            <p className="genre-text">{lang}</p>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
 
           <section className="movies-section">
             <div className="movies-grid">
