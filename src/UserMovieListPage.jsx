@@ -10,7 +10,6 @@ const UserMovieListPage = ({type}) => {
   const [movies, setMovies] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState("All Genres");
   const [searchTerm, setSearchTerm] = useState("");
-  const [genresExpanded, setGenresExpanded] = useState(true);
   const [expandedFilter, setExpandedFilter] = useState(null);
   const navigate = useNavigate();
 const [selectedLanguage, setSelectedLanguage] = useState("All Languages");
@@ -19,6 +18,11 @@ const [languages, setLanguages] = useState([]);
 
 
 const [languageExpanded, setLanguageExpanded] = useState(false);
+
+const [showRequestBox, setShowRequestBox] = useState(false);
+const [showRequestModal, setShowRequestModal] = useState(false);
+const [requestMessage, setRequestMessage] = useState("");
+
 
 
   const fetchRatingSummary = async (movieId) => {
@@ -136,7 +140,13 @@ setLanguages(uniqueLanguages);
   
 return matchesGenre && matchesSearch && matchesLanguage;
   });
-
+useEffect(() => {
+  if (searchTerm.trim() && filteredMovies.length === 0) {
+    setShowRequestBox(true);
+  } else {
+    setShowRequestBox(false);
+  }
+}, [searchTerm, filteredMovies]);
   return (
     <div>
       <UserHeader />
@@ -176,6 +186,14 @@ return matchesGenre && matchesSearch && matchesLanguage;
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
+      {showRequestBox && (
+  <div className="request-box">
+    <p>No results found for: <strong>{searchTerm}</strong></p>
+    <button className="request-btn" onClick={() => setShowRequestModal(true)}>
+      Request this movie/series
+    </button>
+  </div>
+)}
     </div>
   </div>
 
@@ -217,7 +235,7 @@ return matchesGenre && matchesSearch && matchesLanguage;
           <section className="movies-section">
             <div className="movies-grid">
               {filteredMovies.map((movie) => (
-                console.log(movie),
+             
                 <div key={movie.id} className="movie-card" onClick={() => showmovieDetails(movie.id)}>
                   <img
                     src={movie.poster_url}
@@ -249,6 +267,59 @@ return matchesGenre && matchesSearch && matchesLanguage;
           <a className="footer-link" href="#">Privacy Policy</a>
         </div>
       </footer>
+      {showRequestModal && (
+  <div className="modal-overlay">
+    <div className="modal">
+      <h3>Request Movie/Series</h3>
+      <p>Requested Title</p>
+      <input 
+        type="text" 
+        value={searchTerm} 
+        readOnly 
+        className="modal-input"
+      />
+
+      <p>Message (optional)</p>
+      <textarea 
+        className="modal-textarea"
+        value={requestMessage}
+        onChange={(e) => setRequestMessage(e.target.value)}
+      />
+
+      <div className="modal-buttons">
+        <button 
+          className="send-btn"
+          onClick={async () => {
+            const mail=localStorage.getItem("userEmail");
+            const {data,error}=await supabase.from("movie_req").insert({
+              email:mail,
+              subject: searchTerm,
+              desc: requestMessage
+            });
+            if(error){
+              alert(`Error submitting request. Please try again later.data tried to send :${mail} ${subject} ${desc}`);
+            
+            }
+            else{
+               setSearchTerm("");
+            setRequestMessage("");
+            alert("Request submitted!");
+           
+            }setShowRequestModal(false);
+            setRequestMessage("");
+          }}
+        >
+          Send Request
+        </button>
+
+        <button className="cancel-btn" onClick={() => setShowRequestModal(false)}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
