@@ -300,10 +300,10 @@ useEffect(() => {
                       position: 'absolute',
                       top: '0.75rem',
                       right: '0.75rem',
-                      width: '40px',
-                      height: '40px',
+                      width: '37px',
+                      height: '37px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                     
                       border: 'none',
                       cursor: 'pointer',
                       display: 'flex',
@@ -311,12 +311,13 @@ useEffect(() => {
                       justifyContent: 'center',
                       fontSize: '1.25rem',
                       opacity:
-  watchlistIds.has(movie.id) || window.innerWidth <= 768 || hoveredMovie === movie.id
-    ? 1
-    : 0,
+                      watchlistIds.has(movie.id) || window.innerWidth <= 768 || hoveredMovie === movie.id
+                      ? 1
+                      : 0,
                       transition: 'opacity 0.3s, transform 0.2s',
                       zIndex: 2,
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                      boxShadow: window.innerWidth <= 768?'0 2px 8px rgba(0,0,0,0)':'0 2px 8px rgba(0,0,0,1)',
+                      backgroundColor:window.innerWidth <= 768?'rgba(255, 255, 255, 0)': 'rgba(255, 255, 255, 0.8)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'scale(1.1)';
@@ -325,7 +326,7 @@ useEffect(() => {
                       e.currentTarget.style.transform = 'scale(1)';
                     }}
                   >
-                    <img src={watchlistIds.has(movie.id) ? filledImg : emptyImg} alt="Watchlist Icon" style={{ width: '24px', height: '24px' }} />
+                    <img src={watchlistIds.has(movie.id) ? filledImg : emptyImg} alt="Watchlist Icon" style={{ width: '26px', height: '26px' }} />
                   </button>
                   
                   <img
