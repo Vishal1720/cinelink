@@ -4,6 +4,9 @@ import UserHeader from "./UserHeader";
 import { supabase } from './supabase';
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import emptyImg from "./assets/icons/unfilled.png";
+import filledImg from "./assets/icons/filled.png";
+
 
 const UserMovieListPage = ({type}) => {
   const [genres, setGenres] = useState([]);
@@ -22,8 +25,58 @@ const [languageExpanded, setLanguageExpanded] = useState(false);
 const [showRequestBox, setShowRequestBox] = useState(false);
 const [showRequestModal, setShowRequestModal] = useState(false);
 const [requestMessage, setRequestMessage] = useState("");
+const [hoveredMovie, setHoveredMovie] = useState(null);
 
+const [watchlistIds, setWatchlistIds] = useState(new Set());
 
+//we are storing watchlist ids in a set so it can be filled or empty
+const fetchWatchlist = async () => {
+  const mail = localStorage.getItem("userEmail")?.trim();
+  if (!mail) return;
+
+  const { data, error } = await supabase
+    .from("watchlist")
+    .select("movie_id")
+    .eq("email", mail);
+
+  if (!error && data) {
+    setWatchlistIds(new Set(data.map(w => w.movie_id)));
+  }
+};
+
+const handleWatchlistClick = async (e, movieId) => {
+    e.stopPropagation(); // Prevent navigation to movie details
+     const mail = localStorage.getItem("userEmail");
+     if (!mail) return;
+ const isInWatchlist = watchlistIds.has(movieId);
+     setWatchlistIds(prev => {
+    const updated = new Set(prev);
+    isInWatchlist ? updated.delete(movieId) : updated.add(movieId);
+    return updated;
+  });
+if (isInWatchlist) {
+    // REMOVE
+    const { error } = await supabase
+      .from("watchlist")
+      .delete()
+      .eq("email",mail)
+      .eq("movie_id",movieId);
+
+    if (error) console.error("Remove error:", error);
+  } else {
+    // ADD
+    const { error } = await supabase
+      .from("watchlist")
+      .insert({
+        email: mail,
+        movie_id: movieId
+      });
+
+    if (error) console.error("Insert error:", error);
+  }
+   
+  }
+  
 
   const fetchRatingSummary = async (movieId) => {
     const { data, error } = await supabase
@@ -127,6 +180,7 @@ setLanguages(uniqueLanguages);
 
     fetchGenres();
     fetchMovies();
+    fetchWatchlist();
   }, [type]);
 
   // Filter movies based on selected genre and search text
@@ -236,7 +290,41 @@ useEffect(() => {
             <div className="movies-grid">
               {filteredMovies.map((movie) => (
              
-                <div key={movie.id} className="movie-card" onClick={() => showmovieDetails(movie.id)}>
+                <div key={movie.id} className="movie-card" onClick={() => showmovieDetails(movie.id)} onMouseEnter={() => setHoveredMovie(movie.id)}
+                  onMouseLeave={() => setHoveredMovie(null)}
+                  style={{ position: 'relative' }}>
+                 <button
+                    onClick={(e) => handleWatchlistClick(e, movie.id)}
+                    className="watchlist-heart-btn"
+                    style={{
+                      position: 'absolute',
+                      top: '0.75rem',
+                      right: '0.75rem',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '1.25rem',
+                      opacity: hoveredMovie === movie.id ? 1 : 0,
+                      transition: 'opacity 0.3s, transform 0.2s',
+                      zIndex: 2,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <img src={watchlistIds.has(movie.id) ? filledImg : emptyImg} alt="Watchlist Icon" style={{ width: '24px', height: '24px' }} />
+                  </button>
+                  
                   <img
                     src={movie.poster_url}
                     alt={`Movie poster for ${movie.title}`}
