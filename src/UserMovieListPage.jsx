@@ -133,9 +133,9 @@ setLanguages(uniqueLanguages);
   const filteredMovies = movies.filter(movie => {
     const movieGenres = movie.genre_in_movies.map(g => g.genre_name);
     const matchesGenre = selectedGenre === "All Genres" || movieGenres.includes(selectedGenre);
-    const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase());
-     const matchesLanguage = selectedLanguage === "All Languages" || movie.language === selectedLanguage;
-  
+    const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase()) || movie.language?.toLowerCase() === searchTerm.toLowerCase() || movie.year=== searchTerm.toLowerCase() ;
+    const matchesLanguage = selectedLanguage === "All Languages" || movie.language === selectedLanguage;
+    
  
   
 return matchesGenre && matchesSearch && matchesLanguage;
