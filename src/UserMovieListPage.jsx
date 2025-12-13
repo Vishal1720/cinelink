@@ -310,7 +310,10 @@ useEffect(() => {
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '1.25rem',
-                      opacity: hoveredMovie === movie.id ? 1 : 0,
+                      opacity:
+  watchlistIds.has(movie.id) || window.innerWidth <= 768 || hoveredMovie === movie.id
+    ? 1
+    : 0,
                       transition: 'opacity 0.3s, transform 0.2s',
                       zIndex: 2,
                       boxShadow: '0 2px 8px rgba(0,0,0,0.3)'

@@ -90,7 +90,8 @@ const isActive = (path) =>
           <Link to="/movielistpage" className={`nav-link ${isActive('/movielistpage')}`}>Home</Link>
           <Link to="/moviespage" className={`nav-link ${isActive('/moviespage')}`}>Movies</Link>
           <Link to="/seriespage" className={`nav-link ${isActive('/seriespage')}`}>Series</Link>
-          <a href="#" className="nav-link">Lists</a>
+          <Link to="/watchlist" className={`nav-link ${isActive('/watchlist')}`}>Watchlist</Link>
+      
         </nav>
         
         <div className="header-right">
@@ -158,7 +159,9 @@ const isActive = (path) =>
           <Link to="/seriespage" className={`sidebar-link ${isActive('/seriespage')}`} onClick={closeSidebar}>
             Series
           </Link>
-          
+          <Link to="/watchlist" className={`sidebar-link ${isActive('/watchlist')}`} onClick={closeSidebar}>
+            Watchlist
+          </Link>
           <button onClick={handleLogout} className="sidebar-logout-button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
