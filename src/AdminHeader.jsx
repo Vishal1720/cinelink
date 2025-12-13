@@ -26,6 +26,10 @@ const imgSrc = userimg || defaultAvatar;
     navigate("/adminpage");
   };
 
+  const user_analytics = () => {
+    setIsMenuOpen(false);
+    navigate("/useranalytics");
+  };
   const logout = () => {
     localStorage.clear();
     navigate("/Login");
@@ -88,7 +92,7 @@ const isActive = (path) =>
               </button>
             </li>
             <li>
-              <button className="admin-nav-item" onClick={toggleMenu}>
+              <button className="admin-nav-item" onClick={user_analytics}>
                 <span className="admin-icon">👥</span>
                 Users
               </button>
