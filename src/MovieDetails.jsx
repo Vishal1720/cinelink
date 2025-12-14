@@ -18,6 +18,7 @@ const MovieDetails = () => {
 
 
 
+
   const [ratingCategories, setRatingCategories] = useState([]);//for pie chart
 const pieData = ratingCategories.map((cat) => ({
   id: cat.id ,
@@ -55,7 +56,7 @@ const fetchReviewCounts = async () => {
           counts[catId] = await countCategoryById(id, catId);
         }
         setReviewCounts(counts);
-        console.log("Review Counts:", counts)
+     
       };
 
   useEffect(() => {
@@ -132,7 +133,7 @@ const fetchReviewCounts = async () => {
 
   const handleRating = (rating) => {
     setSelectedRating(rating);
-    console.log(`Rated as: ${rating}`);
+
   };
 
   const getOttIcon = (ottName) => {
@@ -240,35 +241,6 @@ const fetchReviewCounts = async () => {
               </div>
             </div>
 
-            {/* <div className="moviedetails-rating-section">
-              <h3>Rate this movie</h3>
-              <div className="moviedetails-rating-buttons">
-                <button 
-                  className={`moviedetails-rating-btn moviedetails-rating-unbearable ${selectedRating === 'Unbearable' ? 'moviedetails-selected' : ''}`}
-                  onClick={() => handleRating('Unbearable')}
-                >
-                  <span className="moviedetails-emoji">😫</span> Unbearable
-                </button>
-                <button 
-                  className={`moviedetails-rating-btn moviedetails-rating-onetime ${selectedRating === 'One Time Watch' ? 'moviedetails-selected' : ''}`}
-                  onClick={() => handleRating('One Time Watch')}
-                >
-                  <span className="moviedetails-emoji">👍</span> One Time Watch
-                </button>
-                <button 
-                  className={`moviedetails-rating-btn moviedetails-rating-amazing ${selectedRating === 'Amazing' ? 'moviedetails-selected' : ''}`}
-                  onClick={() => handleRating('Amazing')}
-                >
-                  <span className="moviedetails-emoji">🤩</span> Amazing
-                </button>
-                <button 
-                  className={`moviedetails-rating-btn moviedetails-rating-masterpiece ${selectedRating === 'Masterpiece' ? 'moviedetails-selected' : ''}`}
-                  onClick={() => handleRating('Masterpiece')}
-                >
-                  <span className="moviedetails-emoji">🏆</span> Masterpiece
-                </button>
-              </div>
-            </div> */}
           </div>
         </div>
        
@@ -292,11 +264,6 @@ const fetchReviewCounts = async () => {
             ))}
           </div>
         </div>)}
- {/* {totalReviews > 0 ? (
-  <RatingDonutChart data={pieData} />
-) : (
-  <div className="moviedetails-no-reviews">No reviews available yet.</div>
-)} */}
 
         <ReviewsSection movieId={id} pieData={pieData} totalreviews={totalReviews}/>
       </div>
