@@ -25,19 +25,52 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
   fetchReviews(); // refresh list
 };
 
+const fetchUserRanks = async (emails) => {
+  if (emails.length === 0) return {};
+
+  const { data, error } = await supabase
+    .from('user_analytics')
+    .select('email, position')
+    .in('email', emails);
+
+  if (error) {
+    console.error(error);
+    return {};
+  }
+
+  const rankMap = {};
+  data.forEach(row => {
+    //email key and position is value
+    rankMap[row.email] = row.position;
+  });
+
+  return rankMap;
+};
+
 
   // Fetch user
   const getUser = async () => {
     const email = localStorage.getItem("userEmail");
     if (!email) return;
-
+    console.log(email);
     const { data, error } = await supabase
       .from("user")
-      .select("*")
+      .select("*")//alias userRank
       .eq("email", email)
       .single();
 
-    if (!error) setUser(data);
+    if (!error) {setUser(data);}
+
+    const {data:rankData, error:rankError} = await supabase
+    .from('user_analytics')
+    .select('position')
+    .eq('email', email)
+    .single();
+    if (!rankError && rankData) {
+      setUser(prevUser => ({ ...prevUser, userRank: rankData.position }));
+      console.log("User rank:", rankData.position);
+    }
+   
   };
 
   useEffect(() => {
@@ -66,15 +99,18 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
+      //  create emails array
+    const emails = [...new Set(data.map(r => r.email))];
 
+const rankMap = await fetchUserRanks(emails);
       const reviewsWithLikes = await Promise.all(
         data.map(async (review) => {
           const { count } = await supabase
             .from('like_in_reviews')
             .select('*', { count: 'exact', head: true })
             .eq('review_id', review.id);
-
-          return { ...review, likes: count || 0 };
+//added rank too in reviews
+          return { ...review, likes: count || 0,userRank: rankMap[review.email] || null };
         })
       );
 
@@ -169,10 +205,18 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
           <div className="reviews-new-review">
             <img
               src={user?.avatar_url || "/default-avatar.png"}
-              className="reviews-item-avatar"
+               className={`reviews-item-avatar ${
+    user?.userRank === 1
+      ? "top-1"
+      : user?.userRank === 2
+      ? "top-2"
+      : user?.userRank === 3
+      ? "top-3"
+      : ""
+  }`}
               alt=""
             />
-
+            {}
             <div className="reviews-form-container">
               <textarea
                 className="reviews-textarea"
@@ -230,12 +274,32 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
             {AlreadyReviewed && (
               <div className="reviews-first-row">
                 <div className="reviews-item first-review">
+                   <div className="reviews-avatar-wrapper">
                   <img
                     src={reviews[0].user?.avatar_url || "/default-avatar.png"}
-                    className="reviews-item-avatar"
+                    className={`reviews-item-avatar ${
+    reviews[0].userRank === 1
+      ? "top-1"
+      : reviews[0].userRank === 2
+      ? "top-2"
+      : reviews[0].userRank === 3
+      ? "top-3"
+      : ""
+  }`}
                     alt=""
                   />
-
+                {reviews[0].userRank && (
+  reviews[0].userRank === 1 ? (
+    <span className="rank-badge gold">1</span>
+  ) : reviews[0].userRank === 2 ? (
+    <span className="rank-badge silver">2</span>
+  ) : reviews[0].userRank === 3 ? (
+    <span className="rank-badge bronze">3</span>
+  ) : reviews[0].userRank <=10 ? (
+    <span className="rank-badge">{reviews[0].userRank}</span>
+  ) : null
+)}
+                </div>
                   <div className="reviews-item-content">
                     <div className="reviews-item-header">
                      <p
@@ -247,6 +311,7 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
                   >
                   {reviews[0].user.name.split(" ")[0]}
                 </p>
+                
                       
 
                       <p className="reviews-item-time">
@@ -290,12 +355,34 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
             {/* ⭐ Remaining reviews */}
             {reviews.slice(AlreadyReviewed ? 1 : 0).map((review) => (
               <div key={review.id} className="reviews-item">
+
+                <div className="reviews-avatar-wrapper">
                 <img
                   src={review.user?.avatar_url || "/default-avatar.png"}
-                  className="reviews-item-avatar"
+                 className={`reviews-item-avatar ${
+    review.userRank === 1
+      ? "top-1"
+      : review.userRank === 2
+      ? "top-2"
+      : review.userRank === 3
+      ? "top-3"
+      : ""
+  }`}
                   alt=""
                 />
+                {review.userRank && (
+  review.userRank === 1 ? (
+    <span className="rank-badge gold">1</span>
+  ) : review.userRank === 2 ? (
+    <span className="rank-badge silver">2</span>
+  ) : review.userRank === 3 ? (
+    <span className="rank-badge bronze">3</span>
+  ) : review.userRank <= 10 ? (
+    <span className="rank-badge">{review.userRank}</span>
+  ) : null
+)}
 
+                  </div>
                 <div className="reviews-item-content">
                   <div className="reviews-item-header">
                    <p
@@ -306,6 +393,8 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
                         }
                       >
                         {review.user.name.split(" ")[0]}
+                        
+
                       </p>
 
                     <p className="reviews-item-time">
