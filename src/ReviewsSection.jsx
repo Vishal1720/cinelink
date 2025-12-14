@@ -337,6 +337,7 @@ const rankMap = await fetchUserRanks(emails);
                     <button
                     className="reviews-like-btn"
                     onClick={() => handleLikeReview(reviews[0].id)}
+                    disabled={ reviews[0].email === user?.email}
                   >
                 
                     <span className="material-symbols-outlined">favorite</span>
@@ -419,6 +420,7 @@ const rankMap = await fetchUserRanks(emails);
                   <button
                     className="reviews-like-btn"
                     onClick={() => handleLikeReview(review.id)}
+                    disabled={ review.email === user?.email}
                   >
                   
 
