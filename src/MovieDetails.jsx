@@ -251,12 +251,13 @@ const fetchReviewCounts = async () => {
           <div className="moviedetails-cast-list">
             {cast.map((member, index) => (
               <div key={index} className="moviedetails-cast-member">
-                <div
-                  className="moviedetails-cast-avatar"
-                  style={{
-                    backgroundImage: `url(${member.cast?.avatar_url || 'https://via.placeholder.com/144'})`
-                  }}
-                ></div>
+            <img
+  className="moviedetails-cast-avatar"
+  src={member.cast?.avatar_url || 'https://via.placeholder.com/144'}
+  alt={member.cast?.cast_name || "Cast member"}
+  loading="lazy"
+/>
+
                 <p className="moviedetails-cast-name">{member.cast?.cast_name}</p>
                { member.role_in_movie && (
                 <p className="moviedetails-cast-role">as {member.role_in_movie}</p>)}
