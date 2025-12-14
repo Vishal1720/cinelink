@@ -4,7 +4,7 @@ import './AdminUserAnalytics.css';
 import AdminHeader from './AdminHeader';
 const AdminUserAnalytics = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [topReviewer, setTopReviewer] = useState(null);
   const [topLiked, setTopLiked] = useState(null);
@@ -13,6 +13,23 @@ const AdminUserAnalytics = () => {
   (sum, user) => sum + user.total_reviews,
   0
 );
+
+const totalMasterpiece = users.reduce(
+  (sum, u) => sum + (u.masterpiece || 0),
+  0
+);
+
+const totalAmazing = users.reduce(
+  (sum, u) => sum + (u.amazing || 0),
+  0
+);
+
+
+
+const sentimentBalance =
+  totalReviewsSum > 0
+    ? (((totalMasterpiece + totalAmazing) / totalReviewsSum) * 100).toFixed(1)
+    : 0;
 
   useEffect(() => {
     const fetchUserAnalytics = async () => {
@@ -36,7 +53,7 @@ const AdminUserAnalytics = () => {
           setTopLiked(mostLiked);
         }
       }
-      setLoading(false);
+      
     };
 
     fetchUserAnalytics();
@@ -47,13 +64,7 @@ const AdminUserAnalytics = () => {
     user.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) {
-    return (
-      <div className="analytics-loading">
-        <p>Loading analytics...</p>
-      </div>
-    );
-  }
+  
 
   return (<div style={{display:"flex"}}>
     <AdminHeader />
@@ -112,17 +123,17 @@ const AdminUserAnalytics = () => {
         {/* Stats Grid */}
         <div className="stats-grid">
           <div className="stat-card">
-            <p className="stat-label">Total Active Reviewers</p>
+            <p className="stat-label">Total Users</p>
             <p className="stat-value">{users.length.toLocaleString()}</p>
-            <div className="stat-badge badge-green">
+            {/* <div className="stat-badge badge-green">
               <span>📈</span>
               <span>+5% this week</span>
-            </div>
+            </div> */}
           </div>
 
           <div className="stat-card">
             <p className="stat-label">Sentiment Balance</p>
-            <p className="stat-value">68%</p>
+            <p className="stat-value">{sentimentBalance}% </p>
             <div className="stat-badge badge-green">
               <span>↗️</span>
               <span>Positive Trend</span>
