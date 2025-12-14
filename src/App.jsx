@@ -12,6 +12,7 @@ import UserMovieListPage from "./UserMovieListPage";
 import ReviewsSection from "./ReviewsSection";
 import GoogleCallback from "./GoogleCallback";
 import Watchlist from "./Watchlist";
+import EditUserPage from "./EditUserPage";
 function App() {
   
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/google-callback" element={<GoogleCallback />} />
           <Route path="/watchlist" element={<Watchlist type="Watchlist"/>} />
           <Route path="/useranalytics" element={<AdminUserAnalytics/>} />
+          <Route path="/profile" element={<EditUserPage/>}/>
       </Routes>
     </BrowserRouter>
   );

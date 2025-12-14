@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import './UserHeader.css';
+
 const UserHeader = () => {
   const role = localStorage.getItem("role");
   const navigate = useNavigate();
+  const location = useLocation();
   
   if (role !== "user") {
     navigate("/Login");
@@ -13,13 +15,32 @@ const UserHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showLogoutMenu, setShowLogoutMenu] = useState(false);
   
-  // selecting tab when page change
-const isActive = (path) =>
-  location.pathname === path ? "active" : "";
+  // Ref for click outside detection
+  const menuRef = useRef(null);
+  
+  const isActive = (path) => location.pathname === path ? "active" : "";
 
   const defaultAvatar =
     "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
   const storedImg = localStorage.getItem("userimage");
+  const userName = localStorage.getItem("username") || "User";
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowLogoutMenu(false);
+      }
+    };
+
+    if (showLogoutMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showLogoutMenu]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -30,14 +51,17 @@ const isActive = (path) =>
   };
 
   const handleLogout = () => {
-    // Clear session storage
     localStorage.clear();
-    // Navigate to login page
     navigate("/Login");
   };
 
   const toggleLogoutMenu = () => {
     setShowLogoutMenu(!showLogoutMenu);
+  };
+
+  const handleProfileClick = () => {
+    setShowLogoutMenu(false);
+    navigate("/profile");
   };
 
   return (
@@ -91,11 +115,10 @@ const isActive = (path) =>
           <Link to="/moviespage" className={`nav-link ${isActive('/moviespage')}`}>Movies</Link>
           <Link to="/seriespage" className={`nav-link ${isActive('/seriespage')}`}>Series</Link>
           <Link to="/watchlist" className={`nav-link ${isActive('/watchlist')}`}>Watchlist</Link>
-      
         </nav>
         
         <div className="header-right">
-          <div className="user-menu-container">
+          <div className="user-menu-container" ref={menuRef}>
             <button
               className="user-avatar"
               onClick={toggleLogoutMenu}
@@ -107,6 +130,25 @@ const isActive = (path) =>
             
             {showLogoutMenu && (
               <div className="logout-menu">
+                {/* Profile Button */}
+                <button onClick={handleProfileClick} className="logout-button">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="logout-icon"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  Profile
+                </button>
+                
+                {/* Logout Button */}
                 <button onClick={handleLogout} className="logout-button">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +192,7 @@ const isActive = (path) =>
         </div>
         
         <nav className="sidebar-nav">
-          <Link to="/movielistpage"  className={`sidebar-link ${isActive('/movielistpage')}`} onClick={closeSidebar}>
+          <Link to="/movielistpage" className={`sidebar-link ${isActive('/movielistpage')}`} onClick={closeSidebar}>
             Home
           </Link>
           <Link to="/moviespage" className={`sidebar-link ${isActive('/moviespage')}`} onClick={closeSidebar}>
@@ -162,6 +204,12 @@ const isActive = (path) =>
           <Link to="/watchlist" className={`sidebar-link ${isActive('/watchlist')}`} onClick={closeSidebar}>
             Watchlist
           </Link>
+          
+          {/* Profile in Sidebar */}
+          <Link to="/profile" className={`sidebar-link ${isActive('/profile')}`} onClick={closeSidebar}>
+            Profile
+          </Link>
+          
           <button onClick={handleLogout} className="sidebar-logout-button">
             <svg
               xmlns="http://www.w3.org/2000/svg"

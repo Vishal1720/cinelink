@@ -14,7 +14,8 @@ const renderEmojiLabel = ({
   innerRadius,
   outerRadius,
   emoji,
-  percent
+  percent,
+  fontSize = 20
 }) => {
   if (percent === 0) return null; // don't show label for 0%
 
@@ -29,14 +30,18 @@ const renderEmojiLabel = ({
       y={y}
       textAnchor="middle"
       dominantBaseline="central"
-      fontSize="20px"
+      fontSize={`${fontSize}px`}
     >
       {emoji}
     </text>
   );
 };
 
-export default function RatingDonutChart({ data }) {
+export default function RatingDonutChart({ 
+  data, 
+  width = 165, 
+  height = 165 
+}) {
   const totalVotes = data.reduce((sum, d) => sum + d.value, 0);
 
   // Find highest category
@@ -49,20 +54,28 @@ export default function RatingDonutChart({ data }) {
   const percent =
     totalVotes === 0 ? 0 : Math.round((top.value / totalVotes) * 100);
 
+  // Calculate scaled dimensions
+  const scale = width / 165; // Base size is 165
+  const innerRadius = 55 * scale;
+  const outerRadius = 79 * scale;
+  const centerFontSize = 28 * scale;
+  const labelFontSize = 16 * scale;
+  const emojiFontSize = 20 * scale;
+
   return (
     <div style={{ textAlign: "center", marginTop: "0px" }}>
       <div style={{ position: "relative", display: "inline-block" }}>
-        <PieChart width={165} height={165}>
+        <PieChart width={width} height={height}>
           <Pie
             data={data}
             dataKey="value"
             cx="50%"
             cy="50%"
-            innerRadius={55}
-            outerRadius={79}
+            innerRadius={innerRadius}
+            outerRadius={outerRadius}
             stroke="none"
             paddingAngle={2}
-            label={renderEmojiLabel}
+            label={(props) => renderEmojiLabel({ ...props, fontSize: emojiFontSize })}
             labelLine={false}
           >
             {data.map((entry) => (
@@ -82,12 +95,12 @@ export default function RatingDonutChart({ data }) {
             color: "white",
           }}
         >
-          <div style={{ fontSize: "28px", fontWeight: "bold" }}>
+          <div style={{ fontSize: `${centerFontSize}px`, fontWeight: "bold" }}>
             {percent}%
           </div>
 
           {top && (
-            <div style={{ fontSize: "16px", opacity: 0.9 }}>
+            <div style={{ fontSize: `${labelFontSize}px`, opacity: 0.9 }}>
               {top.emoji} {top.name}
             </div>
           )}
