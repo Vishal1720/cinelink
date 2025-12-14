@@ -416,20 +416,14 @@ const EditUserPage = () => {
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
 
-              <div className="eup-button-row">
-                <label className="eup-btn-secondary" htmlFor="avatar-input">
+           
+                <label className="eup-btn-secondary" style={{width:""}} htmlFor="avatar-input">
                   <span className="material-symbols-outlined">upload</span>
                   <span>New Avatar</span>
                 </label>
 
-                <button 
-                  className="eup-btn-danger"
-                  onClick={handleRemoveAvatar}
-                >
-                  <span className="material-symbols-outlined">delete</span>
-                  <span>Remove</span>
-                </button>
-              </div>
+                
+          
             </div>
           </div>
         </section>
