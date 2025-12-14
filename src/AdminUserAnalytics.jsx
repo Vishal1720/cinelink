@@ -188,23 +188,23 @@ const AdminUserAnalytics = () => {
                     </div>
                   </div>
 
-                  <div className="col-center">
+                  <div className="col-center" data-label="Total Reviews">
                     <span className="badge">{user.total_reviews}</span>
                   </div>
 
-                  <div className="col-center">
+                  <div className="col-center" data-label="Masterpiece">
                     <span className="value-bold">{user.masterpiece}</span>
                   </div>
 
-                  <div className="col-center">
+                  <div className="col-center" data-label="Amazing">
                     <span className="value-normal">{user.amazing}</span>
                   </div>
 
-                  <div className="col-center">
+                  <div className="col-center" data-label="One Time">
                     <span className="value-muted">{user.one_time}</span>
                   </div>
 
-                  <div className="col-center">
+                  <div className="col-center" data-label="Unbearable">
                     {user.unbearable > 50 ? (
                       <span className="badge-danger">{user.unbearable}</span>
                     ) : (
@@ -240,13 +240,13 @@ const AdminUserAnalytics = () => {
           </div>
 
           {/* Pagination */}
-          <div className="table-pagination">
+          {/*<div className="table-pagination">
             <div className="pagination-info">
               Showing <span className="text-white">1</span> to{' '}
               <span className="text-white">{Math.min(filteredUsers.length, 10)}</span> of{' '}
               <span className="text-white">{filteredUsers.length}</span> results
             </div>
-            <div className="pagination-controls">
+             <div className="pagination-controls">
               <button className="pagination-btn" disabled>
                 <span>‹</span>
               </button>
@@ -258,8 +258,8 @@ const AdminUserAnalytics = () => {
               <button className="pagination-btn">
                 <span>›</span>
               </button>
-            </div>
-          </div>
+            </div> 
+          </div>*/}
         </div>
       </div>
     </div>
