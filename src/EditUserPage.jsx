@@ -178,7 +178,7 @@ const EditUserPage = () => {
         //removing old avatar
         if (userDetails.avatar_url) {
     await deleteOldAvatar(userDetails.avatar_url);
-    alert("Deleted old avatara")
+ 
   }
             //new avatar adding
         avatarUrl = await handleAvatarUpload();
@@ -341,7 +341,7 @@ const EditUserPage = () => {
           </div>
 
           {/* Edit Form */}
-          <div className="eup-edit-panel">
+          <div className="eup-edit-panel" >
             <div className="eup-panel-header">
               <div className="eup-header-icon">
                 <span className="material-symbols-outlined">tune</span>
@@ -352,7 +352,7 @@ const EditUserPage = () => {
               </div>
             </div>
 
-            <div className="eup-form-container">
+            <div className="eup-form-container" >
               {/* Display Name */}
               <div className="eup-form-group">
                 <label>Display Name</label>
