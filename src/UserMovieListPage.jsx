@@ -29,6 +29,54 @@ const [hoveredMovie, setHoveredMovie] = useState(null);
 
 const [watchlistIds, setWatchlistIds] = useState(new Set());
 
+const [sortBy, setSortBy] = useState("name-asc");
+const sortMovies = (list) => {
+   
+  
+  return [...list].sort((a, b) => {
+    switch (sortBy) {
+      case "name-asc":
+        return a.title.localeCompare(b.title);
+      case "name-desc":
+        return b.title.localeCompare(a.title);
+
+      case "year-asc":
+        return (a.year || 0) - (b.year || 0);
+      case "year-desc":
+        return (b.year || 0) - (a.year || 0);
+
+     case "rating-asc": {
+  const catDiff =
+    (a.ratingSummary?.ratingCatId ?? 0) -
+    (b.ratingSummary?.ratingCatId ?? 0);
+
+  // if same category, sort by percentage
+  if (catDiff !== 0) return catDiff;
+
+  return (a.ratingSummary?.percentage ?? 0) -
+         (b.ratingSummary?.percentage ?? 0);
+}
+
+case "rating-desc": {
+  const catDiff =
+    (b.ratingSummary?.ratingCatId ?? 0) -
+    (a.ratingSummary?.ratingCatId ?? 0);
+
+  // if same category, sort by percentage
+  if (catDiff !== 0) return catDiff;
+
+  return (b.ratingSummary?.percentage ?? 0) -
+         (a.ratingSummary?.percentage ?? 0);
+}
+
+      default:
+        return 0;
+     
+    }
+  });
+};
+
+
 //we are storing watchlist ids in a set so it can be filled or empty
 const fetchWatchlist = async () => {
   const mail = localStorage.getItem("userEmail")?.trim();
@@ -98,11 +146,13 @@ if (isInWatchlist) {
     const total = data.length;
     const countMap = {};
     const emojiMap = {};
-    
+    const idMap = {};
+
     data.forEach((r) => {
       const cat = r.rating_cat.cat_name;
       countMap[cat] = (countMap[cat] || 0) + 1;
       emojiMap[cat] = r.rating_cat.cat_emoji;
+        idMap[cat] = r.rating_cat.id;
     });
 
     // Find highest
@@ -121,7 +171,8 @@ if (isInWatchlist) {
     return {
       category: bestCat,
       percentage: Math.round((bestCount / total) * 100),
-      emoji_pic: emoji
+      emoji_pic: emoji,
+      ratingCatId: idMap[bestCat]
     };
   };
 
@@ -171,29 +222,41 @@ if (isInWatchlist) {
           })
         );
         setMovies(moviesWithRatings);
+       
         const uniqueLanguages = ["All Languages", ...new Set(moviesWithRatings.map(m => m.language))];
 setLanguages(uniqueLanguages);
-
+          
 
       }
+      
     };
 
     fetchGenres();
     fetchMovies();
     fetchWatchlist();
+    
   }, [type]);
 
   // Filter movies based on selected genre and search text
-  const filteredMovies = movies.filter(movie => {
+  const filteredMovies = sortMovies(
+  movies.filter(movie => {
     const movieGenres = movie.genre_in_movies.map(g => g.genre_name);
-    const matchesGenre = selectedGenre === "All Genres" || movieGenres.includes(selectedGenre);
-    const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase()) || movie.language?.toLowerCase() === searchTerm.toLowerCase() || movie.year=== searchTerm.toLowerCase() ;
-    const matchesLanguage = selectedLanguage === "All Languages" || movie.language === selectedLanguage;
-    
- 
-  
-return matchesGenre && matchesSearch && matchesLanguage;
-  });
+    const matchesGenre =
+      selectedGenre === "All Genres" ||  movieGenres.some(g => g.toLowerCase().includes(selectedGenre.toLowerCase()));;
+
+    const matchesSearch =
+      movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      movie.language?.toLowerCase() === searchTerm.toLowerCase() ||
+      movieGenres.some(g => g.toLowerCase()===searchTerm.toLowerCase());
+      movie.year?.toString() === searchTerm;
+   
+    const matchesLanguage =
+      selectedLanguage === "All Languages" || movie.language === selectedLanguage;
+
+    return matchesGenre && matchesSearch && matchesLanguage;
+  })
+);
+
 useEffect(() => {
   if (searchTerm.trim() && filteredMovies.length === 0) {
     setShowRequestBox(true);
@@ -240,6 +303,32 @@ useEffect(() => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
+     <div className="sort-wrapper">
+  <button
+    className="sort-icon-btn"
+    onClick={() =>
+      setExpandedFilter(expandedFilter === "sort" ? null : "sort")
+    }
+    title="Sort"
+  >
+    ⬍
+  </button>
+
+  {expandedFilter === "sort" && (
+    <div className="sort-menu">
+      <button onClick={() => {setSortBy("name-asc");setExpandedFilter(null)}}>Name ↑</button>
+      <button onClick={() => {setSortBy("name-desc");setExpandedFilter(null)}}>Name ↓</button>
+
+      <button onClick={() => {setSortBy("year-asc");setExpandedFilter(null)}}>Year ↑</button>
+      <button onClick={() => {setSortBy("year-desc");setExpandedFilter(null)}}>Year ↓</button>
+
+      <button onClick={() => {setSortBy("rating-asc");setExpandedFilter(null)}}>Rating ↑</button>
+      <button onClick={() => {setSortBy("rating-desc");setExpandedFilter(null)}}>Rating ↓</button>
+    </div>
+  )}
+</div>
+
+
       {showRequestBox && (
   <div className="request-box">
     <p>No results found for: <strong>{searchTerm}</strong></p>
