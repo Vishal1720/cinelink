@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabase';
 import RatingDonutChart from "./RatingDonutChart";
 import './ReviewsSection.css';
-
+import TypewriterText from './TypeWritertext';
 import { generateReviewSummary } from "./gemini";
 
 const ReviewsSection = ({ movieId, pieData,totalreviews,summary,moviename,type }) => {
@@ -276,7 +276,9 @@ saveAiSummaryToMovie(summary);
     {aiError && <p className="ai-error">{aiError}</p>}
 
     {aiSummary && (
-      <p className="ai-summary-text">{aiSummary}</p>
+      <p className="ai-summary-text typewriter"> 
+      <TypewriterText text={aiSummary} speed={20} />
+      </p>
     )}
   </div>
 )}
