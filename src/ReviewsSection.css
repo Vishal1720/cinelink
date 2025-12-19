@@ -710,3 +710,18 @@
               0 0 5px rgba(205,127,50,0.6);
   animation:bronzePulse 2s infinite;
 }
+.reviews-ai-summary {
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.ai-loading {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.ai-summary-text {
+  line-height: 1.6;
+}

@@ -3,7 +3,9 @@ import { supabase } from './supabase';
 import RatingDonutChart from "./RatingDonutChart";
 import './ReviewsSection.css';
 
-const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
+import { generateReviewSummary } from "./gemini";
+
+const ReviewsSection = ({ movieId, pieData,totalreviews,summary,moviename,type }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newReview, setNewReview] = useState('');
@@ -11,6 +13,13 @@ const ReviewsSection = ({ movieId, pieData,totalreviews }) => {
   const [user, setUser] = useState(null);
   const [ratingCategories, setRatingCategories] = useState([]);
   const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
+const [aiRequested, setAiRequested] = useState(false);//only one time load
+
+
+  const [aiSummary, setAiSummary] = useState(null);
+const [aiLoading, setAiLoading] = useState(false);
+const [aiError, setAiError] = useState(null);
+
 
   const handleDeleteReview = async (reviewId) => {
   const confirmDelete = window.confirm("Are you sure you want to delete your review?");
@@ -121,6 +130,68 @@ const rankMap = await fetchUserRanks(emails);
     }
   };
 
+  const saveAiSummaryToMovie = async (summary) => {
+  const { error } = await supabase
+    .from("movies")
+    .update({ ai_summary: summary })
+    .eq("id", movieId);
+
+  if (error) {
+    console.error("Failed to save AI summary:", error);
+  }
+};
+
+  useEffect(() => {
+    
+  if (reviews.length < 2) return;
+  if(summary!="No summary")
+  {
+    setAiSummary(summary);
+    return
+  }
+  if (aiRequested) return; // 🔒 prevents repeat calls
+ setAiRequested(true);
+  const topReviews = [...reviews]
+    .sort((a, b) => b.likes - a.likes)
+    .slice(0, 10);
+
+  generateAiSummary(topReviews);
+ 
+}, [reviews, aiRequested]);
+
+const generateAiSummary = async (topReviews) => {
+  try {
+    setAiLoading(true);
+    setAiError(null);
+
+    const prompt = `
+You are a movie review analyst.Give summary of the reviews given by users in max 3 sentences.Add emoji to make it seem human.
+  ${type} name is ${moviename} 
+Reviews:
+${topReviews.map((r, i) => `${i + 1}. ${r.review_text}`).join("\n")}
+`;
+
+    const response=await generateReviewSummary(prompt);
+
+    const data = response;
+
+    const summary =data;
+saveAiSummaryToMovie(summary);
+    if (!summary) throw new Error("No summary generated");
+    
+    setAiSummary(summary);
+  } catch (err) {
+    console.error(err);
+    // setAiError("Failed to generate AI summary"); if limit is hit we dont show summary
+     setAiSummary(null);
+    setAiError(null);
+    setAiRequested(true); // prevent retries
+  } finally {
+    setAiLoading(false);
+  }
+};
+
+
   const handlePostReview = async () => {
     if (!newReview.trim() || !selectedRating) return alert('Write a review & select rating');
     if (!user) return alert('Please sign in');
@@ -195,6 +266,21 @@ const rankMap = await fetchUserRanks(emails);
   }, [user, reviews]);
 
   return (
+    <>
+    {(reviews.length >= 2 && (aiLoading || aiError || aiSummary)) && (
+  <div className="reviews-ai-summary">
+    <h4>✨ Audience Summary</h4>
+
+    {aiLoading && <p className="ai-loading">Generating summary…</p>}
+
+    {aiError && <p className="ai-error">{aiError}</p>}
+
+    {aiSummary && (
+      <p className="ai-summary-text">{aiSummary}</p>
+    )}
+  </div>
+)}
+
     <div className="reviews-section">
       <h3 className="reviews-section-title">Reviews</h3>
 
@@ -434,6 +520,7 @@ const rankMap = await fetchUserRanks(emails);
         )}
       </div>
     </div>
+    </>
   );
 };
 

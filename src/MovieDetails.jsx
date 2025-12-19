@@ -266,7 +266,7 @@ const fetchReviewCounts = async () => {
           </div>
         </div>)}
 
-        <ReviewsSection movieId={id} pieData={pieData} totalreviews={totalReviews}/>
+        <ReviewsSection movieId={id} pieData={pieData} totalreviews={totalReviews} summary={movie.ai_summary} moviename={movie.title} type={movie.type}/>
       </div>
       <GenreRecommendationSection genres={genres.map(g => g.genre_name || g.genre?.genre_name)} movieid={id}/>  
     </div>
