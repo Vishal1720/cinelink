@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabase';
 import RatingDonutChart from "./RatingDonutChart";
 import './ReviewsSection.css';
-import TypewriterText from './TypeWritertext';
+import TypeWriterText from './TypeWriterText';
 import { generateReviewSummary } from "./gemini";
 
 const ReviewsSection = ({ movieId, pieData,totalreviews,summary,moviename,type }) => {
@@ -287,7 +287,7 @@ console.log("Top reviews count:", topReviewsSize);
 
     {aiSummary && (
       <p className="ai-summary-text typewriter"> 
-      <TypewriterText text={aiSummary} speed={20} />
+      <TypeWriterText text={aiSummary} speed={20} />
       </p>
     )}
   </div>

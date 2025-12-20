@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const TypewriterText = ({ text, speed = 30 }) => {
+const TypeWriterText = ({ text, speed = 30 }) => {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -18,4 +18,4 @@ const TypewriterText = ({ text, speed = 30 }) => {
   return <span>{displayText}</span>;
 };
 
-export default TypewriterText;
+export default TypeWriterText;
