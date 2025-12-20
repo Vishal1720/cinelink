@@ -20,6 +20,73 @@ const CastGenre = () => {
 
   // Temporary UI lists
   const [genres, setGenres] = useState([]);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+const [confirmConfig, setConfirmConfig] = useState({
+  title: "",
+  message: "",
+  onConfirm: null
+});
+
+const openConfirmPopup = ({ title, message, onConfirm }) => {
+  setConfirmConfig({ title, message, onConfirm });
+  setShowConfirm(true);
+};
+
+const closeConfirmPopup = () => {
+  setShowConfirm(false);
+  setConfirmConfig({ title: "", message: "", onConfirm: null });
+};
+
+const deleteGenre = (genreId) => {
+  openConfirmPopup({
+    title: "Delete Genre?",
+    message:
+      "This is a destructive action. Deleting this genre will remove all related movie data. This cannot be undone.",
+    onConfirm: async () => {
+      const { error } = await supabase
+        .from("genre")
+        .delete()
+        .eq("genre_name", genreId);
+
+      if (error) {
+        alert(error.message);
+      } else {
+        setGenres(genres.filter(g => g.id !== genreId));
+      }
+
+      closeConfirmPopup();
+    }
+  });
+};
+
+const deleteCastMember = (castId, imageUrl) => {
+  openConfirmPopup({
+    title: "Delete Cast Member?",
+    message:
+      "This is a destructive action. Deleting this cast member will remove them from all related movies.",
+    onConfirm: async () => {
+      if (imageUrl) {
+        const fileName = imageUrl.split("/").pop();
+        await supabase.storage.from("CastBucket").remove([fileName]);
+      }
+
+      const { error } = await supabase
+        .from("cast")
+        .delete()
+        .eq("id", castId);
+
+      if (error) {
+        alert(error.message);
+      } else {
+        setCastMembers(castMembers.filter(c => c.id !== castId));
+      }
+
+      closeConfirmPopup();
+    }
+  });
+};
+
   const [castMembers, setCastMembers] = useState([]);
 useEffect(() => {
   const fetchGenres = async () => {
@@ -202,8 +269,8 @@ useEffect(() => {
                             <button className="btn-icon btn-edit">
                               <span className="material-symbols-outlined">edit</span>
                             </button>
-                            <button className="btn-icon btn-delete">
-                              <span className="material-symbols-outlined">delete</span>
+                            <button className="btn-icon btn-delete" onClick={() => deleteGenre(genre.name)}>
+                              <span className="material-symbols-outlined" onClick={() => deleteGenre(genre.name)}>delete</span>
                             </button>
                           </div>
                         </td>
@@ -302,7 +369,7 @@ useEffect(() => {
                               <span className="material-symbols-outlined">edit</span>
                             </button>
 
-                            <button className="btn-icon btn-delete">
+                            <button className="btn-icon btn-delete"  onClick={() => deleteCastMember(cast.id, cast.image)}>
                               <span className="material-symbols-outlined">delete</span>
                             </button>
                           </div>
@@ -318,6 +385,27 @@ useEffect(() => {
 
         </div>
       </main>
+      {showConfirm && (
+  <div className="confirm-overlay">
+    <div className="confirm-modal">
+      <h3 className="confirm-title">{confirmConfig.title}</h3>
+      <p className="confirm-message">{confirmConfig.message}</p>
+
+      <div className="confirm-actions">
+        <button className="btn-secondary" onClick={closeConfirmPopup}>
+          Cancel
+        </button>
+        <button
+          className="btn-danger"
+          onClick={confirmConfig.onConfirm}
+        >
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
