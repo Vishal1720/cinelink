@@ -176,10 +176,12 @@ ${topReviews.map((r, i) => `${i + 1}. ${r.review_text}`).join("\n")}
     const data = response;
 
     const summary =data;
+      if (!summary) throw new Error("No summary generated");
+       setAiSummary(summary);
 saveAiSummaryToMovie(summary);
-    if (!summary) throw new Error("No summary generated");
+  
     
-    setAiSummary(summary);
+   
   } catch (err) {
     console.error(err);
     // setAiError("Failed to generate AI summary"); if limit is hit we dont show summary
@@ -208,6 +210,14 @@ saveAiSummaryToMovie(summary);
     setNewReview('');
     setSelectedRating(null);
     fetchReviews();
+
+    const topReviews = [...reviews]
+    .sort((a, b) => b.likes - a.likes)
+    .slice(0, 10);
+      const topReviewsSize = topReviews.length;
+console.log("Top reviews count:", topReviewsSize);
+
+  generateAiSummary(topReviews);
   };
 
   const handleLikeReview = async (reviewId) => {
