@@ -111,6 +111,7 @@ if (isInWatchlist) {
       .eq("movie_id",movieId);
 
     if (error) console.error("Remove error:", error);
+    else window.dispatchEvent(new Event('watchlistChanged'));
   } else {
     // ADD
     const { error } = await supabase
@@ -121,6 +122,7 @@ if (isInWatchlist) {
       });
 
     if (error) console.error("Insert error:", error);
+    else window.dispatchEvent(new Event('watchlistChanged'));
   }
    
   }
@@ -236,6 +238,13 @@ setLanguages(uniqueLanguages);
     fetchWatchlist();
     
   }, [type]);
+
+  // Refresh watchlist IDs when other parts of the app change the watchlist
+  useEffect(() => {
+    const onWatchlistChanged = () => fetchWatchlist();
+    window.addEventListener('watchlistChanged', onWatchlistChanged);
+    return () => window.removeEventListener('watchlistChanged', onWatchlistChanged);
+  }, []);
 
   // Filter movies based on selected genre and search text
   const filteredMovies = sortMovies(
