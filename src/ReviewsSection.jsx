@@ -20,6 +20,8 @@ const [aiRequested, setAiRequested] = useState(false);//only one time load
 const [aiLoading, setAiLoading] = useState(false);
 const [aiError, setAiError] = useState(null);
 
+const [posting, setPosting] = useState(false);
+
 
   const handleDeleteReview = async (reviewId) => {
   const confirmDelete = window.confirm("Are you sure you want to delete your review?");
@@ -30,7 +32,7 @@ const [aiError, setAiError] = useState(null);
     .delete()
     .eq("id", reviewId)
     .eq("email", user.email); // extra safety
-
+setPosting(false);//enabling button after review is deleted since review option comes again
   fetchReviews(); // refresh list
 };
 
@@ -197,7 +199,9 @@ saveAiSummaryToMovie(summary);
   const handlePostReview = async () => {
     if (!newReview.trim() || !selectedRating) return alert('Write a review & select rating');
     if (!user) return alert('Please sign in');
-
+if (posting) return; //  extra safety
+try {
+    setPosting(true);
     await supabase.from('reviews').insert([
       {
         movie_id: movieId,
@@ -210,7 +214,12 @@ saveAiSummaryToMovie(summary);
     setNewReview('');
     setSelectedRating(null);
     fetchReviews();
-
+  }
+  catch (err) {
+    console.error(err);
+    alert("Failed to post review. Please try again.");
+    setPosting(false); // ❗ re-enable only on error
+  }
     const topReviews = [...reviews]
     .sort((a, b) => b.likes - a.likes)
     .slice(0, 10);
@@ -218,6 +227,7 @@ saveAiSummaryToMovie(summary);
 console.log("Top reviews count:", topReviewsSize);
 
   generateAiSummary(topReviews);
+
   };
 
   const handleLikeReview = async (reviewId) => {
