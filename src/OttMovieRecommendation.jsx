@@ -1,18 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
-
 import "./GenreRecommendationSection.css";
 import { useNavigate } from "react-router-dom";
-export default function GenreRecommendationSection({ genres ,movieid}) {
+export default function OttMovieRecommendation({ ottname ,movieid}) {
   const [suggested, setSuggested] = useState([]);
   const scrollRef = useRef(null);
  const navigate=useNavigate();
 
  const fetchSuggestions = async () => {
-  const { data: genreRows, error: gError } = await supabase
-    .from("genre_in_movies")
+  const { data: ottMovies, error: gError } = await supabase
+    .from("url_in_movies")
     .select("movie_id")
-    .in("genre_name", genres).neq("movie_id", movieid);
+    .eq("ott_name", ottname).neq("movie_id", movieid);
 
   if (gError) {
     console.log(gError);
@@ -20,7 +19,7 @@ export default function GenreRecommendationSection({ genres ,movieid}) {
   }
 
   // Extract movie IDs
-  const movieIds = [...new Set(genreRows.map(row => row.movie_id))];
+  const movieIds = [...new Set(ottMovies.map(row => row.movie_id))];
 
   if (movieIds.length === 0) {
     setSuggested([]);
@@ -30,41 +29,43 @@ export default function GenreRecommendationSection({ genres ,movieid}) {
   //Fetch actual movie data
   const { data: moviesData, error: mError } = await supabase
     .from("movies")
-    .select("*, genre_in_movies (genre_name)")
+    .select("*, url_in_movies(ott_name)")
     .in("id", movieIds)
 
     ;
-const randomTen = moviesData
+    if(mError)
+    {
+          return;
+    }
+const randomTen =[...moviesData] 
   .sort(() => Math.random() - 0.5)
   .slice(0, 10);
 
-  if (!mError) {
+  
     setSuggested(randomTen);
 
-  }
+  
 };
 
-  useEffect(() => {
-    
-    if (!genres || genres.length === 0) return;
+useEffect(() => {
+  if (!ottname) return;
+  fetchSuggestions();
+}, [ottname, movieid]);
 
-   fetchSuggestions();
+const scrollLeft = () => {
+  scrollRef.current?.scrollBy({ left: -300, behavior: "smooth" });
+};
 
-  }, [genres]);
+const scrollRight = () => {
+  scrollRef.current?.scrollBy({ left: 300, behavior: "smooth" });
+};
 
-  const scrollLeft = () => {
-    scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
-  };
-
-  const scrollRight = () => {
-    scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
-  };
 
   if (suggested.length === 0) return null;
 
   return (
     <div className="genre-rec-section">
-      <h2 className="genre-rec-title"><span class="part1">More From these</span> <span class="part2"> Genres</span></h2>
+      <h2 className="genre-rec-title"><span className="part1">More on</span> <span className="part2"> {ottname}</span></h2>
 
       <div className="scroll-wrapper">
         <button className="scroll-btn left" onClick={scrollLeft}>❮</button>

@@ -5,11 +5,17 @@
 }
 
 .genre-rec-title {
-  color: white;
-  margin-bottom: 16px;
-  font-size: 22px;
-  font-weight: 600;
+   font-size: 1.58rem;
+  font-weight: 700;
+  position: relative;     
+  margin-bottom: 0.12%;
+  margin-top: 0.2%;
+  letter-spacing: -1px;
+  display: inline-block;
+  text-align: left;
 }
+ .genre-rec-title .part1{color: #ff6b6b;}
+  .genre-rec-title .part2 {color: #4ecdc4;}
 
 /* Wrapper for arrows + scroll row */
 .scroll-wrapper {
@@ -88,3 +94,35 @@
     display: none;
   }
 }
+.genre-rec-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.genre-rec-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.5),
+    rgba(0,0,0,0.1),
+    transparent
+  );
+  pointer-events: none;
+}
+.genre-rec-name {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  z-index: 2;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+}
+
+
+

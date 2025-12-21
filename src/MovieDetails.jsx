@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from './supabase';
 import UserHeader from './UserHeader';
+import OttMovieRecommendation from './OttMovieRecommendation';
 import './MovieDetails.css';
 import ReviewsSection from './ReviewsSection';
 import RatingDonutChart from "./RatingDonutChart";
@@ -114,7 +115,7 @@ const fetchReviewCounts = async () => {
       // 4️⃣ Fetch OTT platforms (join with urls table)
       const { data: ottData, error: ottError } = await supabase
         .from("url_in_movies")
-        .select("urls(ott_name, logo_url), ott_link")
+        .select("urls(ott_name, logo_url), ott_link,ott_name")
         .eq("movie_id", id);
 
       if (ottError) throw ottError;
@@ -171,6 +172,12 @@ const fetchReviewCounts = async () => {
       </div>
     );
   }
+
+  const ottNames = ottPlatforms.map(
+  (ott) => ott.ott_name || ott.urls?.ott_name
+);
+
+const uniqueOttNames = [...new Set(ottNames)];
 
   return (
     <div className="moviedetails-container">
@@ -268,7 +275,11 @@ const fetchReviewCounts = async () => {
 
         <ReviewsSection movieId={id} pieData={pieData} totalreviews={totalReviews} summary={movie.ai_summary} moviename={movie.title} type={movie.type}/>
       </div>
-      <GenreRecommendationSection genres={genres.map(g => g.genre_name || g.genre?.genre_name)} movieid={id}/>  
+      <GenreRecommendationSection genres={genres.map(g => g.genre_name || g.genre?.genre_name)} movieid={id}/> 
+   {uniqueOttNames.map((ott) => (
+  <OttMovieRecommendation key={ott} ottname={ott} movieid={id}
+  />
+))}
     </div>
   );
 };
