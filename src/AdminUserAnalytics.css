@@ -24,7 +24,7 @@
 .analytics-container {
   position: relative;
   z-index: 10;
-  max-width: 1400px;
+  width: 70vw;
   margin: 0 auto;
 }
 
