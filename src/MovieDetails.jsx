@@ -7,6 +7,7 @@ import './MovieDetails.css';
 import ReviewsSection from './ReviewsSection';
 import RatingDonutChart from "./RatingDonutChart";
 import GenreRecommendationSection from './GenreRecommendationSection';
+import LikeBasedRecommendationSection from './LikeBasedRecommendationSection';
 const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
@@ -275,11 +276,13 @@ const uniqueOttNames = [...new Set(ottNames)];
 
         <ReviewsSection movieId={id} pieData={pieData} totalreviews={totalReviews} summary={movie.ai_summary} moviename={movie.title} type={movie.type}/>
       </div>
+     
       <GenreRecommendationSection genres={genres.map(g => g.genre_name || g.genre?.genre_name)} movieid={id}/> 
    {uniqueOttNames.map((ott) => (
   <OttMovieRecommendation key={ott} ottname={ott} movieid={id}
   />
 ))}
+ <LikeBasedRecommendationSection movieid={id} />
     </div>
   );
 };
