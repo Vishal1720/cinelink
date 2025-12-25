@@ -18,6 +18,7 @@ const navigate = useNavigate();
           review_created_at,
           review_text,
           movie_title,
+          movie_id,
           poster_url,
           rating_name,
           rating_emoji,
@@ -39,6 +40,7 @@ const navigate = useNavigate();
       if (error) {
         console.error("Fetch reviews error:", error);
       } else {
+   
         setReviews(data);
       }
 
@@ -66,19 +68,17 @@ const navigate = useNavigate();
 
       <div className="reviews-list">
         {reviews.map((review) => (
-          <div key={review.review_id} className="review-card" onClick={()=>{navigate(`/movie/${review.review_id}`)}}>
+          <div key={review.review_id} className="review-card" >
             {/* Poster */}
             <div
               className="review-poster"
-              style={{
-                backgroundImage: `url(${review.poster_url})`,
-              }}
+              style={{backgroundImage: `url(${review.poster_url})`,cursor:"pointer"}} onClick={()=>{navigate(`/movie/${review.movie_id}`)}}
             />
 
             {/* Content */}
             <div className="review-content">
               <div className="review-header">
-                <h3>{review.movie_title}</h3>
+                <h3>{review.movie_title} </h3>
                 <span className="review-rating">
                   {review.rating_emoji} {review.rating_name}
                 </span>
@@ -90,7 +90,17 @@ const navigate = useNavigate();
 
               <div className="review-footer">
                 <span className="review-date">
-                  {new Date(review.review_created_at).toLocaleDateString()}
+                  {new Intl.DateTimeFormat("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                })
+                .format(new Date(review.review_created_at))
+                .replace(/\//g, "/")}
+                {/*  - en-GB locale gives DD/MM/YY
+ - replace "/" with spaces to get "DD MM YY"  / → the character to replace
+\ → escape for slash
+g → global (replace all occurrences)*/}
                 </span>
 
                 <span className="review-likes">
