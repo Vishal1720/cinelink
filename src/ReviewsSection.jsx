@@ -4,8 +4,13 @@ import RatingDonutChart from "./RatingDonutChart";
 import './ReviewsSection.css';
 import TypeWriterText from './TypeWriterText';
 import { generateReviewSummary } from "./gemini";
-
+import { useNavigate } from "react-router-dom";
 const ReviewsSection = ({ movieId, pieData,totalreviews,summary,moviename,type }) => {
+  const navigate = useNavigate();
+
+  const navigateToUserProfile = (email) => {
+    navigate(`/profile?email=${email}`);
+  };
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newReview, setNewReview] = useState('');
@@ -108,7 +113,7 @@ const fetchUserRanks = async (emails) => {
         .select(`*, user:email ( avatar_url, name ), rating:rating_cat ( cat_name )`)
         .eq('movie_id', movieId)
         .order('created_at', { ascending: false });
-
+console.log("Fetched reviews:", data);
       if (error) throw error;
       //  create emails array
     const emails = [...new Set(data.map(r => r.email))];
@@ -384,6 +389,8 @@ console.log("Top reviews count:", topReviewsSize);
                 <div className="reviews-item first-review">
                    <div className="reviews-avatar-wrapper">
                   <img
+                  onClick={reviews[0].email?()=>{navigateToUserProfile(reviews[0].email)}:null}
+                  style={{cursor:"pointer"}}
                     src={reviews[0].user?.avatar_url || "/default-avatar.png"}
                     className={`reviews-item-avatar ${
     reviews[0].userRank === 1
@@ -467,6 +474,8 @@ console.log("Top reviews count:", topReviewsSize);
 
                 <div className="reviews-avatar-wrapper">
                 <img
+                onClick={review.email?()=>{navigateToUserProfile(review.email)}:null}
+                  style={{cursor:"pointer"}}
                   src={review.user?.avatar_url || "/default-avatar.png"}
                  className={`reviews-item-avatar ${
     review.userRank === 1
