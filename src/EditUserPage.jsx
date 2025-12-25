@@ -3,8 +3,17 @@ import UserHeader from './UserHeader';
 import { supabase } from './supabase';
 import RatingDonutChart from './RatingDonutChart';
 import './EditUserPage.css';
-
+import ReviewsByPerson from './ReviewByPerson';
+import { useSearchParams } from "react-router-dom";
 const EditUserPage = () => {
+    const [searchParams] = useSearchParams();
+    const loggedInEmail = localStorage.getItem("userEmail");
+ // when the URL email is truly missing (null or undefined),
+// not when it is an empty or falsy value.
+const profileEmail = searchParams.get("email") ?? loggedInEmail;
+ 
+
+ const email = profileEmail;
   const [userDetails, setUserDetails] = useState(null);
   const [userStatDetails, setUserStatDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,9 +24,21 @@ const EditUserPage = () => {
   const [gender, setGender] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
-
+  
+  const [ratingType, setRatingType] = useState('all');
+  const [showEditForm, setShowEditForm] = useState(false);
   const fetchProfileDetails = async () => {
-    const email = localStorage.getItem("userEmail");
+      
+   
+
+
+  
+   if(profileEmail!==loggedInEmail){
+    setShowEditForm(false);
+   }
+   else if(profileEmail===loggedInEmail){
+    setShowEditForm(true);
+   }
     const { data, error } = await supabase
       .from("user")
       .select("*")
@@ -33,7 +54,7 @@ const EditUserPage = () => {
   };
 
   const fetchStats = async () => {
-    const email = localStorage.getItem("userEmail");
+   
     const { data, error } = await supabase
       .from("user_analytics")
       .select("*")
@@ -234,9 +255,10 @@ const EditUserPage = () => {
               <div className="eup-avatar-ring">
                 <div 
                   className="eup-avatar-image"
-                  style={{ backgroundImage: `url('${previewUrl}')` }}
+                  style={{ backgroundImage: `url('${previewUrl}')`,cursor: showEditForm ? "pointer" : "default" }}
+                  
                 >
-                  <label className="eup-avatar-edit-overlay" htmlFor="avatar-input">
+                 {showEditForm &&<><label className="eup-avatar-edit-overlay" htmlFor="avatar-input">
                     <span className="material-symbols-outlined">edit</span>
                   </label>
                   <input 
@@ -245,7 +267,8 @@ const EditUserPage = () => {
                     accept="image/*"
                     onChange={handleFileSelect}
                     style={{ display: 'none' }}
-                  />
+                  /></>}
+                  
                 </div>
               </div>
               <div className="eup-rank-badge">
@@ -307,16 +330,16 @@ const EditUserPage = () => {
         </section>
 
         {/* Main Grid */}
-        <section className="eup-content-grid">
+        <section className="eup-content-grid "style={{backgroundColor:"none"}}>
           {/* Ratings Chart */}
-          <div className="eup-chart-panel">
+          <div className="eup-chart-panel" >
             <div className="eup-panel-header">
               <span className="material-symbols-outlined">pie_chart</span>
               <h3>Ratings Distribution</h3>
             </div>
             
-            <div className="eup-chart-container">
-              <RatingDonutChart data={getRatingsData()} width={150} height={150} className="chart"/>
+            <div className="eup-chart-container" onClick={()=>{setRatingType("all")}} style={{cursor:"pointer"}}>
+              <RatingDonutChart  data={getRatingsData()} width={150} height={150} className="chart"/>
             </div>
 
             <div className="eup-rating-legend" >
@@ -324,7 +347,7 @@ const EditUserPage = () => {
                 const total = userStatDetails?.total_reviews || 0;
                 const percent = total > 0 ? ((item.value / total) * 100).toFixed(0) : 0;
                 return (
-                  <div key={item.id} className="eup-legend-item">
+                  <div key={item.id} className="eup-legend-item" onClick={()=>{setRatingType(item.id)}}>
                     <span className="eup-legend-emoji">{item.emoji}</span>
                     <span className="eup-legend-name">{item.name}</span>
                     <span className="eup-legend-percent">{percent}%</span>
@@ -334,8 +357,11 @@ const EditUserPage = () => {
             </div>
           </div>
 
-          {/* Edit Form */}
-          <div className="eup-edit-panel" >
+         
+          <ReviewsByPerson email={userDetails.email} ratingtype={ratingType} />
+           {/* Edit Form */}
+           { showEditForm &&  
+          <div className="eup-edit-panel"  >
             <div className="eup-panel-header">
               <div className="eup-header-icon">
                 <span className="material-symbols-outlined">tune</span>
@@ -419,7 +445,7 @@ const EditUserPage = () => {
                 
           
             </div>
-          </div>
+          </div>}
         </section>
       </main>
     </div>

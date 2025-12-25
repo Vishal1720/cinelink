@@ -693,3 +693,13 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+.edit-user-page .eup-chart-panel{
+
+  background: none;
+  background-color: transparent;
+  height: fit-content;
+  
+}
+.eup-legend-item{
+  cursor: pointer;
+}
