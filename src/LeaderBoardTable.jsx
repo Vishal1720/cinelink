@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./LeaderBoardTable.css";
-
+import { useNavigate } from "react-router-dom";
 const LeaderboardTable = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -58,6 +59,8 @@ const LeaderboardTable = () => {
                   src={user.avatar_url}
                   alt={user.name}
                   className="user-avatar"
+                  style={{cursor:"pointer"}}
+                  onClick={() => { navigate(`/profile?email=${user.email}`); }}
                 />
                 <div className="user-info">
                   <strong>{user.name}</strong>

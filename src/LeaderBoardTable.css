@@ -8,7 +8,7 @@
 
 }
 .table-body *{
-  font-size: 1.05rem;
+  font-size: 0.95rem;
 }
 .analytics-table {
   overflow-x: auto;
@@ -133,4 +133,7 @@
     color: #94a3b8;
     text-transform: uppercase;
   }
+}
+.leaderboard-wrapper{
+  margin-top: 15vh;
 }

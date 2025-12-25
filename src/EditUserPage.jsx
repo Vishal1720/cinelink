@@ -5,7 +5,9 @@ import RatingDonutChart from './RatingDonutChart';
 import './EditUserPage.css';
 import ReviewsByPerson from './ReviewByPerson';
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 const EditUserPage = () => {
+  const navigate=useNavigate();
     const [searchParams] = useSearchParams();
     const loggedInEmail = localStorage.getItem("userEmail");
  // when the URL email is truly missing (null or undefined),
@@ -281,7 +283,8 @@ const profileEmail = searchParams.get("email") ?? loggedInEmail;
               <h1 className="eup-user-name">{userDetails?.name}</h1>
               <div className="eup-user-meta">
                 <p className="eup-username">@{userDetails?.email.split('@')[0]}</p>
-                <div className="eup-rank-badge-inline">
+                <div className="eup-rank-badge-inline"
+              onClick={()=>{navigate("/leaderboard")}} style={{cursor:"pointer"}}>
                   <span className="material-symbols-outlined">trophy</span>
                   <span>Community Rank</span>
                   <span className="eup-rank-number">#{userStatDetails?.position || 'N/A'}</span>
