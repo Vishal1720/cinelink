@@ -41,7 +41,7 @@ function App() {
           <Route path="/watchlist" element={<Watchlist type="Watchlist"/>} />
           <Route path="/useranalytics" element={<AdminUserAnalytics/>} />
           <Route path="/profile" element={<EditUserPage/>}/>
-          <Route path="/edit-movies" element={<EditMovies />} />
+          {/* <Route path="/edit-movies" element={<EditMovies />} /> */}
           <Route path="/leaderboard" element={<LeaderBoard />} />
 
          
