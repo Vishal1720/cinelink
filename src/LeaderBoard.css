@@ -1,0 +1,44 @@
+h1.leaderboard-heading {
+  font-size: clamp(2.8rem, 5.5vw, 4rem);
+  font-weight: 900;
+  margin: 0 0 2.5rem;
+  text-align: center;
+
+  /* Elegant cinematic gradient */
+  background: linear-gradient(
+    135deg,
+    #f9fafb 0%,     /* clean white */
+    #fde68a 30%,    /* soft gold */
+    #c084fc 60%,    /* violet */
+    #6d28d9 100%    /* deep purple */
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+
+  /* Controlled glow */
+  text-shadow:
+    0 0 16px rgba(192, 132, 252, 0.35),
+    0 0 32px rgba(253, 230, 138, 0.18);
+
+  animation: leaderboardFade 0.85s ease-out both;
+  position: relative;
+}
+
+
+
+/* Entrance animation */
+@keyframes leaderboardFade {
+  from {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

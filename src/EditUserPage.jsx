@@ -99,12 +99,6 @@ const EditUserPage = () => {
   // Handle avatar upload
   const handleAvatarUpload = async () => {
     if (!selectedFile) return null;
-
-    // TODO: Upload to Supabase Storage
-    // 1. Generate unique filename
-    // 2. Upload to 'avatars' bucket
-    // 3. Get public URL
-    // Example:
    
     const fileExt = selectedFile.name.split('.').pop();
     const fileName = `${userDetails.email}-${Date.now()}.${fileExt}`;

@@ -13,8 +13,10 @@ import ReviewsSection from "./ReviewsSection";
 import GoogleCallback from "./GoogleCallback";
 import Watchlist from "./Watchlist";
 import EditUserPage from "./EditUserPage";
-
+import EditMovies from "./EditMovies";
 import ScrollToTop from "./ScrollToTop";
+import LeaderBoardTable from "./LeaderBoardTable";
+import LeaderBoard from "./LeaderBoard";
 function App() {
   
 
@@ -22,6 +24,7 @@ function App() {
     <BrowserRouter>
     <ScrollToTop/>
       <Routes>
+        
         <Route path="/morie" element={<ReviewsSection movieId={15} />} />
         <Route path="/" element={<LandingPage/>} />
         <Route path="/Login" element={<Login/>} />
@@ -38,6 +41,9 @@ function App() {
           <Route path="/watchlist" element={<Watchlist type="Watchlist"/>} />
           <Route path="/useranalytics" element={<AdminUserAnalytics/>} />
           <Route path="/profile" element={<EditUserPage/>}/>
+          <Route path="/edit-movies" element={<EditMovies />} />
+          <Route path="/leaderboard" element={<LeaderBoard />} />
+
          
       </Routes>
     </BrowserRouter>
