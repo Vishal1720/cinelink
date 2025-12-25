@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase";
-import "./LeaderboardTable.css";
+import "./LeaderBoardTable.css";
 
 const LeaderboardTable = () => {
   const [users, setUsers] = useState([]);
