@@ -13,7 +13,7 @@ import ReviewsSection from "./ReviewsSection";
 import GoogleCallback from "./GoogleCallback";
 import Watchlist from "./Watchlist";
 import EditUserPage from "./EditUserPage";
-import EditMovies from "./EditMovies";
+// import EditMovies from "./EditMovies";
 import ScrollToTop from "./ScrollToTop";
 import LeaderBoardTable from "./LeaderBoardTable";
 import LeaderBoard from "./LeaderBoard";
