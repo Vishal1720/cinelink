@@ -61,3 +61,153 @@
 @media (max-width: 600px){
   .watchlist-poster{ height: 160px }
 }
+
+
+ .my-collections-title {
+ font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-align: center;
+  margin: 0;
+  padding: 1.2rem 0;
+
+  /* subtle cinematic glow */
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 180, 255, 0.15);
+  
+
+}
+.new-collection-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  padding: 0.5rem 1.2rem;
+  border-radius: 10px;
+
+  background: rgb(48, 62, 80); /* slate blue-gray */
+  color: #ffffff;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  border: none;
+  cursor: pointer;
+
+  
+
+  transition: all 0.25s ease;
+}
+.new-collection-btn:hover {
+  background: rgb(56, 72, 94);
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.new-collection-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    inset 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.watchlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Right side container — keeps layout stable */
+.watchlist-header-actions {
+  min-height: 52px; /* reserve space */
+  display: flex;
+  align-items: center;
+}
+.watchlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Right side container — keeps layout stable */
+.watchlist-header-actions {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+/* CREATE LIST FORM */
+.create-list-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Normalize input + buttons */
+.create-list-form input,
+.watchlist-create-btn,
+.watchlist-cancel-btn {
+  height: 45px;
+  box-sizing: border-box;
+}
+
+/* Input styling */
+.create-list-form input {
+  min-width: 240px;
+  padding: 0 18px;
+  border-radius: 24px;
+  border: 2px solid #e50914;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  line-height: 45px; /* 🔥 KEY FIX */
+}
+
+.create-list-form input::placeholder {
+  color: #aaa;
+}
+
+/* Buttons */
+.watchlist-create-btn,
+.watchlist-cancel-btn {
+  width: 55px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.2s ease;
+}
+
+/* Confirm */
+.watchlist-create-btn {
+  background: #abca1f;
+  color: #fff;
+}
+
+.watchlist-create-btn:hover {
+  background: #c6e92d;
+  transform: translateY(-1px);
+}
+
+/* Cancel */
+.watchlist-cancel-btn {
+  background: #333;
+  color: #fff;
+}
+
+.watchlist-cancel-btn:hover {
+  background: #444;
+}

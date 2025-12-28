@@ -258,97 +258,54 @@ const Watchlist = () => {
       <main className="main-content">
         <div className="content-wrapper">
 
-          <div className="watchlist-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-            <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 'bold' }}>My Collections</h2>
-            {!isCreatingList ? (
-              <button
-                className="create-list-btn"
-                onClick={() => setIsCreatingList(true)}
-                style={{
-                  background: 'linear-gradient(45deg, #E50914, #B20710)',
-                  color: 'white',
-                  border: 'none',
-                  padding: '12px 24px',
-                  borderRadius: '30px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '1rem',
-                  boxShadow: '0 4px 15px rgba(229, 9, 20, 0.4)',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(229, 9, 20, 0.6)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(229, 9, 20, 0.4)';
-                }}
-              >
-                <span style={{ fontSize: '1.2rem' }}>+</span> New Collection
-              </button>
-            ) : (
-              <div className="create-list-form" style={{ display: 'flex', gap: '10px', animation: 'fadeIn 0.3s ease' }}>
-                <input
-                  type="text"
-                  value={newListName}
-                  onChange={(e) => setNewListName(e.target.value)}
-                  placeholder="Collection Name"
-                  autoFocus
-                  style={{
-                    padding: '12px 20px',
-                    borderRadius: '30px',
-                    border: '2px solid #E50914',
-                    background: '#1a1a1a',
-                    color: 'white',
-                    outline: 'none',
-                    minWidth: '250px'
-                  }}
-                  onKeyDown={(e) => e.key === 'Enter' && createNewList()}
-                />
-                <button
-                  onClick={createNewList}
-                  style={{
-                    background: '#E50914',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '45px',
-                    height: '45px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.2rem'
-                  }}
-                  title="Save"
-                >
-                  ✓
-                </button>
-                <button
-                  onClick={() => setIsCreatingList(false)}
-                  style={{
-                    background: '#333',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '45px',
-                    height: '45px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.2rem'
-                  }}
-                  title="Cancel"
-                >
-                  ✕
-                </button>
-              </div>
-            )}
+          {/* <div className="watchlist-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+           */}
+           <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 'bold' }}>My Collections</h2>
+           <div className="watchlist-header" >
+
+            
+            <div className="watchlist-header-actions">
+  {!isCreatingList ? (
+    <button
+      className="new-collection-btn"
+      onClick={() => setIsCreatingList(true)}
+    >
+      <span style={{ fontSize: '1.2rem' }}>+</span> New Collection
+    </button>
+  ) : (
+  <div className="create-list-form">
+  <input
+    type="text"
+    value={newListName}
+    onChange={(e) => setNewListName(e.target.value)}
+    placeholder="Collection name"
+    autoFocus
+    onKeyDown={(e) => e.key === "Enter" && createNewList()}
+  />
+
+  <button
+    className="watchlist-create-btn"
+    onClick={createNewList}
+    title="Create collection"
+  >
+    ✓
+  </button>
+
+  <button
+    className="watchlist-cancel-btn"
+    onClick={() => {
+      setIsCreatingList(false);
+      setNewListName("");
+    }}
+    title="Cancel"
+  >
+    ✕
+  </button>
+</div>
+
+  )}
+</div>
+
           </div>
 
           {loading ? (
