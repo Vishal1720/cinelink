@@ -84,7 +84,7 @@
   width: 100%;
   height: 90vh;
   overflow: hidden;
-  margin-top: 13vh;
+  margin-top: 12vh;
 }
 
 .homepage .banner-image-container {
@@ -267,7 +267,8 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .homepage .hero-banner {
-    height: 70vh;
+    height: 90vh;
+    margin-top: 10vh;
   }
 
   .homepage .banner-content {
@@ -299,6 +300,7 @@
   .homepage .banner-navigation {
     bottom: 1rem;
   }
+  
 }
 
 @media (max-width: 640px) {
@@ -318,6 +320,7 @@
   .homepage .banner-meta {
     font-size: 0.75rem;
   }
+  
 }
 
 @media (max-width: 768px) {
@@ -345,5 +348,8 @@
    margin-bottom: 14rem;
    margin-left:auto ;
    margin-right: auto;
+  }
+  .banner-navigation{
+    margin-bottom: -10px;
   }
 }
