@@ -40,9 +40,10 @@ const fetchHomeGenres = async () => {
   if (error || !data) return;
 
   const shuffled = [...data]
-    .map(g => g.genre_name)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 2); 
+    .map(g => g.genre_name)// converts objects → array of genre names
+    .sort(() => Math.random() - 0.5)// shuffles the array randomly
+    .slice(0, 5); // takes the first 4 items
+
 
   setHomeGenres(shuffled);
 };
