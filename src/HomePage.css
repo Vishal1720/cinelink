@@ -1,0 +1,321 @@
+/* HomePage.css - Specific Component Styles */
+
+/* Main Container */
+.homepage {
+  min-height: 100vh;
+ background: #0e1625;
+}
+
+.dark .homepage {
+  background: #0f172a;
+}
+
+/* Loading State */
+.homepage .loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  height: 100vh;
+  font-size: 1.125rem;
+  color: #06b6d4;
+}
+
+.homepage .loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(6, 182, 212, 0.2);
+  border-top-color: #06b6d4;
+  border-radius: 50%;
+  animation: homepage-spin 1s linear infinite;
+}
+
+@keyframes homepage-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.homepage .error-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  height: 100vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+.homepage .error-icon {
+  font-size: 4rem;
+  color: #ef4444;
+}
+
+.homepage .error-state p {
+  font-size: 1.125rem;
+  color: #64748b;
+}
+
+.dark .homepage .error-state p {
+  color: #94a3b8;
+}
+
+.homepage .btn-retry {
+  margin-top: 1rem;
+  padding: 0.75rem 2rem;
+  background: #06b6d4;
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.homepage .btn-retry:hover {
+  background: #0891b2;
+  transform: translateY(-2px);
+}
+
+/* Hero Banner Section */
+.homepage .hero-banner {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  overflow: hidden;
+  margin-top: 13vh;
+}
+
+.homepage .banner-image-container {
+  position: absolute;
+  inset: 0;
+}
+
+.homepage .banner-image {
+  width: 100%;
+  height: 90vh;
+  object-fit: cover;
+  object-position:top;
+}
+
+
+
+.homepage .banner-side-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgb(14, 14, 15) 0%,
+    transparent 50%
+  );
+}
+
+
+
+/* Banner Content */
+.homepage .banner-content {
+  position: relative;
+  z-index: 10;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  height: 100%;
+  display: flex;
+   align-items: flex-start;
+}
+
+.homepage .banner-info {
+  max-width: 36rem;
+  padding-top: 4rem;
+}
+
+.homepage .banner-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(6, 182, 212, 0.2);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  color: #06b6d4;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.homepage .banner-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.homepage .banner-highlight {
+  color: #06b6d4;
+}
+
+.homepage .banner-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin-bottom: 1.5rem;
+}
+
+.homepage .banner-description {
+  font-size: 1.125rem;
+  color: #cbd5e1;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+  max-width: 32rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Banner Actions */
+.homepage .banner-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.homepage .btn-primary,
+.homepage .btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  text-decoration: none;
+}
+
+.homepage .btn-primary {
+  background: #06b6d4;
+  color: white;
+  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.25);
+}
+
+.homepage .btn-primary:hover {
+  background: #0891b2;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(6, 182, 212, 0.35);
+}
+
+.homepage .btn-secondary {
+  background: rgba(14, 22, 37, 0.8);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.homepage .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.homepage .btn-primary .material-icons-round,
+.homepage .btn-secondary .material-icons-round {
+  font-size: 1.25rem;
+}
+
+/* Banner Navigation Dots */
+.homepage .banner-navigation {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.homepage .banner-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.homepage .banner-dot:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+.homepage .banner-dot.active {
+  background: #06b6d4;
+  width: 32px;
+  border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .homepage .hero-banner {
+    height: 70vh;
+  }
+
+  .homepage .banner-content {
+    padding: 0 1.5rem;
+  }
+
+  .homepage .banner-info {
+    padding-top: 2rem;
+  }
+
+  .homepage .banner-title {
+    font-size: 2rem;
+  }
+
+  .homepage .banner-description {
+    font-size: 1rem;
+  }
+
+  .homepage .banner-actions {
+    flex-direction: column;
+  }
+
+  .homepage .btn-primary,
+  .homepage .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .homepage .banner-navigation {
+    bottom: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .homepage .banner-badge {
+    font-size: 0.625rem;
+  }
+
+  .homepage .banner-title {
+    font-size: 1.75rem;
+  }
+
+  .homepage .banner-description {
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .homepage .banner-meta {
+    font-size: 0.75rem;
+  }
+}

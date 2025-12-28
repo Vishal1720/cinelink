@@ -8,7 +8,7 @@ import emptyImg from "./assets/icons/unfilled.png";
 import filledImg from "./assets/icons/filled.png";
 
 
-const UserMovieListPage = ({type}) => {
+const UserMovieListPage = () => {
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState("All Genres");
@@ -28,6 +28,7 @@ const [requestMessage, setRequestMessage] = useState("");
 const [hoveredMovie, setHoveredMovie] = useState(null);
 
 const [watchlistIds, setWatchlistIds] = useState(new Set());
+const [contentType, setContentType] = useState("All");
 
 const [sortBy, setSortBy] = useState("name-asc");
 const sortMovies = (list) => {
@@ -193,26 +194,20 @@ if (isInWatchlist) {
     };
 
     const fetchMovies = async () => {
-      let movdata, moverror;
-      if(type === "Movie" || type === "Series"){
-        ({ data: movdata, error: moverror } = await supabase
-          .from("movies")
-          .select(`
-            *,
-            genre_in_movies (
-              genre_name
-            )
-          `).eq("type", type).order('title', { ascending: true }));
-      } else {
-        ({ data: movdata, error: moverror } = await supabase
-          .from("movies")
-          .select(`
-            *,
-            genre_in_movies (
-              genre_name
-            )
-          `).order('title', { ascending: true }));
-      }
+   
+      let query = supabase
+  .from("movies")
+  .select(`
+    *,
+    genre_in_movies ( genre_name )
+  `)
+  .order("title", { ascending: true });
+
+if (contentType !== "All") {
+  query = query.eq("type", contentType);
+}
+const { data: movdata, error: moverror } = await query;
+      
 
       if (moverror) {
         console.error('Error fetching movies:', moverror);
@@ -237,7 +232,7 @@ setLanguages(uniqueLanguages);
     fetchMovies();
     fetchWatchlist();
     
-  }, [type]);
+  }, [contentType]);
 
   // Refresh watchlist IDs when other parts of the app change the watchlist
   useEffect(() => {
@@ -278,8 +273,22 @@ useEffect(() => {
       <UserHeader />
       <main className="main-content">
         <div className="content-wrapper">
+          
           <section className="filter-section">
-  <div className="filter-row">
+            
+
+  <div className="filter-row" style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
+    <div className="content-type-tabs">
+  {["All", "Movie", "Series"].map(t => (
+    <button
+      key={t}
+      className={contentType === t ? "tab active" : "tab"}
+      onClick={() => setContentType(t)}
+    >
+      {t}
+    </button>
+  ))}
+</div>
     <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1}}>
       <button 
         className="genre-toggle-button" 

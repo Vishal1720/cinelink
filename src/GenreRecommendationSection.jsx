@@ -3,17 +3,23 @@ import { supabase } from "./supabase";
 
 import "./GenreRecommendationSection.css";
 import { useNavigate } from "react-router-dom";
-export default function GenreRecommendationSection({ genres ,movieid}) {
+export default function GenreRecommendationSection({ genres ,movieid,general=false,title="More From these Genres"}) {
   const [suggested, setSuggested] = useState([]);
   const scrollRef = useRef(null);
  const navigate=useNavigate();
 
  const fetchSuggestions = async () => {
-  const { data: genreRows, error: gError } = await supabase
+   let query = supabase
     .from("genre_in_movies")
     .select("movie_id")
-    .in("genre_name", genres).neq("movie_id", movieid);
+    .in("genre_name", genres);
 
+  // ❗ Only exclude current movie if NOT general
+  if (!general && movieid) {
+    query = query.neq("movie_id", movieid);
+  }
+
+  const { data: genreRows, error: gError } = await query;
   if (gError) {
     console.log(gError);
     return;
@@ -34,7 +40,8 @@ export default function GenreRecommendationSection({ genres ,movieid}) {
     .in("id", movieIds)
 
     ;
-const randomTen = moviesData
+     if (!moviesData || moviesData.length === 0) return;
+const randomTen = [...moviesData] 
   .sort(() => Math.random() - 0.5)
   .slice(0, 10);
 
@@ -50,7 +57,7 @@ const randomTen = moviesData
 
    fetchSuggestions();
 
-  }, [genres]);
+  }, [genres, movieid, general]);
 
   const scrollLeft = () => {
     scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
@@ -64,8 +71,16 @@ const randomTen = moviesData
 
   return (
     <div className="genre-rec-section">
-      <h2 className="genre-rec-title"><span class="part1">More From these</span> <span class="part2"> Genres</span></h2>
-
+       {title ? (
+    <div className="genre-rec-title">
+      <span className="part2">{title}</span>
+    </div>
+  ) : (
+    <div className="genre-rec-title">
+      <span className="part1">More From these</span>
+      <span className="part2"> Genres</span>
+    </div>
+  )}
       <div className="scroll-wrapper">
         <button className="scroll-btn left" onClick={scrollLeft}>❮</button>
 
