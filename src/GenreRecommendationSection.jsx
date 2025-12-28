@@ -3,9 +3,10 @@ import { supabase } from "./supabase";
 
 import "./GenreRecommendationSection.css";
 import { useNavigate } from "react-router-dom";
-export default function GenreRecommendationSection({ genres ,movieid,general=false,title="More From these Genres"}) {
+export default function GenreRecommendationSection({ genres ,movieid,general=false,title="More From these Genres",width="1"}) {
   const [suggested, setSuggested] = useState([]);
   const scrollRef = useRef(null);
+  const hasFetchedRef = useRef(false);
  const navigate=useNavigate();
 
  const fetchSuggestions = async () => {
@@ -45,19 +46,20 @@ const randomTen = [...moviesData]
   .sort(() => Math.random() - 0.5)
   .slice(0, 10);
 
-  if (!mError) {
+  if (!mError && moviesData.length > 6) {
     setSuggested(randomTen);
 
   }
 };
 
   useEffect(() => {
-    
+    if (hasFetchedRef.current) return;
     if (!genres || genres.length === 0) return;
 
    fetchSuggestions();
-
+ hasFetchedRef.current = true;
   }, [genres, movieid, general]);
+
 
   const scrollLeft = () => {
     scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
@@ -70,7 +72,7 @@ const randomTen = [...moviesData]
   if (suggested.length === 0) return null;
 
   return (
-    <div className="genre-rec-section">
+    <div className="genre-rec-section" style={{width:width==="1"?"89%":"100%"}}>
        {title ? (
     <div className="genre-rec-title">
       <span className="part2">{title}</span>

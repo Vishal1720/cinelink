@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 import UserHeader from './UserHeader';
 import {supabase} from './supabase.js';
 import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
+import TopRatedSection from './TopRatedSection.jsx';
 import GenreRecommendationSection from './GenreRecommendationSection';
-const HOME_GENRES = ['Comedy'];
+
+
 
 
 
@@ -16,10 +18,34 @@ const HomePage = () => {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+const [homeGenres, setHomeGenres] = useState([]);
 
-  useEffect(() => {
-    fetchBanners();
-  }, []);
+// fetch banners ONCE
+useEffect(() => {
+  fetchBanners();
+}, []);
+
+ // fetch random home genres ONLY ONCE
+useEffect(() => {
+
+  fetchHomeGenres();
+
+}, []);
+
+const fetchHomeGenres = async () => {
+  const { data, error } = await supabase
+    .from("genre")
+    .select("genre_name");
+
+  if (error || !data) return;
+
+  const shuffled = [...data]
+    .map(g => g.genre_name)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 2); 
+
+  setHomeGenres(shuffled);
+};
 
   const fetchBanners = async () => {
     try {
@@ -239,13 +265,20 @@ const HomePage = () => {
           </div>
         )}
       </div>
-     <GenreRecommendationSection
-  genres={HOME_GENRES}
-  title='More in Comedy'
-  general
-/>
+     {homeGenres.map((genre) => (
+  <GenreRecommendationSection
+    key={genre}
+    genres={[genre]}
+    title={`More in ${genre}`}
+    width='all'
+    general
+  />
+))}
     </div>
-    
+    <TopRatedSection
+    limit={10}
+    title="Top Rated Picks"
+  />
     </>
   );
 };
