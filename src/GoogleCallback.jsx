@@ -64,10 +64,9 @@ else {
 }
       localStorage.setItem("role", "user");
       localStorage.setItem("userEmail", email);
-      localStorage.setItem("username", name);
-      
+      localStorage.setItem("username", name); 
 
-      navigate("/movielistpage");
+      navigate("/homepage");
     };
 
     handleGoogleLogin();

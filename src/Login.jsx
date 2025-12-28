@@ -114,7 +114,7 @@ let pass=await hashPassword(formData.password);
    localStorage.setItem("userEmail", data2[0].email);
         localStorage.setItem("username", data2[0].name);
         localStorage.setItem("userimage", data2[0].avatar_url);
-        navigate("/movielistpage");
+        navigate("/homepage");
      
 }  
       }
