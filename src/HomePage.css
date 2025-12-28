@@ -319,3 +319,31 @@
     font-size: 0.75rem;
   }
 }
+
+@media (max-width: 768px) {
+ 
+  .homepage .banner-description {
+    display: none;
+ 
+  }
+    .homepage .banner-content {
+    height: 100%;
+    align-items: stretch;
+  }
+
+  .homepage .banner-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    text-shadow: #0e1625 0.1px 0.1px 3px;
+    padding-bottom: 20px;
+  }
+  .homepage .banner-meta {
+   
+   margin-bottom: 14rem;
+   margin-left:auto ;
+   margin-right: auto;
+  }
+}
