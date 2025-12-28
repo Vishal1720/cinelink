@@ -82,9 +82,9 @@
 .homepage .hero-banner {
   position: relative;
   width: 100%;
-  height: 90vh;
+  height: 90dvh;
   overflow: hidden;
-  margin-top: 12vh;
+  margin-top: 12dvh;
 }
 
 .homepage .banner-image-container {
@@ -94,7 +94,7 @@
 
 .homepage .banner-image {
   width: 100%;
-  height: 90vh;
+  height: 90dvh;
   object-fit: cover;
   object-position:top;
 }
