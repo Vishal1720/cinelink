@@ -3,7 +3,7 @@ import "./Login.css";
 import { Link,useNavigate } from "react-router-dom";
 import { supabase } from "./supabase";
 import Landingheader from "./Landingheader";
-import SHA256 from "crypto-js/sha256";
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -11,9 +11,7 @@ const Login = () => {
   });
 const navigate = useNavigate();
 
-const hashPassword = (password) => {
-  return SHA256(password).toString();
-};
+
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -62,13 +60,13 @@ const validateForm = () => {
     setLoading(true);
 
     try {
-let pass=await hashPassword(formData.password);
+
        // Check admin table first
   const { data: adminData, error: adminError } = await supabase
     .from("admin")
     .select("*")
     .eq("email", formData.email)
-    .eq("password",pass );
+    .eq("password", formData.password);
 
   if (adminError) {
     console.error("❌ Supabase admin error:", adminError.message);
@@ -81,43 +79,47 @@ let pass=await hashPassword(formData.password);
         localStorage.setItem("userimage", adminData[0].avatar_url);
     navigate("/adminpage");
   } else {
-    // Not an admin, check user table
-      const { data, error } = await supabase
-        .from("user")
-        .select("*")
-        .eq("email", formData.email)
-        .eq("password", pass);
-    console.log("User login data1:", data);
-      if (error) {
-        console.error("❌ Supabase error:", error.message);
-        setError("Something went wrong. Please try again later.");
-      } else if (!data || data.length === 0) {
-        setError("Invalid email or password.");
-      } else {
 
-        //checking if email is verified
-        const { data:data2, error:error2 } = await supabase
-        .from("user")
-        .select("*")
-        .eq("email", formData.email)
-        .eq("password",pass)
-        .eq("verified",true);
-        
+   const { data:authdata, error:autherror } = await supabase.auth.signInWithPassword({
+  email: formData.email,
+  password: formData.password,
+});
+
+  
+      if (autherror) {
+        console.error("❌ Supabase error:", autherror.message);
+        setError(autherror.message);
+      }  else {
+
+       if (!authdata.user.email_confirmed_at) {
+  setError("Please verify your email before logging in.");
+  await supabase.auth.signOut();
+  setLoading(false);
+  return;
+}
+const { data: data2, error: error2 } = await supabase
+  .from("user")
+  .select("*")
+  .eq("email", formData.email)
+  .single();
+  
+  if (error2 || !data2) {
+  setError("User profile not found. Please contact support.");
+  setLoading(false);
+  return;
+}
+
         console.log("User login data:", data2);
-        if (error2) {
-  console.error("Error querying user:", error2);
-} else if (data2.length<1 ) {
-  setError("Please verify your email before logging in.Check email for verification link.");
-} else {
-  console.log(data2);
+       
+  
    localStorage.setItem("role", "user");
-   localStorage.setItem("userEmail", data2[0].email);
-        localStorage.setItem("username", data2[0].name);
-        localStorage.setItem("userimage", data2[0].avatar_url);
+   localStorage.setItem("userEmail", data2.email);
+        localStorage.setItem("username", data2.name);
+        localStorage.setItem("userimage", data2.avatar_url);
         navigate("/homepage");
      
 }  
-      }
+      
     }
     } catch (err) {
       console.error("⚠️ Unexpected error:", err);

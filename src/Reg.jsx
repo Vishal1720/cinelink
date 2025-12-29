@@ -5,7 +5,7 @@ import Landingheader from './Landingheader'
 import { Link } from "react-router-dom";
 import "./Reg.css"
 import { useNavigate } from 'react-router-dom';
-import SHA256 from "crypto-js/sha256";
+
 const Reg = () => {
   const navigate = useNavigate();
 const [imageFile, setImageFile] = useState(null);
@@ -125,9 +125,7 @@ function isDisposableEmail(email) {
 }
 
 
-const hashPassword = (password) => {
-  return SHA256(password).toString();
-};
+
 
   function validatePassword(password) {
   const rules = [];
@@ -153,6 +151,8 @@ const hashPassword = (password) => {
 
 async function uploadImageAndInsertUser() {
   setRegistering(true);
+
+
   let imageUrl = formData.avatar_url && formData.avatar_url.trim() !== ""
   ? formData.avatar_url
   : "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
@@ -182,14 +182,22 @@ if (isDisposableEmail(formData.email)) {
 
     imageUrl = urlData.publicUrl;
   }
-const hashed = await hashPassword(formData.password);
 
-  // 3️⃣ Insert user details with imageUrl (could be NULL or actual URL)
+const {  data: authData, error: authError } = await supabase.auth.signUp({
+  email: formData.email,
+  password: formData.password,
+});
+if (authError) {
+  setPasswordError(authError.message);
+  setRegistering(false);
+  return;
+}
+
+  // 3️ Insert user details with imageUrl (could be NULL or actual URL)
   const newUser = {
     name: formData.name,
     email: formData.email,
-   
-    password:hashed,
+    password: "auth_managed", // TEMP ONLY,
     avatar_url: imageUrl,   // 👈 will be default one OR uploaded URL
     gender: formData.gender
   };
@@ -200,20 +208,14 @@ const hashed = await hashPassword(formData.password);
 
 
   if (error) {
-    if(error.code==='23505') 
-      {
-        setPasswordError("❌ Email already registered");
-        setRegistering(false);
-      } 
+     // rollback auth user removing data added to auth if db insert fails
+  await supabase.auth.admin.deleteUser(authData.user.id);
       console.error("Insert error:", error);
+      alert("Registration failed: ");
     setError(error.message);
   } else {
-    // console.log("User inserted:", data);
-    // Sign up user via Supabase Auth triggering verification email
-const { data3, error3 } = await supabase.auth.signUp({
-  email: formData.email,
-  password: hashed,
-});
+   
+
 
 alert("Registration successful! Please check your email to verify your account.");
 navigate("/Login");
