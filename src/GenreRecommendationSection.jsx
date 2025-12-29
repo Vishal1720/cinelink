@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 
 import "./GenreRecommendationSection.css";
 import { useNavigate } from "react-router-dom";
-export default function GenreRecommendationSection({ genres ,movieid,general=false,title="More From these Genres",width="1"}) {
+export default function GenreRecommendationSection({ genres ,movieid,general=false,title="More From these Genres",width="1",genre_name="nothing"}) {
   const [suggested, setSuggested] = useState([]);
   const scrollRef = useRef(null);
   const hasFetchedRef = useRef(false);
@@ -74,9 +74,17 @@ const randomTen = [...moviesData]
   return (
     <div className="genre-rec-section" style={{width:width==="1"?"89%":"100%"}}>
        {title ? (
+      genre_name !== "nothing" ? (
+
     <div className="genre-rec-title">
+      <span className="part1">{ "More In "}</span>
       <span className="part2">{title}</span>
+    </div>):(
+      <div className="genre-rec-title">
+      <span className="part2">{title}</span>
+      
     </div>
+    )
   ) : (
     <div className="genre-rec-title">
       <span className="part1">More From these</span>

@@ -2,17 +2,22 @@ import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
 import "./GenreRecommendationSection.css";
 import { useNavigate } from "react-router-dom";
-export default function OttMovieRecommendation({ ottname ,movieid}) {
+export default function OttMovieRecommendation({ ottname ,movieid="unavailable",width='1' }) {
   const [suggested, setSuggested] = useState([]);
   const scrollRef = useRef(null);
+  const hasFetchedRef = useRef(false);
  const navigate=useNavigate();
 
  const fetchSuggestions = async () => {
-  const { data: ottMovies, error: gError } = await supabase
-    .from("url_in_movies")
-    .select("movie_id")
-    .eq("ott_name", ottname).neq("movie_id", movieid);
+  let query = supabase
+  .from("url_in_movies")
+  .select("movie_id")
+  .eq("ott_name", ottname);
 
+  if (movieid !== "unavailable") {
+    query = query.neq("movie_id", movieid);
+  }
+  const { data: ottMovies, error: gError } = await query;
   if (gError) {
     console.log(gError);
     return;
@@ -48,8 +53,10 @@ const randomTen =[...moviesData]
 };
 
 useEffect(() => {
+    if (hasFetchedRef.current) return;
   if (!ottname) return;
   fetchSuggestions();
+   hasFetchedRef.current = true;
 }, [ottname, movieid]);
 
 const scrollLeft = () => {
@@ -61,10 +68,11 @@ const scrollRight = () => {
 };
 
 
-  if (suggested.length === 0) return null;
+  if (suggested.length === 0 ) return null;
+  if(movieid==="unavailable" && suggested.length<6)return null;
 
   return (
-    <div className="genre-rec-section">
+    <div className="genre-rec-section" style={{width:width==="1"?"89%":"100%"}}>
       <h2 className="genre-rec-title"><span className="part1">More on</span> <span className="part2"> {ottname}</span></h2>
 
       <div className="scroll-wrapper">

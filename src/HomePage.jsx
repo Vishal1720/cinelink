@@ -1,16 +1,11 @@
 import React, { useState, useEffect,useRef } from 'react';
-import { createClient } from '@supabase/supabase-js';
-
 import UserHeader from './UserHeader';
 import {supabase} from './supabase.js';
 import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
 import TopRatedSection from './TopRatedSection.jsx';
 import GenreRecommendationSection from './GenreRecommendationSection';
-
-
-
-
+import OttMovieRecommendation from './OttMovieRecommendation.jsx';
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -19,7 +14,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 const [homeGenres, setHomeGenres] = useState([]);
-
+const [ottnames, setOttnames] = useState([]);
 // fetch banners ONCE
 useEffect(() => {
   fetchBanners();
@@ -27,9 +22,27 @@ useEffect(() => {
 
  // fetch random home genres ONLY ONCE
 useEffect(() => {
-
   fetchHomeGenres();
+}, []);
 
+const fetch_ottnames = async () => {
+  const { data, error } = await supabase
+    .from("urls")
+    .select("ott_name")
+    
+  if (error || !data) return;
+
+  const names = data.map(item => item.ott_name);
+
+  const randomFour = [...names]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 4);
+
+  setOttnames(names);
+};
+
+useEffect(() => {
+  fetch_ottnames();
 }, []);
 
 const fetchHomeGenres = async () => {
@@ -43,8 +56,6 @@ const fetchHomeGenres = async () => {
     .map(g => g.genre_name)// converts objects → array of genre names
     .sort(() => Math.random() - 0.5)// shuffles the array randomly
     .slice(0, 5); // takes the first 4 items
-
-
   setHomeGenres(shuffled);
 };
 
@@ -270,8 +281,9 @@ const fetchHomeGenres = async () => {
   <GenreRecommendationSection
     key={genre}
     genres={[genre]}
-    title={`More in ${genre}`}
+    title={`${genre}`}
     width='all'
+    genre_name={genre}
     general
   />
 ))}
@@ -280,6 +292,12 @@ const fetchHomeGenres = async () => {
     limit={10}
     title="Top Rated Picks"
   />
+  {ottnames.map((ottname) => {
+    return <OttMovieRecommendation key={ottname} ottname={ottname}  width='all' />;
+  })  
+  }
+ 
+ 
     </>
   );
 };

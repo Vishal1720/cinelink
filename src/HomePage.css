@@ -325,10 +325,7 @@
 
 @media (max-width: 768px) {
  
-  .homepage .banner-description {
-    display: none;
- 
-  }
+  
     .homepage .banner-content {
     height: 100%;
     align-items: stretch;
