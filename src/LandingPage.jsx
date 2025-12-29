@@ -47,7 +47,7 @@ const LandingPage = () => {
     const name=localStorage.getItem("username");//this is only for admin for now 
     // 🔹 If user is already logged in, redirect to movie list page
     if (role === "user" && email) {
-      navigate("/movielistpage");
+      navigate("/homepage");
       return;
     }
     if (role === "admin" && name)  {
