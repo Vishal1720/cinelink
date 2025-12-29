@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import './UserHeader.css';
+import { supabase } from "./supabase";
 
 const UserHeader = () => {
   const role = localStorage.getItem("role");
@@ -52,6 +53,7 @@ const UserHeader = () => {
 
   const handleLogout = () => {
     localStorage.clear();
+    supabase.auth.signOut();
     navigate("/Login");
   };
 

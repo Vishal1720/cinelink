@@ -13,11 +13,14 @@ import ReviewsSection from "./ReviewsSection";
 import GoogleCallback from "./GoogleCallback";
 import Watchlist from "./Watchlist";
 import EditUserPage from "./EditUserPage";
-// import EditMovies from "./EditMovies";
+//  import EditMovies from "./EditMovies";
 import ScrollToTop from "./ScrollToTop";
 import LeaderBoardTable from "./LeaderBoardTable";
 import LeaderBoard from "./LeaderBoard";
 import HomePage from "./HomePage";
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
+
 function App() {
   
 
@@ -38,9 +41,11 @@ function App() {
           <Route path="/watchlist" element={<Watchlist type="Watchlist"/>} />
           <Route path="/useranalytics" element={<AdminUserAnalytics/>} />
           <Route path="/profile" element={<EditUserPage/>}/>
-          {/* <Route path="/edit-movies" element={<EditMovies />} /> */}
+           {/* <Route path="/edit-movies" element={<EditMovies />} /> */}
           <Route path="/leaderboard" element={<LeaderBoard />} />
           <Route path="/homepage" element={<HomePage/>}/>
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
          
       </Routes>
     </BrowserRouter>

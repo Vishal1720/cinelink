@@ -3,10 +3,7 @@ body {
   font-family: "Inter", sans-serif;
   background-color: #0e1625;
   color: #fff;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
-  /* height: 100vh; */
+
 }
 
 /* Center card inside the screen */
@@ -26,7 +23,7 @@ body {
   padding: 40px 35px;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  width: 360px;
+  width: 390px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -195,4 +192,40 @@ form {
   color: #999;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: -6px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+
+.forgot-password a {
+  color: #60a5fa; /* soft blue */
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.forgot-password a:hover {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+/* Optional: disabled look while loading */
+.forgot-password.disabled a {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.login-card {
+  margin-top: 4%;
+}
+/* Mobile */
+@media (max-width: 480px) {
+  .login-card {
+    margin-top: 20%;
+    padding: 1rem;
+    width: 360px;
+  }
 }

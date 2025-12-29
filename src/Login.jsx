@@ -196,6 +196,10 @@ const { data: data2, error: error2 } = await supabase
     )}
   </span>
 </div>
+<p className="forgot-password">
+  <Link to="/forgot-password">Forgot password?</Link>
+</p>
+
           {error && <p className="error-text">{error}</p>}
 
           <button className="login-btn" type="submit" disabled={loading}>
