@@ -3,11 +3,11 @@ import './Landingheader.css';
 import Reg from "./Reg";
 import Login from "./Login"; 
 import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 const Landingheader = () => {
 const navigate = useNavigate();
-
+const location = useLocation();
       const handlesigninClick = () => {
     navigate("/Login");  // manually go to /community route
   };
@@ -23,7 +23,9 @@ const navigate = useNavigate();
 useEffect(() => {
     const role = localStorage.getItem("role");
     const email = localStorage.getItem("userEmail");
-    const name=localStorage.getItem("username");//this is only for admin for now 
+    const name=localStorage.getItem("username");//this is only for admin for now
+    if (location.pathname === "/reset-password" ) {return}
+    
     // 🔹 If user is already logged in, redirect to movie list page
     if (role === "user" && email) {
       navigate("/movielistpage");
