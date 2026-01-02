@@ -65,7 +65,7 @@ const fetchHomeGenres = async () => {
       
       // Fetch banners with related movie information
       const { data, error } = await supabase
-        .from('bannerdetails')
+        .from('bannerdetailss')
         .select(`
           id,
           created_at,
@@ -86,19 +86,24 @@ const fetchHomeGenres = async () => {
         `)
         .order('created_at', { ascending: false });
 
+//  Shuffle banners randomly
+const shuffled = [...data].sort(() => Math.random() - 0.5);
+
+//  Take only 5 banners
+const randomFive = shuffled.slice(0, 5);
       if (error) throw error;
- console.log('Fetched banners:', data);
-      setBanners(data || []);
+ console.log('Fetched banners:', randomFive);
+      setBanners(randomFive || []);
       setError(null);
     } catch (err) {
       console.error('Error fetching banners:', err);
       setError('Failed to load banners');
       
-      // Fallback demo data
+      // Fallback demo data, the buttons do not work in this demo data
       setBanners([
         {
           id: 1,
-          banner_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBTOSgo53glsFfWNctlIh1bxADQnOF-dM2PjEO1rKGUbwrQnuA7jzdk6YB2NaJ9VpYzi-H1cqSWoJ6O08K6u6zp6fKfgSL60NVWneJJhGw3EH49jlEREbav_MkYvaE0mVDY3Fdw0VW8YcDQljmtsTJlpRbQP6YKYC3Gg8GtJOjZIvksmGjj3WwjDWkY3fSZ35uRfFgS3GjMU6u9I3R2otH3upL2A4bzTp6V2qzkVFxPuZo8y4HbtalRnXNGDCcKYui9N1CkEFZaFv8e',
+          banner_url: 'https://image.tmdb.org/t/p/original/65BTgbR7w8g5h8PlNwUgRVWqPyQ.jpg',
           movie_id: 1,
           
           movies: {

@@ -278,7 +278,7 @@ useEffect(() => {
             
 
   <div className="filter-row" style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-    <div className="content-type-tabs">
+   <div className="firstline" style={{width:"100vw"}}> <div className="content-type-tabs">
   {["All", "Movie", "Series"].map(t => (
     <button
       key={t}
@@ -310,7 +310,7 @@ useEffect(() => {
         </span>
       </button>
     </div>
-    
+    </div>
     <div className="search-section">
       <div className="search-container">
         <input
