@@ -65,7 +65,7 @@ const fetchHomeGenres = async () => {
       
       // Fetch banners with related movie information
       const { data, error } = await supabase
-        .from('bannerdetailss')
+        .from('bannerdetails')
         .select(`
           id,
           created_at,
