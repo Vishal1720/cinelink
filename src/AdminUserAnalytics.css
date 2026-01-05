@@ -1,12 +1,15 @@
 /* Main Container */
 .admin-analytics {
-  min-height: 100vh;
+  margin-left: 260px;
+  width: calc(100% - 260px); /* Fill the remaining space exactly */
+  padding: 2.5rem;
+   min-height: 100vh;
   background-color: #101922;
   color: #fff;
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   position: relative;
-  padding: 1rem;
-  width: 80vw;
+  
+  
 }
 
 /* Background Gradient */
@@ -25,9 +28,10 @@
 .analytics-container {
   position: relative;
   z-index: 10;
-  width: 70vw;
+  max-width: 1200px;   /* optional for clean alignment */
   margin: 0 auto;
 }
+
 
 /* Loading State */
 .analytics-loading {
@@ -43,6 +47,7 @@
 /* Header */
 .analytics-header {
   margin-bottom: 2rem;
+  
 }
 
 .breadcrumb {
@@ -86,16 +91,18 @@
 
 .header-text h2 {
   font-size: 2.25rem;
-  font-weight: bold;
-  margin: 0 0 0.5rem 0;
-  letter-spacing: -0.025em;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
 .header-text p {
+  margin-top: 0.5rem;
   color: #94a3b8;
-  font-size: 1rem;
-  margin: 0;
+  max-width: 600px;
 }
+
 
 .header-actions {
   display: flex;
@@ -596,7 +603,8 @@
 
 @media (max-width: 768px) {
   .admin-analytics {
-    padding: 1rem;
+     margin-left: 0;
+    width: 100%;
   }
 
   .header-text h2 {
@@ -611,6 +619,10 @@
   .search-container {
     max-width: 100%;
   }
+  .analytics-header {
+  padding-top: 10vh;
+  
+}
 }
 /* Mobile Responsive - Concise Version */
 
