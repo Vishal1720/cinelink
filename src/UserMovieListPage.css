@@ -12,6 +12,8 @@
 
 .main-content {
   padding-top: 70px;
+
+  
 }
 
 .content-wrapper {
@@ -258,6 +260,8 @@
 
 .movies-section {
   margin-top: 8px;
+  margin-left: 2%;
+  margin-right: 1%;
 }
 
 .movies-grid {
