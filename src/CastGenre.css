@@ -555,3 +555,81 @@
     opacity: 1;
   }
 }
+@media (max-width: 768px) {
+
+  /* Page padding */
+  .main-content {
+    padding: 1rem;
+  }
+
+  /* Panels should feel full-width */
+  .panel {
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  /* Reduce heading size */
+  .panel h2 {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  /* Stack form inputs cleanly */
+  .input-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .input-label p {
+    font-size: 0.9rem;
+  }
+
+  /* Inputs */
+  .text-input {
+    height: 2.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* Add Genre button */
+  .btn-primary {
+    width: 100%;
+    height: 2.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* Search box */
+  .search-input {
+    width: 100%;
+    height: 2.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* Table → card-style rows */
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+  }
+
+  .data-table td {
+    padding: 0;
+    font-size: 0.9rem;
+  }
+
+  /* Action buttons easier to tap */
+  .action-buttons {
+    gap: 1rem;
+  }
+
+  .btn-icon span {
+    font-size: 1.4rem;
+  }
+  .grid-container{
+    margin-left: 3%;
+  }
+}
