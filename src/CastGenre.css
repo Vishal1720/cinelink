@@ -161,11 +161,11 @@
 
 /* Grid */
 .grid-container {
-  margin-left: 12.5%;
+  margin-left:17%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 2rem;
-  width: 100%;
+  width: flex;
 }
 
 @media (max-width: 1024px) {
