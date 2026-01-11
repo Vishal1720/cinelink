@@ -60,26 +60,6 @@ const validateForm = () => {
     setLoading(true);
 
     try {
-
-       // Check admin table first
-  const { data: adminData, error: adminError } = await supabase
-    .from("admin")
-    .select("*")
-    .eq("email", formData.email)
-    .eq("password", formData.password);
-
-  if (adminError) {
-    console.error("❌ Supabase admin error:", adminError.message);
-    setError("Something went wrong. Please try again later.");
-  } else if (adminData && adminData.length > 0) {
-    // Admin found, redirect to AdminPage
-  
-         localStorage.setItem("role", "admin");
-         localStorage.setItem("username", adminData[0].name);
-        localStorage.setItem("userimage", adminData[0].avatar_url);
-    navigate("/adminpage");
-  } else {
-
    const { data:authdata, error:autherror } = await supabase.auth.signInWithPassword({
   email: formData.email,
   password: formData.password,
@@ -110,7 +90,23 @@ const { data: data2, error: error2 } = await supabase
 }
 
       
-       
+       if(data2["role"]=="admin"){
+        const isAdminIntent = window.confirm("Hey Admin! Do you want to proceed to the Admin Page?");
+         
+          localStorage.setItem("userEmail", data2.email);
+    localStorage.setItem("username", data2.name);
+    localStorage.setItem("userimage", data2.avatar_url);
+     if(isAdminIntent){
+          localStorage.setItem("role", "admin");
+          navigate("/adminpage");
+          }
+          else{
+          localStorage.setItem("role", "user");
+          navigate("/homepage");
+          }
+    
+          return;
+       }
   
    localStorage.setItem("role", "user");
    localStorage.setItem("userEmail", data2.email);
@@ -120,7 +116,7 @@ const { data: data2, error: error2 } = await supabase
      
 }  
       
-    }
+    
     } catch (err) {
       console.error("⚠️ Unexpected error:", err);
       setError(`An unexpected error occurred.${err}`);

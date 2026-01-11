@@ -25,10 +25,10 @@ const defaultAvatarUrl ="https://wiggitkoxqislzddubuk.supabase.co/storage/v1/obj
 
         const { data: existingUser } = await supabase
   .from("user")
-  .select("email, avatar_url, name")
+  .select("email, avatar_url, name,role")
   .eq("email", email)
   .single();
-  
+ 
   // 2️⃣ If user EXISTS → update only safe fields
 if (existingUser) {
 
@@ -65,7 +65,18 @@ else {
       localStorage.setItem("role", "user");
       localStorage.setItem("userEmail", email);
       localStorage.setItem("username", name); 
-
+      if(existingUser.role==="admin"){
+        const navToAdmin = window.confirm("Hey Admin! Do you want to proceed to the Admin Page?");
+        if(navToAdmin){
+        localStorage.setItem("role", "admin");
+        navigate("/adminpage");
+        }
+        else{
+          localStorage.setItem("role", "user");
+          navigate("/homepage");
+        }
+        return;
+      }
       navigate("/homepage");
     };
 
