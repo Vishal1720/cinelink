@@ -7,6 +7,7 @@ import './MovieDetails.css';
 import ReviewsSection from './ReviewsSection';
 import RatingDonutChart from "./RatingDonutChart";
 import GenreRecommendationSection from './GenreRecommendationSection';
+import { useNavigate } from 'react-router-dom';
 import LikeBasedRecommendationSection from './LikeBasedRecommendationSection';
 const MovieDetails = () => {
   const { id } = useParams();
@@ -17,7 +18,7 @@ const MovieDetails = () => {
   const [loading, setLoading] = useState(true);
   const [selectedRating, setSelectedRating] = useState(null);
   const [reviewCounts, setReviewCounts] = useState({});
-
+const navigate = useNavigate();
 
 
 
@@ -246,6 +247,16 @@ const uniqueOttNames = [...new Set(ottNames)];
                     )}
                   </a>
                 ))}
+                <div className="moviedetails-btn-ott">
+  <button
+    className="discussion-icon-btn"
+    onClick={() => navigate(`/discussion/${id}`)}
+  >
+    <span className="material-symbols-outlined">groups</span>
+   
+  </button>
+</div>
+
               </div>
             </div>
 

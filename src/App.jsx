@@ -20,7 +20,7 @@ import LeaderBoard from "./LeaderBoard";
 import HomePage from "./HomePage";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
-
+import MovieDiscussion from "./MovieDiscussion";
 function App() {
   
 
@@ -46,7 +46,7 @@ function App() {
           <Route path="/homepage" element={<HomePage/>}/>
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-         
+         <Route path="/discussion/:id" element={<MovieDiscussion />} />
       </Routes>
     </BrowserRouter>
   );
