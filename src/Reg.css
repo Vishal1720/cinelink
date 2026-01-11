@@ -69,7 +69,7 @@
     color: #d1d5db;
   }
 
-  input[type="text"],
+  
   input[type="email"],
   input[type="password"],input[type="tel"] {
     background: #1e2533;
@@ -83,7 +83,18 @@
     margin-bottom: 18px;
     transition: background 0.3s;
   }
-
+.regformcontainer input[type="text"]{
+  background: #1e2533;
+    border: none;
+    border-radius: 20px;
+    width: 100%;
+    padding: 12px 20px;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    outline: none;
+    margin-bottom: 18px;
+    transition: background 0.3s;
+}
   input::placeholder {
     color: #6b7280;
   }
