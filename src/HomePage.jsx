@@ -92,7 +92,7 @@ const shuffled = [...data].sort(() => Math.random() - 0.5);
 //  Take only 5 banners
 const randomFive = shuffled.slice(0, 5);
       if (error) throw error;
- console.log('Fetched banners:', randomFive);
+
       setBanners(randomFive || []);
       setError(null);
     } catch (err) {

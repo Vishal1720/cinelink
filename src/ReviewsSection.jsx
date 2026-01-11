@@ -68,7 +68,7 @@ const fetchUserRanks = async (emails) => {
   const getUser = async () => {
     const email = localStorage.getItem("userEmail");
     if (!email) return;
-    console.log(email);
+
     const { data, error } = await supabase
       .from("user")
       .select("*")//alias userRank
@@ -84,7 +84,7 @@ const fetchUserRanks = async (emails) => {
     .single();
     if (!rankError && rankData) {
       setUser(prevUser => ({ ...prevUser, userRank: rankData.position }));
-      console.log("User rank:", rankData.position);
+    
     }
    
   };
@@ -113,7 +113,7 @@ const fetchUserRanks = async (emails) => {
         .select(`*, user:email ( avatar_url, name ), rating:rating_cat ( cat_name )`)
         .eq('movie_id', movieId)
         .order('created_at', { ascending: false });
-console.log("Fetched reviews:", data);
+
       if (error) throw error;
       //  create emails array
     const emails = [...new Set(data.map(r => r.email))];
@@ -229,8 +229,6 @@ try {
     .sort((a, b) => b.likes - a.likes)
     .slice(0, 10);
       const topReviewsSize = topReviews.length;
-console.log("Top reviews count:", topReviewsSize);
-
   generateAiSummary(topReviews);
 
   };

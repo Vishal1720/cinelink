@@ -162,7 +162,7 @@ const MovieDiscussion = () => {
   return (
     <>
      <UserHeader/>
-    <div className="movie-discussion-container" style={{marginTop:"13vh"}}>
+    <div className="movie-discussion-container" >
         
       {/* Movie Info */}
       <aside className="movie-sidebar">

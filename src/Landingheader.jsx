@@ -32,10 +32,7 @@ useEffect(() => {
     }else if (role === "admin" && name)  {
       navigate("/adminpage");
     }
-    else {
-      // 🔹 If no logged-in user, stay on landing and show console message
-      console.log("No user logged in from landing header");
-    }
+   
   }, [navigate]); // dependency so effect runs once after render
   return (
     <header className="cineverse-header">

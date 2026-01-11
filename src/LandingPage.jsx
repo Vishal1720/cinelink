@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import "./LandingPage.css"
 const LandingPage = () => {
   const navigate = useNavigate();
-  console.log("Going in to Landing Page");
 
   async function verifyUser() {
       const { data, error } = await supabase.auth.getUser();
@@ -18,20 +17,20 @@ const LandingPage = () => {
 // This prevents errors if 'data' is null or undefined.
 // Extract the actual user object safely with optional chaining
  const user = data?.user;
-      console.log('User data:', user);
+     
       if (user && user.email_confirmed_at) {
         // Email verified, update registration table
-        console.log("User is verified now verfiying in the table")
+        
         const { error: updateError } = await supabase
           .from('user')
           .update({verified: true })
           .eq('email', user.email);
-          console.log('User email:', user.email);
+         
 
         if (updateError) {
           console.error('Error updating verification status:', updateError);
         } else {
-          console.log('User verified status updated.');
+          
           alert("Email verified successfully! Please log in now.");
           navigate("/Login");
         }
@@ -54,11 +53,8 @@ const LandingPage = () => {
       navigate("/adminpage");
       return;
     }
-    else {
-      // 🔹 If no logged-in user, stay on landing and show console message
-      console.log("No user logged in from landing header");
-    }
-      console.log("Verifying user email status...");
+   
+      
     
 if(role!=="user" && role!=="admin")
     verifyUser();

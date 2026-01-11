@@ -73,7 +73,7 @@ const validateForm = () => {
     setError("Something went wrong. Please try again later.");
   } else if (adminData && adminData.length > 0) {
     // Admin found, redirect to AdminPage
-    console.log("Admin login data:", adminData);
+  
          localStorage.setItem("role", "admin");
          localStorage.setItem("username", adminData[0].name);
         localStorage.setItem("userimage", adminData[0].avatar_url);
@@ -109,7 +109,7 @@ const { data: data2, error: error2 } = await supabase
   return;
 }
 
-        console.log("User login data:", data2);
+      
        
   
    localStorage.setItem("role", "user");
@@ -140,7 +140,7 @@ const { data: data2, error: error2 } = await supabase
           <div className="input-group">
             <label>Email</label>
             <input
-              type="text"
+              type="email"
               name="email"
               placeholder="Enter your email"
               value={formData.email}
