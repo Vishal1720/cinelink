@@ -8,26 +8,22 @@ const defaultAvatarUrl ="https://wiggitkoxqislzddubuk.supabase.co/storage/v1/obj
   useEffect(() => {
     const handleGoogleLogin = async () => {
       const { data, error } = await supabase.auth.getUser();
-
       if (error || !data?.user) {
         console.error(error);
         navigate("/login");
         return;
       }
-
       const user = data.user;
-
       const email = user.email;
       const name = user.user_metadata.full_name || "Google User";
       const avatar_url =
         user.user_metadata.avatar_url ||
         "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
-
         const { data: existingUser } = await supabase
   .from("user")
   .select("email, avatar_url, name,role")
   .eq("email", email)
-  .single();
+  .maybeSingle();
  
   // 2️⃣ If user EXISTS → update only safe fields
 if (existingUser) {
@@ -35,8 +31,7 @@ if (existingUser) {
   await supabase
     .from("user")
     .update({
-      name: name,           // ✅ column
-      
+      name: name,           // ✅ column this can be removed since name will be overwritten
       verified: true,       // ✅ column
     })
     .eq("email", email);    // ✅ condition column
@@ -45,13 +40,12 @@ if (existingUser) {
    // Save avatar to localStorage
   localStorage.setItem("userimage", finalAvatar);
 } 
-
 // 3️⃣ If NEW user → insert with required columns
 else {
   localStorage.setItem("userimage", avatar_url);
   await supabase
     .from("user")
-    .insert({
+    .upsert({
       email: email,               // ✅ column
       name: name,                 // ✅ column
       password: "GOOGLE_AUTH",    // ✅ required column
@@ -65,7 +59,7 @@ else {
       localStorage.setItem("role", "user");
       localStorage.setItem("userEmail", email);
       localStorage.setItem("username", name); 
-      if(existingUser.role==="admin"){
+      if(existingUser && existingUser.role==="admin"){
         const navToAdmin = window.confirm("Hey Admin! Do you want to proceed to the Admin Page?");
         if(navToAdmin){
         localStorage.setItem("role", "admin");
