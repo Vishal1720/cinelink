@@ -30,6 +30,18 @@ const imgSrc = userimg || defaultAvatar;
     setIsMenuOpen(false);
     navigate("/useranalytics");
   };
+
+  const dashboard = () => {
+    setIsMenuOpen(false);
+    navigate("/adminpage");
+  };
+
+  const reviews_page = () => {
+  setIsMenuOpen(false);
+  navigate("/admin-reviews");
+};
+
+
   const logout = () => {
     localStorage.clear();
     navigate("/Login");
@@ -80,7 +92,7 @@ const isActive = (path) =>
         <nav className="nav-menu">
           <ul>
             <li>
-              <button className="admin-nav-item " onClick={toggleMenu}>
+              <button className={`admin-nav-item ${isActive("/adminpage")}`} onClick={dashboard}>
                 <span className="admin-icon">📊</span>
                 Dashboard
               </button>
@@ -92,17 +104,21 @@ const isActive = (path) =>
               </button>
             </li>
             <li>
-              <button className="admin-nav-item" onClick={user_analytics}>
+              <button className={`admin-nav-item ${isActive("/useranalytics")}`} onClick={user_analytics}>
                 <span className="admin-icon">👥</span>
                 Users
               </button>
             </li>
-            <li>
-              <button className="admin-nav-item" onClick={toggleMenu}>
-                <span className="admin-icon">⭐</span>
-                Reviews
-              </button>
+           <li>
+              <button
+                 className={`admin-nav-item ${isActive("/admin-reviews")}`}
+                  onClick={reviews_page}
+                >
+                  <span className="admin-icon">⭐</span>
+                    Reviews
+             </button>
             </li>
+
             <li>
               <button className={`admin-nav-item ${isActive("/castgenre")}`} onClick={genre_caste}>
                 <span className="admin-icon">➕</span>

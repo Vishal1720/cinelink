@@ -9,6 +9,8 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CastGenre from "./CastGenre";
 import UserMovieListPage from "./UserMovieListPage";
+import Reviews from "./Reviews";
+
 import ReviewsSection from "./ReviewsSection";
 import GoogleCallback from "./GoogleCallback";
 import Watchlist from "./Watchlist";
@@ -47,6 +49,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
          <Route path="/discussion/:id" element={<MovieDiscussion />} />
+         <Route path="/admin-reviews" element={<Reviews />} />
+
       </Routes>
     </BrowserRouter>
   );
