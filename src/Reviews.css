@@ -256,6 +256,17 @@
   background: #2563eb;
   border-color: #2563eb;
 }
+/* ===========================
+   FIX MOBILE LAYOUT SHIFT
+=========================== */
+@media (max-width: 1024px) {
+  .reviews-ui {
+    margin-left: 0 !important;
+    width: 100% !important;
+     
+  }
+}
+
 
 /* ===========================
    MOBILE RESPONSIVE
