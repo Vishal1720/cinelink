@@ -203,7 +203,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-width: 600px;
+ align-items: flex-start;
+ max-width: 60%;
 }
 
 .message.own .content {
@@ -421,8 +422,8 @@
   color: white;
 }
 .avatar-img {
-  width: 36px;
-  height: 36px;
+  width: 43px;
+  height: 43px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
