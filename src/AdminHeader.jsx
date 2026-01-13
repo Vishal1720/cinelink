@@ -92,7 +92,7 @@ const isActive = (path) =>
         <nav className="nav-menu">
           <ul>
             <li>
-              <button className={`admin-nav-item ${isActive("/adminpage")}`} onClick={dashboard}>
+              <button className={`admin-nav-item ${isActive("/dashboard")}`} onClick={dashboard}>
                 <span className="admin-icon">📊</span>
                 Dashboard
               </button>
