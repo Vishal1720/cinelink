@@ -14,6 +14,49 @@
   font-size: 12px;
   color: #94a3b8;
 }
+/* ===========================
+   RATING CELL (FIXED)
+=========================== */
+.rating-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rating-cell strong {
+  font-size: 16px;
+  color: #facc15;
+}
+
+.rating-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating-emoji {
+  font-size: 18px;
+}
+
+.rating-text {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* ===========================
+   REVIEW TEXT CLEAN
+=========================== */
+.review-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #e5e7eb;
+}
+
+.review-text.spam {
+  color: #f87171;
+  font-style: italic;
+}
+
 
 
 /* ===========================
@@ -151,10 +194,23 @@
 /* ===========================
    USER CELL
 =========================== */
-.user-cell {
+.reviews-ui .user-cell {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  align-items: flex-start;   /* 🔥 KEY FIX */
+}
+
+.user-email {
+  font-size: 13px;
+  font-weight: 500;
+  color: #cbd5f5;
+  word-break: break-all;
+}
+
+.user-date {
+  font-size: 11px;
+  color: #64748b;
 }
 
 .user-cell strong {
@@ -167,10 +223,11 @@
   color: #64748b;
 }
 
+
 /* ===========================
    RATING CELL
 =========================== */
-.rating-cell {
+.reviews-ui .rating-cell {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -190,7 +247,7 @@
 /* ===========================
    REVIEW TEXT
 =========================== */
-.review-text {
+.reviews-ui .review-text {
   font-size: 14px;
   line-height: 1.6;
   color: #e5e7eb;
@@ -212,7 +269,7 @@
 /* ===========================
    ACTION CELL
 =========================== */
-.action-cell {
+.reviews-ui .action-cell {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -271,16 +328,10 @@
 /* ===========================
    MOBILE RESPONSIVE
 =========================== */
+/* ===========================
+   MOBILE RESPONSIVE (FINAL)
+=========================== */
 @media (max-width: 768px) {
-  .reviews-topbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .reviews-topbar input,
-  .export-btn {
-    width: 100%;
-  }
 
   .reviews-header-row {
     display: none;
@@ -291,19 +342,55 @@
     gap: 14px;
     padding: 16px;
     border-radius: 16px;
-    background: rgba(255, 255, 255, 0.035);
+    background: rgba(255, 255, 255, 0.04);
     margin-bottom: 16px;
   }
 
+  /* FORCE LEFT ALIGN FOR ALL CELLS */
+  .review-row > div {
+    justify-self: start;
+    text-align: left;
+    width: 100%;
+  }
+
+  /* MOVIE */
   .movie-cell {
     align-items: center;
   }
 
-  .rating-cell {
-    flex-direction: row;
-    justify-content: space-between;
+  /* USER */
+  .reviews-ui .user-cell {
+    gap: 4px;
   }
 
+  .user-email {
+    font-size: 13px;
+  }
+
+  .user-date {
+    font-size: 11px;
+  }
+
+  /* RATING */
+  .rating-cell {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rating-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* REVIEW */
+  .review-text {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ACTION */
   .action-cell {
     justify-content: flex-end;
   }
