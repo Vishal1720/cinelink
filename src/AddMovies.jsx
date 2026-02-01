@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import "./AddMovies.css";
 import { supabase } from "./supabase";
 import Select from 'react-select';
-
+import { useNavigate } from 'react-router-dom';
 const AddMovies = () => {
   const [activeTab, setActiveTab] = useState("core");
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const [posterFile, setPosterFile] = useState(null);
   const [posterPreview, setPosterPreview] = useState(null);
@@ -265,7 +266,9 @@ for (const castItem of formData.castList) {
   return (
     <div className="add-movie-container">
       <h1 className="page-title">Add New Movie</h1>
-
+      <button type="button" className="edit-movie-btn" onClick={()=>{navigate("/edit-movies")}}>
+    ✏️ Edit Movie
+  </button>
       <div className="content-card">
 
         <div className="tabs">

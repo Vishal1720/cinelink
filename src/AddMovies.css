@@ -722,3 +722,25 @@ grid-template-columns: 1fr 1fr;
 .react-select-container .react-select__option--is-selected {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
+
+/* Edit Movie Button */
+.edit-movie-btn {
+  background-color: #0f172a; /* dark slate */
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-movie-btn:hover {
+  background-color: #1e293b;
+  transform: translateY(-1px);
+}
+
+.edit-movie-btn:active {
+  transform: translateY(0);
+}

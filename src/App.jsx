@@ -23,6 +23,7 @@ import HomePage from "./HomePage";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import MovieDiscussion from "./MovieDiscussion";
+import EditMovies from "./EditMovies";
 function App() {
   
 
@@ -50,6 +51,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
          <Route path="/discussion/:id" element={<MovieDiscussion />} />
          <Route path="/admin-reviews" element={<Reviews />} />
+          <Route path="/edit-movies" element={<EditMovies />} />
 
       </Routes>
     </BrowserRouter>
