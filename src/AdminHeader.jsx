@@ -41,6 +41,10 @@ const imgSrc = userimg || defaultAvatar;
   navigate("/admin-reviews");
 };
 
+  const banner = () => {
+    setIsMenuOpen(false);
+    navigate("/upload-banner");
+  }
 
   const logout = () => {
     localStorage.clear();
@@ -92,14 +96,17 @@ const isActive = (path) =>
         <nav className="nav-menu">
           <ul>
             <li>
-              <button className={`admin-nav-item ${isActive("/dashboard")}`} onClick={dashboard}>
-                <span className="admin-icon">📊</span>
-                Dashboard
+              <button className={`admin-nav-item ${isActive("/upload-banner")}`} onClick={banner}>
+              
+                <span class="material-icons-round">campaign</span>
+
+                Banner
               </button>
             </li>
             <li>
               <button className={`admin-nav-item ${isActive("/adminpage")}`} onClick={movie_page}>
                 <span className="admin-icon">🎬</span>
+                
                 Movies
               </button>
             </li>

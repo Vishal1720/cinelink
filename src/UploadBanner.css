@@ -1,0 +1,699 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Round');
+
+/* Scoped to banner-management container */
+.banner-management {
+  display: flex;
+  min-height: 100vh;
+  background: #0f172a;
+  color: #f1f5f9;
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Reset only for direct children to avoid affecting AdminHeader */
+.banner-management .main-content,
+.banner-management .main-content * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.banner-management .main-content {
+  flex: 1;
+  padding: 2rem;
+  padding-bottom: 5rem;
+}
+
+/* Page Header */
+.banner-management .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.banner-management .page-header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.banner-management .page-header p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.banner-management .header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.banner-management .btn-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.banner-management .btn-filter:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.banner-management .btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: #06b6d4;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+}
+
+.banner-management .btn-primary:hover {
+  background: #0891b2;
+}
+
+.banner-management .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Glass Card */
+.banner-management .glass-card {
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.banner-management .glass-card::before {
+  content: '';
+  position: absolute;
+  top: -8rem;
+  right: -8rem;
+  width: 16rem;
+  height: 16rem;
+  background: rgba(6, 182, 212, 0.1);
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.banner-management .section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.banner-management .accent-bar {
+  width: 4px;
+  height: 1.25rem;
+  background: #ec4899;
+  border-radius: 2px;
+}
+
+.banner-management .accent-bar.primary {
+  background: #06b6d4;
+}
+
+/* Upload Form */
+.banner-management .upload-form {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.banner-management .file-upload-box {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 1.5rem;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.banner-management .file-upload-box:hover {
+  border-color: rgba(6, 182, 212, 0.5);
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.banner-management .file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.banner-management .upload-content {
+  text-align: center;
+  padding: 1.5rem;
+  transition: transform 0.3s;
+}
+
+.banner-management .file-upload-box:hover .upload-content {
+  transform: scale(1.05);
+}
+
+.banner-management .upload-icon {
+  width: 4rem;
+  height: 4rem;
+  background: rgba(148, 163, 184, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  transition: all 0.3s;
+}
+
+.banner-management .file-upload-box:hover .upload-icon {
+  background: rgba(6, 182, 212, 0.2);
+  color: #06b6d4;
+}
+
+.banner-management .upload-icon .material-icons-round {
+  font-size: 2rem;
+  color: #94a3b8;
+}
+
+.banner-management .file-upload-box:hover .upload-icon .material-icons-round {
+  color: #06b6d4;
+}
+
+.banner-management .upload-content h3 {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.banner-management .upload-content p {
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.banner-management .preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Form Fields */
+.banner-management .form-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.banner-management .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.banner-management .form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin-bottom: 0.5rem;
+}
+
+.banner-management .input-wrapper {
+  position: relative;
+}
+
+.banner-management .input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+.banner-management .form-group input,
+.banner-management .form-group textarea {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 0.75rem;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.banner-management .form-group textarea {
+  padding: 0.75rem;
+  resize: none;
+}
+
+.banner-management .form-group input:focus,
+.banner-management .form-group textarea:focus {
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+}
+
+.banner-management .form-group input::placeholder,
+.banner-management .form-group textarea::placeholder {
+  color: #64748b;
+}
+
+.banner-management .field-hint {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Movie Dropdown */
+.banner-management .movie-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  background: #1e293b;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.banner-management .movie-option {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.banner-management .movie-option:hover {
+  background: rgba(6, 182, 212, 0.1);
+}
+
+.banner-management .movie-id {
+  color: #06b6d4;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.banner-management .movie-title {
+  color: #fff;
+  font-weight: 500;
+}
+
+.banner-management .movie-year {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+/* Form Actions */
+.banner-management .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.banner-management .btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 0.75rem;
+  color: #cbd5e1;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.banner-management .btn-secondary:hover {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+.banner-management .btn-add {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #06b6d4;
+  border: none;
+  border-radius: 0.75rem;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+}
+
+.banner-management .btn-add:hover {
+  background: #0891b2;
+}
+
+.banner-management .btn-add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Banners List */
+.banner-management .list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.banner-management .search-box {
+  position: relative;
+  width: 16rem;
+}
+
+.banner-management .search-box .material-icons-round {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.25rem;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.banner-management .search-box input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+  background: #1e293b;
+  border: none;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.banner-management .search-box input:focus {
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3);
+}
+
+/* Table */
+.banner-management .table-container {
+  background: #1e293b;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.banner-management table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.banner-management thead tr {
+  background: rgba(15, 23, 42, 0.5);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.banner-management thead th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.banner-management tbody tr {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.banner-management tbody tr:hover {
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.banner-management tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.banner-management .banner-preview {
+  position: relative;
+  width: 12rem;
+  aspect-ratio: 16/9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.banner-management .banner-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-management .preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.banner-management tbody tr:hover .preview-overlay {
+  opacity: 1;
+}
+
+.banner-management .preview-overlay .material-icons-round {
+  color: white;
+}
+
+/* Movie Info */
+.banner-management .movie-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.banner-management .movie-info .movie-id {
+  font-size: 0.75rem;
+  color: #06b6d4;
+  font-weight: 700;
+}
+
+.banner-management .movie-info h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.banner-management .movie-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.banner-management .genre-tag {
+  background: rgba(148, 163, 184, 0.2);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* Banner Description */
+.banner-management .banner-description {
+  font-size: 0.875rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+  display: -webkit-box;
+
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Status Badge */
+.banner-management .status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.banner-management .status-badge.active {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* Action Buttons */
+.banner-management .action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.banner-management tbody tr:hover .action-buttons {
+  opacity: 1;
+}
+
+.banner-management .btn-icon {
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.banner-management .btn-icon:hover {
+  background: rgba(6, 182, 212, 0.1);
+  color: #06b6d4;
+}
+
+.banner-management .btn-icon.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* Empty State */
+.banner-management .empty-state {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.banner-management .empty-state .material-icons-round {
+  font-size: 4rem;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+
+.banner-management .empty-state p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* Text Alignment Utilities */
+.banner-management .text-center {
+  text-align: center;
+}
+
+.banner-management .text-right {
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .banner-management .upload-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-management .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .banner-management .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .banner-management .search-box {
+    width: 100%;
+  }
+
+  .banner-management .table-container {
+    overflow-x: auto;
+  }
+
+  .banner-management table {
+    min-width: 900px;
+  }
+}
+ .main-content{
+    margin-left:18vw;
+    width: 100-18vw;
+}
+.main-content .page-header{
+   margin-left:18vw;
+    width: 100-18vw;
+}
+.upload-section .glass-card{
+   margin-left:18vw;
+    width: 82vw;
+}
+.upload-section .glass-card{
+  
+    width: 78vw;
+}
+.banners-list{
+
+  margin-left:38vw;
+    width: 80vw;
+}
+.banners-list .table-container{
+   margin-left:18vw;
+    width: 76vw;
+}
+.banners-list table {
+padding: 100px;
+    
+}
