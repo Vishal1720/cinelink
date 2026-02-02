@@ -1,7 +1,7 @@
-/* /* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons+Round');
 
-/* Scoped to banner-management container 
+
 .banner-management {
   display: flex;
   min-height: 100vh;
@@ -668,10 +668,7 @@
     min-width: 900px;
   }
 }
- .main-content{
-    margin-left:18vw;
-    width: 100-18vw;
-}
+
 .main-content .page-header{
    margin-left:18vw;
     width: 100-18vw;
@@ -696,4 +693,4 @@
 .banners-list table {
 padding: 100px;
     
-} */
+} 
