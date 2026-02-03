@@ -25,6 +25,7 @@ import ResetPassword from "./ResetPassword";
 import MovieDiscussion from "./MovieDiscussion";
 import EditMovies from "./EditMovies";
 import UploadBanner from "./UploadBanner";
+import CastDetails from "./CastDetails";
 function App() {
   
 
@@ -54,6 +55,7 @@ function App() {
          <Route path="/admin-reviews" element={<Reviews />} />
           <Route path="/edit-movies" element={<EditMovies />} />
           <Route path="/upload-banner" element={<UploadBanner />} />
+          <Route path="/cast/:castId" element={<CastDetails />} />
 
       </Routes>
     </BrowserRouter>
