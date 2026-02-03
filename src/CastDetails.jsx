@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { supabase } from './supabase.js';
 import UserHeader from './UserHeader';
+import { useNavigate } from 'react-router-dom';
 import './CastDetails.css';
 import { useParams } from 'react-router-dom';
 const CastDetails = () => {
 const { castId } = useParams();
+const navigate = useNavigate();
   const [cast, setCast] = useState(null);
   const [movies, setMovies] = useState([]);
   const [series, setSeries] = useState([]);
@@ -90,7 +92,7 @@ const { castId } = useParams();
   }
 
   return (
-    <div className="cast-details-container">
+    <div className="cast-details-container" style={{marginTop:"12vh"}}>
       <UserHeader />
       
       <div className="cast-details-layout">
@@ -116,8 +118,6 @@ const { castId } = useParams();
             <div className="cast-details-header">
               <h1 className="cast-details-name">{cast.cast_name}</h1>
               <div className="cast-details-roles">
-                <span className="cast-details-role-primary">Actress</span>
-                <span className="cast-details-role-secondary">Producer</span>
               </div>
             </div>
 
@@ -133,18 +133,7 @@ const { castId } = useParams();
               </button>
             </div>
 
-            {/* Social Links */}
-            <div className="cast-details-social">
-              <a href="#" className="cast-details-social-link">
-                <span className="material-symbols-outlined">public</span>
-              </a>
-              <a href="#" className="cast-details-social-link">
-                <span className="material-symbols-outlined">alternate_email</span>
-              </a>
-              <a href="#" className="cast-details-social-link">
-                <span className="material-symbols-outlined">link</span>
-              </a>
-            </div>
+            
           </div>
         </aside>
 
@@ -160,10 +149,11 @@ const { castId } = useParams();
             <span className="cast-details-breadcrumb-sep">/</span>
             <span className="cast-details-breadcrumb-current">{cast.cast_name}</span>
           </div>
-
+        {movies.length > 0 && (
+          <>
           {/* Feature Films Section */}
           <section className="cast-details-section">
-            <div className="cast-details-section-header">
+            <div className="cast-details-section-header" >
               <h3 className="cast-details-section-title">Feature Films</h3>
               <a href="#" className="cast-details-view-all">
                 View all ({movies.length})
@@ -172,18 +162,13 @@ const { castId } = useParams();
             </div>
             <div className="cast-details-scroll-container">
               {movies.map((movie) => (
-                <div key={movie.id} className="cast-details-card">
+                <div key={movie.id} className="cast-details-card" onClick={()=>{navigate(`/movie/${movie.id}`)}} style={{cursor:"pointer"}}>
                   <div className="cast-details-card-image">
                     <div 
                       className="cast-details-card-bg"
                       style={{ backgroundImage: `url(${movie.poster_url || 'https://via.placeholder.com/300x450'})` }}
                     ></div>
-                    <div className="cast-details-card-comments">
-                      <span className="material-symbols-outlined">chat_bubble</span>
-                      <span className="cast-details-card-comments-count">
-                        {Math.floor(Math.random() * 5000)}
-                      </span>
-                    </div>
+                  
                   </div>
                   <h4 className="cast-details-card-title">{movie.title}</h4>
                   <p className="cast-details-card-year">{movie.year}</p>
@@ -191,8 +176,10 @@ const { castId } = useParams();
               ))}
             </div>
           </section>
+          </>)}
 
           {/* TV Series Section */}
+            {series.length > 0 && (<>
           <section className="cast-details-section cast-details-section-alt">
             <div className="cast-details-section-header">
               <h3 className="cast-details-section-title">TV Series</h3>
@@ -222,6 +209,7 @@ const { castId } = useParams();
               ))}
             </div>
           </section>
+          </>)}
         </main>
       </div>
     </div>
