@@ -20,8 +20,6 @@ const MovieDetails = () => {
   const [reviewCounts, setReviewCounts] = useState({});
 const navigate = useNavigate();
 
-
-
   const [ratingCategories, setRatingCategories] = useState([]);//for pie chart
 const pieData = ratingCategories.map((cat) => ({
   id: cat.id ,
@@ -269,7 +267,7 @@ const uniqueOttNames = [...new Set(ottNames)];
           <h3 className="moviedetails-section-title">Cast</h3>
           <div className="moviedetails-cast-list">
             {cast.map((member, index) => (
-              <div key={index} className="moviedetails-cast-member">
+              <div key={index} className="moviedetails-cast-member" onClick={() => navigate(`/cast/${member.cast?.id}`)} style={{cursor:"pointer"}}>
             <img
   className="moviedetails-cast-avatar"
   src={member.cast?.avatar_url || 'https://via.placeholder.com/144'}
