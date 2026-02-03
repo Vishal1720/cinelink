@@ -45,7 +45,7 @@ const navigate = useNavigate();
             .in('id', movieIds)
             .eq('type', 'Movie')
             .order('year', { ascending: false })
-            .limit(10);
+            ;
 
           if (moviesError) throw moviesError;
           setMovies(moviesData || []);
@@ -57,7 +57,7 @@ const navigate = useNavigate();
             .in('id', movieIds)
             .eq('type', 'Series')
             .order('year', { ascending: false })
-            .limit(10);
+            ;
 
           if (seriesError) throw seriesError;
           setSeries(seriesData || []);
@@ -107,10 +107,7 @@ const navigate = useNavigate();
                   className="cast-details-profile-bg"
                   style={{ backgroundImage: `url(${cast.avatar_url || 'https://via.placeholder.com/400x600'})` }}
                 ></div>
-                <div className="cast-details-online-badge">
-                  <span className="cast-details-online-pulse"></span>
-                  <span className="cast-details-online-text">ONLINE</span>
-                </div>
+               
               </div>
             </div>
 
@@ -122,7 +119,7 @@ const navigate = useNavigate();
             </div>
 
             {/* Biography */}
-            <div className="cast-details-bio-section">
+            {/* <div className="cast-details-bio-section">
               <h3 className="cast-details-bio-title">Biography</h3>
               <p className="cast-details-bio-text">
                 {cast.ai_summary || 'No biography available.'}
@@ -131,7 +128,7 @@ const navigate = useNavigate();
                 Read full bio 
                 <span className="material-symbols-outlined">chevron_right</span>
               </button>
-            </div>
+            </div> */}
 
             
           </div>
@@ -154,11 +151,8 @@ const navigate = useNavigate();
           {/* Feature Films Section */}
           <section className="cast-details-section">
             <div className="cast-details-section-header" >
-              <h3 className="cast-details-section-title">Feature Films</h3>
-              <a href="#" className="cast-details-view-all">
-                View all ({movies.length})
-                <span className="material-symbols-outlined">arrow_forward</span>
-              </a>
+              <h3 className="cast-details-section-title">Feature Movies</h3>
+              
             </div>
             <div className="cast-details-scroll-container">
               {movies.map((movie) => (
@@ -182,11 +176,8 @@ const navigate = useNavigate();
             {series.length > 0 && (<>
           <section className="cast-details-section cast-details-section-alt">
             <div className="cast-details-section-header">
-              <h3 className="cast-details-section-title">TV Series</h3>
-              <a href="#" className="cast-details-view-all">
-                View all ({series.length})
-                <span className="material-symbols-outlined">arrow_forward</span>
-              </a>
+              <h3 className="cast-details-section-title">Feature Series</h3>
+             
             </div>
             <div className="cast-details-scroll-container">
               {series.map((show) => (
@@ -196,15 +187,10 @@ const navigate = useNavigate();
                       className="cast-details-card-bg"
                       style={{ backgroundImage: `url(${show.poster_url || 'https://via.placeholder.com/300x450'})` }}
                     ></div>
-                    <div className="cast-details-card-comments">
-                      <span className="material-symbols-outlined">chat_bubble</span>
-                      <span className="cast-details-card-comments-count">
-                        {Math.floor(Math.random() * 2000)}
-                      </span>
-                    </div>
+                   
                   </div>
                   <h4 className="cast-details-card-title">{show.title}</h4>
-                  <p className="cast-details-card-year">{show.duration}</p>
+                  <p className="cast-details-card-year">{show.year}</p>
                 </div>
               ))}
             </div>
