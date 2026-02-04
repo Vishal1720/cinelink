@@ -278,7 +278,8 @@ useEffect(() => {
             
 
   <div className="filter-row" style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-   <div className="firstline" style={{width:"100vw"}}> <div className="content-type-tabs">
+   <div className="firstline" style={{width:"100vw"}}> 
+    <div className="content-type-tabs">
   {["All", "Movie", "Series"].map(t => (
     <button
       key={t}
@@ -289,22 +290,30 @@ useEffect(() => {
     </button>
   ))}
 </div>
-    <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', flex: 1}}>
+    <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', }}>
       <button 
         className="genre-toggle-button" 
         onClick={() => setExpandedFilter(expandedFilter === 'genres' ? null : 'genres')}
       >
-        <span>Genres</span>
+       <span className="material-symbols-rounded btn-icon">
+  category
+</span>
+
+
+
         <span className={`toggle-icon ${expandedFilter === 'genres' ? 'expanded' : ''}`}>
           ▼
         </span>
+         
       </button>
 
       <button 
         className="genre-toggle-button" 
         onClick={() => setExpandedFilter(expandedFilter === 'language' ? null : 'language')}
       >
-        <span>Language</span>
+       <span className="material-symbols-rounded btn-icon">
+  language
+</span>
         <span className={`toggle-icon ${expandedFilter === 'language' ? 'expanded' : ''}`}>
           ▼
         </span>

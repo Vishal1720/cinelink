@@ -1,4 +1,6 @@
 /* UserMovieListPage.css */
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded");
+
 
 .page-container {
   position: relative;
@@ -45,26 +47,26 @@
 .genre-toggle-button {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+ width:10px;
 
-  padding: 12px 20px;
+  padding: 4px;
   background: rgba(255, 255, 255, 0.05);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   color: white;
-  font-size: 14px;
-  font-weight: 500;
+width: fit-content;
+height: fit-content;
   cursor: pointer;
   transition: all 0.3s ease;
- width: fit-content;
+
 }
 
 @media (min-width: 768px) {
   .genre-toggle-button {
-    width: auto;
-    min-width: 150px;
+  
+
     border-radius: 9999px;
     
   }
@@ -138,7 +140,7 @@
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding-top: 4px;
+  padding-top: 9px;
   padding-bottom: 4px;
 }
 
@@ -412,10 +414,11 @@
   }
 
   /* Ensure toggle buttons don't shrink */
-  .genre-toggle-button {
-    width: fit-content;
-    justify-content: space-between;
+ 
+  .firstline{
+    font-size:0.1rem;
   }
+
 }
 .genre-scroll-wrapper.collapsed {
   max-height: 0 !important;
@@ -480,6 +483,7 @@
   .request-box {
     max-width: 320px;
   }
+
 }
 /* Fullscreen dark overlay */
 .modal-overlay {
@@ -665,4 +669,10 @@
 .firstline {
 
   display: flex;
+}
+
+.genre-lang-tab {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
