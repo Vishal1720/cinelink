@@ -181,7 +181,7 @@ const navigate = useNavigate();
             </div>
             <div className="cast-details-scroll-container">
               {series.map((show) => (
-                <div key={show.id} className="cast-details-card">
+                <div key={show.id} className="cast-details-card" onClick={()=>{navigate(`/movie/${show.id}`)}} style={{cursor:"pointer"}}>
                   <div className="cast-details-card-image">
                     <div 
                       className="cast-details-card-bg"
