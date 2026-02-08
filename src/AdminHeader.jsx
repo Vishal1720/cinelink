@@ -16,6 +16,11 @@ const imgSrc = userimg || defaultAvatar;
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const movie_requests = () => {
+    setIsMenuOpen(false);
+    navigate("/movie-requests");
+  };
+
   const genre_caste = () => {
     setIsMenuOpen(false);
     navigate("/castgenre");
@@ -96,6 +101,14 @@ const isActive = (path) =>
         <nav className="nav-menu">
           <ul>
             <li>
+              <li>
+              <button className={`admin-nav-item ${isActive("/movie-requests")}`} onClick={movie_requests}>
+              
+                <span className="material-icons-round">theaters</span>
+
+                Requests
+              </button>
+            </li>
               <button className={`admin-nav-item ${isActive("/upload-banner")}`} onClick={banner}>
               
                 <span className="material-icons-round">campaign</span>
