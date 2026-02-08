@@ -98,7 +98,7 @@ const isActive = (path) =>
             <li>
               <button className={`admin-nav-item ${isActive("/upload-banner")}`} onClick={banner}>
               
-                <span class="material-icons-round">campaign</span>
+                <span className="material-icons-round">campaign</span>
 
                 Banner
               </button>

@@ -17,6 +17,11 @@ const CastGenre = () => {
   const [genreSearch, setGenreSearch] = useState('');
   const [castSearch, setCastSearch] = useState('');
   const [castImageFile, setCastImageFile] = useState(null);
+  const [editingCastId, setEditingCastId] = useState(null);
+  const [editCastName, setEditCastName] = useState("");
+  const [confirmInput, setConfirmInput] = useState("");
+
+
 
   // Temporary UI lists
   const [genres, setGenres] = useState([]);
@@ -35,6 +40,7 @@ const openConfirmPopup = ({ title, message, onConfirm }) => {
 
 const closeConfirmPopup = () => {
   setShowConfirm(false);
+  setConfirmInput("");
   setConfirmConfig({ title: "", message: "", onConfirm: null });
 };
 
@@ -47,7 +53,7 @@ const deleteGenre = (genreId) => {
       const { error } = await supabase
         .from("genre")
         .delete()
-        .eq("genre_name", genreId);
+        .eq("id", genreId);
 
       if (error) {
         alert(error.message);
@@ -60,12 +66,18 @@ const deleteGenre = (genreId) => {
   });
 };
 
-const deleteCastMember = (castId, imageUrl) => {
+const deleteCastMember = (castId, imageUrl, castName) => {
+  const confirmText = `DELETE ${castName}`;
+
   openConfirmPopup({
-    title: "Delete Cast Member?",
-    message:
-      "This is a destructive action. Deleting this cast member will remove them from all related movies.",
+    title: "Confirm Cast Deletion",
+    message: `Type "${confirmText}" to permanently delete this cast member.`,
     onConfirm: async () => {
+      if (confirmInput !== confirmText) {
+        alert("Confirmation text does not match.");
+        return;
+      }
+
       if (imageUrl) {
         const fileName = imageUrl.split("/").pop();
         await supabase.storage.from("CastBucket").remove([fileName]);
@@ -82,10 +94,42 @@ const deleteCastMember = (castId, imageUrl) => {
         setCastMembers(castMembers.filter(c => c.id !== castId));
       }
 
+      setConfirmInput("");
       closeConfirmPopup();
     }
   });
 };
+
+
+const startEditCast = (cast) => {
+  setEditingCastId(cast.id);
+  setEditCastName(cast.name);
+};
+
+const saveEditedCast = async (castId) => {
+  if (!editCastName.trim()) return;
+
+  const { error } = await supabase
+    .from("cast")
+    .update({ cast_name: editCastName })
+    .eq("id", castId);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  setCastMembers(
+    castMembers.map(c =>
+      c.id === castId ? { ...c, name: editCastName } : c
+    )
+  );
+
+  setEditingCastId(null);
+  setEditCastName("");
+};
+
+
 
   const [castMembers, setCastMembers] = useState([]);
 useEffect(() => {
@@ -266,11 +310,11 @@ useEffect(() => {
                         <td>{genre.name}</td>
                         <td>
                           <div className="action-buttons">
-                            <button className="btn-icon btn-edit">
-                              <span className="material-symbols-outlined">edit</span>
-                            </button>
-                            <button className="btn-icon btn-delete" onClick={() => deleteGenre(genre.name)}>
-                              <span className="material-symbols-outlined" onClick={() => deleteGenre(genre.name)}>delete</span>
+                            <button
+                              className="btn-icon btn-delete"
+                              onClick={() => deleteGenre(genre.id)}
+                            >
+                              <span className="material-symbols-outlined">delete</span>
                             </button>
                           </div>
                         </td>
@@ -351,32 +395,63 @@ useEffect(() => {
                     </tr>
                   </thead>
 
-                  <tbody>
-                    {filteredCastMembers.map(cast => (
-                      <tr key={cast.id}>
-                        <td>
-                          <div className="cast-info">
-                            <div
-                              className="cast-avatar"
-                              style={{ backgroundImage: `url(${cast.image})` }}
-                            ></div>
-                            <span>{cast.name}</span>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="action-buttons">
-                            <button className="btn-icon btn-edit">
-                              <span className="material-symbols-outlined">edit</span>
-                            </button>
+                 <tbody>
+  {filteredCastMembers.map((cast) => (
+    <tr key={cast.id}>
+      <td>
+        <div className="cast-info">
+          <div
+            className="cast-avatar"
+            style={{ backgroundImage: `url(${cast.image})` }}
+          ></div>
 
-                            <button className="btn-icon btn-delete"  onClick={() => deleteCastMember(cast.id, cast.image)}>
-                              <span className="material-symbols-outlined">delete</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
+          {/* ---- Editable Name ---- */}
+          {editingCastId === cast.id ? (
+            <input
+              className="text-input"
+              value={editCastName}
+              onChange={(e) => setEditCastName(e.target.value)}
+              style={{ height: "2.2rem", maxWidth: "200px" }}
+            />
+          ) : (
+            <span>{cast.name}</span>
+          )}
+        </div>
+      </td>
+
+      <td>
+        <div className="action-buttons">
+
+          {/* ---- EDIT / SAVE BUTTON ---- */}
+          <button
+            className="btn-icon btn-edit"
+            onClick={() =>
+              editingCastId === cast.id
+                ? saveEditedCast(cast.id)
+                : startEditCast(cast)
+            }
+          >
+            <span className="material-symbols-outlined">
+              {editingCastId === cast.id ? "check" : "edit"}
+            </span>
+          </button>
+
+          {/* ---- DELETE BUTTON ---- */}
+          <button
+            className="btn-icon btn-delete"
+            onClick={() =>
+              deleteCastMember(cast.id, cast.image, cast.name)
+            }
+          >
+            <span className="material-symbols-outlined">delete</span>
+          </button>
+
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
 
                 </table>
               </div>
@@ -389,7 +464,20 @@ useEffect(() => {
   <div className="confirm-overlay">
     <div className="confirm-modal">
       <h3 className="confirm-title">{confirmConfig.title}</h3>
-      <p className="confirm-message">{confirmConfig.message}</p>
+
+      <p className="confirm-message">
+        {confirmConfig.message}
+      </p>
+
+      {/* 👇 ADD INPUT HERE */}
+      <input
+        type="text"
+        className="text-input"
+        placeholder="Type confirmation text"
+        value={confirmInput}
+        onChange={(e) => setConfirmInput(e.target.value)}
+        style={{ marginTop: "12px" }}
+      />
 
       <div className="confirm-actions">
         <button className="btn-secondary" onClick={closeConfirmPopup}>
@@ -405,6 +493,7 @@ useEffect(() => {
     </div>
   </div>
 )}
+
 
     </div>
   );
