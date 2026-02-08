@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import "./AddMovies.css";
 import { supabase } from "./supabase";
 import Select from 'react-select';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 const AddMovies = () => {
   const [activeTab, setActiveTab] = useState("core");
   const [errors, setErrors] = useState({});
@@ -11,6 +12,9 @@ const AddMovies = () => {
   const [posterFile, setPosterFile] = useState(null);
   const [posterPreview, setPosterPreview] = useState(null);
 const [submitting, setSubmitting] = useState(false);
+const { state } = useLocation();
+
+
 
   const [formData, setFormData] = useState({
     title: "",
@@ -25,7 +29,15 @@ const [submitting, setSubmitting] = useState(false);
     castList: [],  // { cast_id, role_in_movie }
     type:""
   });
-
+useEffect(() => {
+    if (state?.movieData) {
+      setFormData(prev => ({
+        ...prev,
+        title: state.movieData.title || prev.title,
+        
+      }));
+    }
+  }, [state]);
   const languageOptions = [
     "English", "Hindi", "Kannada", "Tulu","Tamil", "Telugu", "Malayalam",
     "Marathi", "Gujarati", "Bengali", "Punjabi",

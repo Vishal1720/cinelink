@@ -26,6 +26,7 @@ import MovieDiscussion from "./MovieDiscussion";
 import EditMovies from "./EditMovies";
 import UploadBanner from "./UploadBanner";
 import CastDetails from "./CastDetails";
+import RequestsPage from "./RequestPage";
 function App() {
   
 
@@ -55,6 +56,7 @@ function App() {
          <Route path="/admin-reviews" element={<Reviews />} />
           <Route path="/edit-movies" element={<EditMovies />} />
           <Route path="/upload-banner" element={<UploadBanner />} />
+          <Route path="/movie-requests" element={<RequestsPage/>}></Route>
           <Route path="/cast/:castId" element={<CastDetails />} />
 
       </Routes>
