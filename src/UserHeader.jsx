@@ -15,6 +15,7 @@ const UserHeader = () => {
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showLogoutMenu, setShowLogoutMenu] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   
   // Ref for click outside detection
   const menuRef = useRef(null);
@@ -25,6 +26,52 @@ const UserHeader = () => {
     "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
   const storedImg = localStorage.getItem("userimage");
   const userName = localStorage.getItem("username") || "User";
+
+  // Fetch unread notification count
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        // Get current session from Supabase
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Error fetching session:', sessionError);
+          return;
+        }
+
+        if (!session?.user?.email) {
+          console.log('No user email found in session');
+          navigate('/Login');
+          return;
+        }
+
+        const userEmail = session.user.email;
+
+        // Fetch unread notifications
+        const { data, error } = await supabase
+          .from('notification')
+          .select('id', { count: 'exact' })
+          .eq('email', userEmail)
+          .eq('status', 'unread');
+
+        if (error) {
+          console.error('Error fetching notifications:', error);
+        } else {
+          console.log('Unread notifications count:', data?.length || 0);
+          setUnreadCount(data?.length || 0);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    };
+
+    fetchUnreadCount();
+
+    // Poll for updates every 30 seconds
+    const interval = setInterval(fetchUnreadCount, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -64,6 +111,10 @@ const UserHeader = () => {
   const handleProfileClick = () => {
     setShowLogoutMenu(false);
     navigate("/profile");
+  };
+
+  const handleNotificationClick = () => {
+    navigate("/usernotifications");
   };
 
   return (
@@ -120,6 +171,32 @@ const UserHeader = () => {
         </nav>
         
         <div className="header-right">
+          {/* Notification Icon */}
+          <button 
+            className="notification-icon-button" 
+            onClick={handleNotificationClick}
+            aria-label="Notifications"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="notification-bell-svg"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            {unreadCount > 0 && (
+              <span className="notification-count-badge">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </button>
+
           <div className="user-menu-container" ref={menuRef}>
             <button
               className="user-avatar"

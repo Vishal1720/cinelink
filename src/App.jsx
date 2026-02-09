@@ -27,6 +27,7 @@ import EditMovies from "./EditMovies";
 import UploadBanner from "./UploadBanner";
 import CastDetails from "./CastDetails";
 import RequestsPage from "./RequestPage";
+import UserNotificationPage from "./UserNotificationPage";
 function App() {
   
 
@@ -58,6 +59,7 @@ function App() {
           <Route path="/upload-banner" element={<UploadBanner />} />
           <Route path="/movie-requests" element={<RequestsPage/>}></Route>
           <Route path="/cast/:castId" element={<CastDetails />} />
+          <Route path="/usernotifications" element={<UserNotificationPage />}></Route>
 
       </Routes>
     </BrowserRouter>

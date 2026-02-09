@@ -234,6 +234,8 @@ try {
   };
 
   const handleLikeReview = async (reviewId) => {
+    if (!user) return;
+
     const { data: existingLike } = await supabase
       .from("like_in_reviews")
       .select("*")
@@ -242,15 +244,69 @@ try {
       .single();
 
     if (existingLike) {
+      // Unlike: remove the like
       await supabase
         .from("like_in_reviews")
         .delete()
         .eq("review_id", reviewId)
         .eq("email_of_liker", user.email);
     } else {
+      // Like: add the like
       await supabase.from("like_in_reviews").insert([
         { review_id: reviewId, email_of_liker: user.email }
       ]);
+
+      // Get the review owner's email and movie details
+      const review = reviews.find(r => r.id === reviewId);
+      if (review && review.email !== user.email) {
+        // Don't notify if user likes their own review
+        
+        // Get total likes count for this review (including the one just added)
+        const { count } = await supabase
+          .from('like_in_reviews')
+          .select('*', { count: 'exact', head: true })
+          .eq('review_id', reviewId);
+
+        const totalLikes = count || 1;
+        
+        // Get movie name
+        const { data: movieData } = await supabase
+          .from('movies')
+          .select('title')
+          .eq('id', movieId)
+          .single();
+
+        const movieName = movieData?.title || 'a movie';
+        
+        // Create notification text
+        let notificationText;
+        if (totalLikes === 1) {
+          notificationText = `${user.name || user.email} liked your review on ${movieName}`;
+        } else {
+          const othersCount = totalLikes - 1;
+          notificationText = `${user.name || user.email} and ${othersCount} other${othersCount > 1 ? 's' : ''} liked your review on ${movieName}`;
+        }
+
+        // Delete old notifications for this review to avoid duplicates
+        await supabase
+          .from('notification')
+          .delete()
+          .eq('email', review.email)
+          .eq('movie_id', movieId)
+          .eq('type', 'reviews')
+          .like('notification_text', `%liked your review on ${movieName}%`);
+
+        // Insert new notification
+        await supabase
+          .from('notification')
+          .insert({
+            email: review.email,
+            type: 'reviews',
+            notification_text: notificationText,
+            movie_id: movieId,
+            status: 'unread'
+          });
+      }
     }
 
     fetchReviews();
