@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './CastGenre.css';
 import AdminHeader from './AdminHeader';
 import { supabase } from './supabase';
 import { useNavigate } from 'react-router-dom';
 
+
+
+
 const CastGenre = () => {
   const navigate = useNavigate();
-
+  
+  const confirmInputRef = useRef(null);
   useEffect(() => {
     const role = localStorage.getItem("role");
     if (role !== "admin") navigate("/Login");
@@ -20,6 +24,7 @@ const CastGenre = () => {
   const [editingCastId, setEditingCastId] = useState(null);
   const [editCastName, setEditCastName] = useState("");
   const [confirmInput, setConfirmInput] = useState("");
+  
 
 
 
@@ -67,16 +72,19 @@ const deleteGenre = (genreId) => {
 };
 
 const deleteCastMember = (castId, imageUrl, castName) => {
-  const confirmText = `DELETE ${castName}`;
+  const confirmText = "DELETE";
 
   openConfirmPopup({
     title: "Confirm Cast Deletion",
-    message: `Type "${confirmText}" to permanently delete this cast member.`,
+    message: `Type "DELETE" to permanently delete ${castName}.`,
     onConfirm: async () => {
-      if (confirmInput !== confirmText) {
-        alert("Confirmation text does not match.");
-        return;
-      }
+      const userInput =
+    confirmInputRef.current?.value.trim().toUpperCase();
+
+  if (userInput !== "DELETE") {
+    alert("Confirmation text does not match. Please type exactly: DELETE");
+    return;
+  }
 
       if (imageUrl) {
         const fileName = imageUrl.split("/").pop();
@@ -305,8 +313,8 @@ useEffect(() => {
                   </thead>
 
                   <tbody>
-                    {filteredGenres.map(genre => (
-                      <tr key={genre.id}>
+                    {filteredGenres.map((genre, index) => (
+                      <tr key={`${genre.id}-${index}`}>
                         <td>{genre.name}</td>
                         <td>
                           <div className="action-buttons">
@@ -396,8 +404,8 @@ useEffect(() => {
                   </thead>
 
                  <tbody>
-  {filteredCastMembers.map((cast) => (
-    <tr key={cast.id}>
+  {filteredCastMembers.map((cast, index) => (
+    <tr key={`${cast.id}-${index}`}>
       <td>
         <div className="cast-info">
           <div
@@ -469,15 +477,15 @@ useEffect(() => {
         {confirmConfig.message}
       </p>
 
-      {/* 👇 ADD INPUT HERE */}
       <input
-        type="text"
-        className="text-input"
-        placeholder="Type confirmation text"
-        value={confirmInput}
-        onChange={(e) => setConfirmInput(e.target.value)}
-        style={{ marginTop: "12px" }}
-      />
+  ref={confirmInputRef}
+  type="text"
+  className="text-input"
+  placeholder="Type confirmation text"
+  style={{ marginTop: "12px" }}
+/>
+
+
 
       <div className="confirm-actions">
         <button className="btn-secondary" onClick={closeConfirmPopup}>
