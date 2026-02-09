@@ -529,6 +529,7 @@
 @media (max-width: 640px) {
   .req-max-width {
     padding: 1rem 0.5rem;
+   
   }
 
   .req-cards-grid {
@@ -597,4 +598,14 @@
 
 .to-gray-800 {
   --tw-gradient-to: #1f2937;
+}
+@media (max-width: 940px) {
+  .req-max-width{
+    width: 100vw;
+   
+  }
+
+.requests-page-wrapper {
+margin:0px;
+}
 }
