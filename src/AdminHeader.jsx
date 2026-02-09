@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './AdminHeader.css';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
-
+import { supabase } from './supabase';
 
 const AdminHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +12,42 @@ const defaultAvatar =
 
 const userimg= localStorage.getItem("userimage");
 const imgSrc = userimg || defaultAvatar;
+
+useEffect(() => {
+  const checkAdmin = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      navigate("/login");
+      return;
+    }
+
+    const email = session.user.email;
+
+    const { data, error } = await supabase
+      .from("user")
+      .select("role, name, avatar_url")
+      .eq("email", email)
+      .single();
+
+    if (error || data.role !== "admin") {
+      navigate("/Login"); // or access denied page
+      return;
+    }
+
+    // Optional: store safe display data
+    localStorage.setItem("username", data.name);
+    localStorage.setItem("userimage", data.avatar_url);
+
+    setIsAdmin(true);
+    setLoading(false);
+  };
+
+  checkAdmin();
+}, [navigate]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
