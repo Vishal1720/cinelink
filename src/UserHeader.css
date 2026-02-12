@@ -50,13 +50,28 @@
   height: 24px;
 }
 
-/* Navigation links */
-.nav-links {
+/* Navigation links - Very Specific Selectors */
+.header .nav-links {
   display: flex;
   gap: 36px;
 }
 
-.nav-link {
+.header .nav-links .nav-link {
+  font-size: 0.97rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.header .nav-links .nav-link:hover,
+.header .nav-links .nav-link.active {
+  color: #258cf4;
+}
+
+/* Specific styling for Recommendations tab to ensure it doesn't conflict */
+.header .nav-links a[href="/recommendations"].nav-link {
   font-size: 0.97rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.7);
@@ -64,8 +79,8 @@
   transition: color 0.3s;
 }
 
-.nav-link:hover,
-.nav-link.active {
+.header .nav-links a[href="/recommendations"].nav-link:hover,
+.header .nav-links a[href="/recommendations"].nav-link.active {
   color: #258cf4;
 }
 
@@ -252,7 +267,8 @@
   color: #258cf4;
 }
 
-.sidebar-nav {
+/* Sidebar Navigation - Very Specific */
+.sidebar .sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -260,7 +276,7 @@
   flex: 1;
 }
 
-.sidebar-link {
+.sidebar .sidebar-nav .sidebar-link {
   font-size: 1rem;
   font-weight: 500;
   color: white;
@@ -268,19 +284,33 @@
   transition: color 0.3s;
 }
 
-.sidebar-link:hover,
-.sidebar-link.active {
+.sidebar .sidebar-nav .sidebar-link:hover,
+.sidebar .sidebar-nav .sidebar-link.active {
+  color: #258cf4;
+}
+
+/* Specific styling for Recommendations in sidebar */
+.sidebar .sidebar-nav a[href="/recommendations"].sidebar-link {
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.sidebar .sidebar-nav a[href="/recommendations"].sidebar-link:hover,
+.sidebar .sidebar-nav a[href="/recommendations"].sidebar-link.active {
   color: #258cf4;
 }
 
 /* Sidebar logout button */
-.sidebar-logout-button {
+.sidebar .sidebar-nav .sidebar-logout-button {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
   background: transparent;
- border:none;
+  border: none;
   border-radius: 8px;
   color: white;
   font-size: 1rem;
@@ -288,12 +318,17 @@
   cursor: pointer;
   transition: all 0.3s;
   text-align: left;
+  padding: 0;
 }
 
-.sidebar-logout-button:hover {
+.sidebar .sidebar-nav .sidebar-logout-button:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: #258cf4;
   color: #258cf4;
+}
+
+.sidebar .sidebar-nav .sidebar-logout-button .logout-icon {
+  width: 18px;
+  height: 18px;
 }
 
 /* Responsive adjustments */
@@ -302,7 +337,7 @@
     padding: 16px 24px;
   }
 
-  .nav-links {
+  .header .nav-links {
     display: none;
   }
 

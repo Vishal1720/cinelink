@@ -166,7 +166,7 @@ const UserHeader = () => {
         <nav className="nav-links">
           <Link to="/homepage" className={`nav-link ${isActive('/homepage')}`}>Home</Link>
           <Link to="/movielistpage" className={`nav-link ${isActive('/movielistpage')}`}>Discover</Link>
-       
+          <Link to="/recommendations" className={`nav-link ${isActive('/recommendations')}`}>Recommendations</Link>
           <Link to="/watchlist" className={`nav-link ${isActive('/watchlist')}`}>Watchlist</Link>
         </nav>
         
@@ -271,8 +271,9 @@ const UserHeader = () => {
         </div>
         
         <nav className="sidebar-nav">
-           <Link to="/homepage" className={`nav-link ${isActive('/homepage')}`} onClick={closeSidebar}>Home</Link>
-          <Link to="/movielistpage" className={`nav-link ${isActive('/movielistpage')}`} onClick={closeSidebar}>Discover</Link>
+          <Link to="/homepage" className={`sidebar-link ${isActive('/homepage')}`} onClick={closeSidebar}>Home</Link>
+          <Link to="/movielistpage" className={`sidebar-link ${isActive('/movielistpage')}`} onClick={closeSidebar}>Discover</Link>
+          <Link to="/recommendations" className={`sidebar-link ${isActive('/recommendations')}`} onClick={closeSidebar}>Recommendations</Link>
           <Link to="/watchlist" className={`sidebar-link ${isActive('/watchlist')}`} onClick={closeSidebar}>
             Watchlist
           </Link>
