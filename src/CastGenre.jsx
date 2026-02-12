@@ -11,11 +11,6 @@ const CastGenre = () => {
   const navigate = useNavigate();
   
   const confirmInputRef = useRef(null);
-  useEffect(() => {
-    const role = localStorage.getItem("role");
-    if (role !== "admin") navigate("/Login");
-  }, [navigate]);
-
   const [genreName, setGenreName] = useState('');
   const [castName, setCastName] = useState('');
   const [genreSearch, setGenreSearch] = useState('');
@@ -23,7 +18,22 @@ const CastGenre = () => {
   const [castImageFile, setCastImageFile] = useState(null);
   const [editingCastId, setEditingCastId] = useState(null);
   const [editCastName, setEditCastName] = useState("");
-  const [confirmInput, setConfirmInput] = useState("");
+  const [castImagePreview, setCastImagePreview] = useState(null);
+
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role !== "admin") navigate("/Login");
+  }, [navigate]);
+  useEffect(() => {
+  return () => {
+    if (castImagePreview) {
+      URL.revokeObjectURL(castImagePreview);
+    }
+  };
+}, [castImagePreview]);
+
+
+  
   
 
 
@@ -41,47 +51,66 @@ const [confirmConfig, setConfirmConfig] = useState({
 const openConfirmPopup = ({ title, message, onConfirm }) => {
   setConfirmConfig({ title, message, onConfirm });
   setShowConfirm(true);
+
+  setTimeout(() => {
+    confirmInputRef.current?.focus();
+  }, 100);
 };
+
 
 const closeConfirmPopup = () => {
   setShowConfirm(false);
-  setConfirmInput("");
   setConfirmConfig({ title: "", message: "", onConfirm: null });
+
+  if (confirmInputRef.current) {
+    confirmInputRef.current.value = "";
+  }
 };
 
-const deleteGenre = (genreId) => {
+
+const deleteGenre = (genreName) => {
   openConfirmPopup({
     title: "Delete Genre?",
     message:
-      "This is a destructive action. Deleting this genre will remove all related movie data. This cannot be undone.",
+      `This is a destructive action. Type DELETE ${genreName} to permanently remove this genre and all related movie data.`,
     onConfirm: async () => {
+      const userInput =
+        confirmInputRef.current?.value.trim().toUpperCase();
+
+      if (userInput !== `DELETE ${genreName.toUpperCase()}`) {
+        alert(`Confirmation text does not match. Please type exactly: DELETE ${genreName}`);
+        return;
+      }
+
       const { error } = await supabase
         .from("genre")
         .delete()
-        .eq("id", genreId);
+        .eq("genre_name", genreName);
 
       if (error) {
         alert(error.message);
       } else {
-        setGenres(genres.filter(g => g.id !== genreId));
+        setGenres(prev =>
+          prev.filter(g => g.name !== genreName)
+        );
       }
 
       closeConfirmPopup();
-    }
+    },
   });
 };
 
-const deleteCastMember = (castId, imageUrl, castName) => {
-  const confirmText = "DELETE";
 
-  openConfirmPopup({
+
+const deleteCastMember = (castId, imageUrl, castName) => {
+   openConfirmPopup({
     title: "Confirm Cast Deletion",
-    message: `Type "DELETE" to permanently delete ${castName}.`,
+    message: `Type "DELETE ${castName}" to permanently delete ${castName}.`,
     onConfirm: async () => {
       const userInput =
     confirmInputRef.current?.value.trim().toUpperCase();
 
-  if (userInput !== "DELETE") {
+  if (userInput !== `DELETE ${castName.toUpperCase()}`) {
     alert("Confirmation text does not match. Please type exactly: DELETE");
     return;
   }
@@ -102,7 +131,7 @@ const deleteCastMember = (castId, imageUrl, castName) => {
         setCastMembers(castMembers.filter(c => c.id !== castId));
       }
 
-      setConfirmInput("");
+     
       closeConfirmPopup();
     }
   });
@@ -246,6 +275,8 @@ useEffect(() => {
 
     setCastName("");
     setCastImageFile(null);
+    setCastImagePreview(null);
+
   };
 
   // Filtering
@@ -277,7 +308,7 @@ useEffect(() => {
                     placeholder="e.g., Science Fiction"
                     value={genreName}
                     onChange={(e) => setGenreName(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addGenre()}
+                    onKeyDown={(e) => e.key === 'Enter' && addGenre()}
                   />
                 </label>
 
@@ -320,7 +351,7 @@ useEffect(() => {
                           <div className="action-buttons">
                             <button
                               className="btn-icon btn-delete"
-                              onClick={() => deleteGenre(genre.id)}
+                              onClick={() => deleteGenre(genre.name)}
                             >
                               <span className="material-symbols-outlined">delete</span>
                             </button>
@@ -349,28 +380,52 @@ useEffect(() => {
                     placeholder="e.g., Keanu Reeves"
                     value={castName}
                     onChange={(e) => setCastName(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addCastMember()}
+                    onKeyDown={(e) => e.key === 'Enter' && addCastMember()}
                   />
                 </label>
 
                 {/* ---- Upload Image ---- */}
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="cast-upload"
-                  style={{ display: "none" }}
-                  onChange={(e) => setCastImageFile(e.target.files[0])}
-                />
+               <input
+  type="file"
+  accept="image/*"
+  id="cast-upload"
+  style={{ display: "none" }}
+  onChange={(e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setCastImageFile(file);
+    setCastImagePreview(URL.createObjectURL(file));
+  }}
+/>
+
 
                 <label htmlFor="cast-upload" className="upload-area">
-                  <div className="upload-content">
-                    <span className="material-symbols-outlined upload-icon">cloud_upload</span>
-                    <p className="upload-text">
-                      <span className="upload-highlight">Click to upload</span> or drag and drop
-                    </p>
-                    <p className="upload-hint">PNG, JPG, GIF up to 10MB</p>
-                  </div>
-                </label>
+  {castImagePreview ? (
+    <div className="upload-preview">
+      <img
+        src={castImagePreview}
+        alt="Preview"
+        className="preview-image"
+      />
+      <p className="upload-success">
+        ✅ Image selected: {castImageFile.name}
+      </p>
+      <p className="upload-change">Click to change image</p>
+    </div>
+  ) : (
+    <div className="upload-content">
+      <span className="material-symbols-outlined upload-icon">
+        cloud_upload
+      </span>
+      <p className="upload-text">
+        <span className="upload-highlight">Click to upload</span> or drag and drop
+      </p>
+      <p className="upload-hint">PNG, JPG, GIF up to 10MB</p>
+    </div>
+  )}
+</label>
+
 
                 <button className="btn-primary" onClick={addCastMember}>
                   Add Cast Member
