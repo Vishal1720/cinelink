@@ -12,6 +12,7 @@
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
   position: relative;
+  margin-top: 10vh;
 }
 
 .add-recommendation-wrapper *::selection {
@@ -830,6 +831,7 @@
 
 /* Responsive Design */
 @media (min-width: 768px) {
+   
   .ar-header-section {
     flex-direction: row;
   }
@@ -869,6 +871,9 @@
 }
 
 @media (max-width: 767px) {
+     .add-recommendation-wrapper{
+        margin-top: 11vh;
+    }
   .ar-main-content {
     padding: 1.5rem 1rem;
   }
