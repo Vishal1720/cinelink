@@ -29,6 +29,7 @@ import CastDetails from "./CastDetails";
 import RequestsPage from "./RequestPage";
 import UserNotificationPage from "./UserNotificationPage";
 import AddRecommendation from "./AddRecommendation";
+import RecommendationPage from "./RecommendationPage";
 function App() {
   
 
@@ -61,7 +62,8 @@ function App() {
           <Route path="/movie-requests" element={<RequestsPage/>}></Route>
           <Route path="/cast/:castId" element={<CastDetails />} />
           <Route path="/usernotifications" element={<UserNotificationPage />}></Route>
-          <Route path="/recommendations" element={<AddRecommendation />}></Route>
+          <Route path="/recommendations" element={<RecommendationPage />}></Route>
+          <Route path="/add-recommendation" element={<AddRecommendation />}></Route>
       </Routes>
     </BrowserRouter>
   );

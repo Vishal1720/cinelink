@@ -1,0 +1,771 @@
+/* RecommendationPage - All styles prefixed with 'rp-' for specificity */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Spline+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+/* Page Wrapper */
+.rp-page-wrapper {
+  min-height: 100vh;
+  background-color: #130d1a;
+  color: #f1f5f9;
+  font-family: 'Spline Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+.rp-page-wrapper .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
+}
+
+.rp-page-wrapper *::selection {
+  background-color: #a855f7;
+  color: white;
+}
+
+/* Custom Scrollbar */
+.rp-page-wrapper ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.rp-page-wrapper ::-webkit-scrollbar-track {
+  background: #130d1a;
+}
+
+.rp-page-wrapper ::-webkit-scrollbar-thumb {
+  background: #2d2438;
+  border-radius: 4px;
+}
+
+.rp-page-wrapper ::-webkit-scrollbar-thumb:hover {
+  background: #a855f7;
+}
+
+/* Background Glow Effect */
+.rp-bg-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.15) 0%, rgba(19, 13, 26, 0) 70%);
+}
+
+/* Main Content */
+.rp-main-content {
+  position: relative;
+  z-index: 10;
+  padding-top: 7rem;
+  padding-bottom: 5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.rp-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Sticky Filter Tabs */
+.rp-sticky-filters {
+  position: sticky;
+  top: 88px;
+  z-index: 40;
+  background: rgba(31, 22, 41, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 9999px;
+  padding: 0.375rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2.5rem;
+}
+
+.rp-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rp-tab {
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Spline Sans', sans-serif;
+}
+
+.rp-tab:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rp-tab-active {
+  background: #a855f7 !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
+}
+
+/* Feed Section */
+.rp-feed {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Loading State */
+.rp-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+}
+
+.rp-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid rgba(168, 85, 247, 0.2);
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: rp-spin 0.8s linear infinite;
+}
+
+@keyframes rp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rp-loading p {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+/* Empty State */
+.rp-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  gap: 1rem;
+  text-align: center;
+}
+
+.rp-empty-icon {
+  font-size: 4rem;
+  color: #a855f7;
+  opacity: 0.5;
+}
+
+.rp-empty-state h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.rp-empty-state p {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Recommendation Cards */
+.rp-card {
+  background: linear-gradient(145deg, rgba(31, 22, 41, 0.7) 0%, rgba(19, 13, 26, 0.8) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.rp-card:hover {
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: 0 12px 40px 0 rgba(168, 85, 247, 0.15);
+}
+
+.rp-card-pairing {
+  border-left: 4px solid #a855f7;
+}
+
+/* Card Header */
+.rp-card-header {
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rp-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rp-user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  object-fit: cover;
+}
+
+.rp-user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.rp-timestamp {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Pairing Badge */
+.rp-pairing-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.rp-pairing-badge .material-symbols-outlined {
+  color: #a855f7;
+  font-size: 1rem;
+}
+
+.rp-pairing-badge span:not(.material-symbols-outlined) {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #a855f7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Normal Recommendation Content */
+.rp-normal-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.rp-movie-poster-section {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 2/3;
+  max-width: 280px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.rp-poster-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 40%, transparent);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.rp-movie-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: transform 0.7s ease;
+}
+
+.rp-movie-poster-section:hover .rp-movie-poster {
+  transform: scale(1.05);
+}
+
+.rp-poster-info {
+  position: absolute;
+  bottom: 1rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  z-index: 20;
+}
+
+.rp-movie-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.rp-movie-meta {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+/* Content Section */
+.rp-content-section {
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: rgba(31, 22, 41, 0.4);
+}
+
+.rp-section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #a855f7;
+  margin: 0 0 1.25rem 0;
+}
+
+.rp-message {
+  color: #cbd5e1;
+  line-height: 1.75;
+  font-size: 1.125rem;
+  margin: 0 0 2.5rem 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Card Actions */
+.rp-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rp-action-group {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.rp-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  font-family: 'Spline Sans', sans-serif;
+}
+
+.rp-action-btn:hover {
+  color: #a855f7;
+}
+
+.rp-action-btn.rp-action-liked {
+  color: #a855f7;
+}
+
+.rp-action-btn.rp-action-liked .rp-action-icon-wrapper {
+  background: rgba(168, 85, 247, 0.2);
+}
+
+.rp-action-btn.rp-action-liked .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.rp-action-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  min-width: 1.5rem;
+  text-align: left;
+}
+
+.rp-action-icon-wrapper {
+  padding: 0.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rp-action-btn:hover .rp-action-icon-wrapper {
+  background: rgba(168, 85, 247, 0.2);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+}
+
+.rp-action-icon-wrapper .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+.rp-icon-btn {
+  padding: 0.75rem;
+  border-radius: 50%;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.rp-icon-btn:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rp-icon-btn .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+/* Pairing Content */
+.rp-pairing-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.rp-movie-pair {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  min-height: auto;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem 0;
+}
+
+.rp-pair-connector {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: #130d1a;
+  border: 2px solid #a855f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);
+}
+
+.rp-pair-connector .material-symbols-outlined {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.rp-pair-movie {
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 2/3;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rp-pair-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.rp-pair-movie:hover .rp-pair-poster {
+  transform: scale(1.05);
+}
+
+.rp-pair-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 40%, transparent);
+  pointer-events: none;
+}
+
+.rp-pair-info {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+}
+
+.rp-pair-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: white;
+  font-size: 1.125rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.rp-pair-meta {
+  font-size: 0.8125rem;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+/* Pairing Description */
+.rp-pairing-description {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rp-connection-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rp-connection-title .material-symbols-outlined {
+  color: #a855f7;
+  font-size: 1.5rem;
+}
+
+.rp-connection-text {
+  color: #cbd5e1;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Playlist Button */
+.rp-playlist-btn {
+  padding: 0.625rem;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.rp-playlist-btn:hover {
+  background: #a855f7;
+  color: white;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+}
+
+.rp-playlist-btn .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+/* End Message */
+.rp-end-message {
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+.rp-end-message span {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .rp-main-content {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .rp-normal-content {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .rp-movie-poster-section {
+    /* Fixed width with aspect ratio */
+    width: auto;
+  }
+
+  .rp-content-section {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .rp-main-content {
+    padding-top: 6rem;
+  }
+
+  .rp-sticky-filters {
+    top: 72px;
+  }
+
+  .rp-movie-title {
+    font-size: 2rem;
+  }
+
+  .rp-section-title {
+    font-size: 1.25rem;
+  }
+
+  .rp-message,
+  .rp-connection-text {
+    font-size: 1rem;
+  }
+
+  .rp-movie-poster-section {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .rp-movie-pair {
+    flex-direction: column;
+    min-height: auto;
+    gap: 1.5rem;
+  }
+
+  .rp-pair-movie {
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+  }
+
+  .rp-pair-connector {
+    display: none;
+  }
+
+  .rp-card-actions {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .rp-action-group {
+    justify-content: center;
+  }
+}
+/* Layout inside sticky container */
+.rp-sticky-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Add Recommendation Button */
+.rp-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Spline Sans', sans-serif;
+
+  box-shadow: 
+    0 8px 25px rgba(168, 85, 247, 0.45),
+    0 0 30px rgba(168, 85, 247, 0.35);
+
+  transition: all 0.3s ease;
+}
+
+.rp-add-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.rp-add-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 
+    0 12px 35px rgba(168, 85, 247, 0.6),
+    0 0 40px rgba(168, 85, 247, 0.5);
+}
+
+.rp-add-btn:active {
+  transform: scale(0.98);
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+
+  .rp-sticky-inner {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .rp-add-btn {
+    width: fit-content;
+    justify-content: center;
+    padding: 10px;
+  }
+
+}
