@@ -63,6 +63,7 @@ function App() {
           <Route path="/cast/:castId" element={<CastDetails />} />
           <Route path="/usernotifications" element={<UserNotificationPage />}></Route>
           <Route path="/recommendations" element={<RecommendationPage />}></Route>
+          <Route path="/add-recommendation" element={<AddRecommendation />}></Route>
       </Routes>
     </BrowserRouter>
   );

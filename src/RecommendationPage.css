@@ -707,3 +707,65 @@
     justify-content: center;
   }
 }
+/* Layout inside sticky container */
+.rp-sticky-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Add Recommendation Button */
+.rp-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Spline Sans', sans-serif;
+
+  box-shadow: 
+    0 8px 25px rgba(168, 85, 247, 0.45),
+    0 0 30px rgba(168, 85, 247, 0.35);
+
+  transition: all 0.3s ease;
+}
+
+.rp-add-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.rp-add-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 
+    0 12px 35px rgba(168, 85, 247, 0.6),
+    0 0 40px rgba(168, 85, 247, 0.5);
+}
+
+.rp-add-btn:active {
+  transform: scale(0.98);
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+
+  .rp-sticky-inner {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .rp-add-btn {
+    width: fit-content;
+    justify-content: center;
+    padding: 10px;
+  }
+
+}

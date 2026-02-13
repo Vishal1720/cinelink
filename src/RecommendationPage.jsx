@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserHeader from './UserHeader';
 import { supabase } from './supabase';
 import './RecommendationPage.css';
-
+import { useNavigate } from 'react-router-dom';
 const RecommendationPage = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +10,7 @@ const RecommendationPage = () => {
   const [userEmail, setUserEmail] = useState('');
   const [likedRecommendations, setLikedRecommendations] = useState(new Set());
   const [likeCounts, setLikeCounts] = useState({});
-
+const navigate = useNavigate();
   useEffect(() => {
     const getUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -189,28 +189,44 @@ const RecommendationPage = () => {
       <main className="rp-main-content">
         <div className="rp-container">
           {/* Filter Tabs */}
-          <div className="rp-sticky-filters">
-            <div className="rp-filter-tabs">
-              <button
-                className={`rp-tab ${activeTab === 'all' ? 'rp-tab-active' : ''}`}
-                onClick={() => setActiveTab('all')}
-              >
-                All
-              </button>
-              <button
-                className={`rp-tab ${activeTab === 'normal' ? 'rp-tab-active' : ''}`}
-                onClick={() => setActiveTab('normal')}
-              >
-                Single
-              </button>
-              <button
-                className={`rp-tab ${activeTab === 'pair' ? 'rp-tab-active' : ''}`}
-                onClick={() => setActiveTab('pair')}
-              >
-                Pairings
-              </button>
-            </div>
-          </div>
+         {/* Sticky Filter Tabs + Add Button */}
+<div className="rp-sticky-filters">
+  <div className="rp-sticky-inner">
+
+    <div className="rp-filter-tabs">
+      <button
+        className={`rp-tab ${activeTab === 'all' ? 'rp-tab-active' : ''}`}
+        onClick={() => setActiveTab('all')}
+      >
+        All
+      </button>
+
+      <button
+        className={`rp-tab ${activeTab === 'normal' ? 'rp-tab-active' : ''}`}
+        onClick={() => setActiveTab('normal')}
+      >
+        Single
+      </button>
+
+      <button
+        className={`rp-tab ${activeTab === 'pair' ? 'rp-tab-active' : ''}`}
+        onClick={() => setActiveTab('pair')}
+      >
+        Pairings
+      </button>
+    </div>
+
+    <button
+      className="rp-add-btn"
+      onClick={() => navigate('/add-recommendation')}
+    >
+     
+      Add
+    </button>
+
+  </div>
+</div>
+
 
           {/* Recommendations Feed */}
           <section className="rp-feed">
