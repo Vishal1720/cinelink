@@ -1,0 +1,381 @@
+import React, { useState, useEffect } from 'react';
+import UserHeader from './UserHeader';
+import { supabase } from './supabase';
+import './RecommendationPage.css';
+
+const RecommendationPage = () => {
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('all'); // 'all', 'normal', 'pair'
+  const [userEmail, setUserEmail] = useState('');
+  const [likedRecommendations, setLikedRecommendations] = useState(new Set());
+  const [likeCounts, setLikeCounts] = useState({});
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email) {
+        setUserEmail(session.user.email);
+      }
+    };
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    loadRecommendations();
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (userEmail) {
+      loadUserLikes();
+    }
+  }, [userEmail, recommendations]);
+
+  const loadRecommendations = async () => {
+    setLoading(true);
+    try {
+      let query = supabase
+        .from('user_recommendation')
+        .select(`
+          *,
+          user:email (name, avatar_url),
+          movie1:movie_id1 (id, title, year, poster_url, type, duration),
+          movie2:movie_id2 (id, title, year, poster_url, type, duration)
+        `)
+        .order('created_at', { ascending: false });
+
+      // Filter by tab
+      if (activeTab === 'normal') {
+        query = query.eq('type_of_recommendation', 'normal_based').is('movie_id2', null);
+      } else if (activeTab === 'pair') {
+        query = query.eq('type_of_recommendation', 'like_based').not('movie_id2', 'is', null);
+      }
+
+      const { data, error } = await query.limit(20);
+
+      if (error) throw error;
+
+      setRecommendations(data || []);
+      
+      // Load like counts for all recommendations
+      if (data && data.length > 0) {
+        loadLikeCounts(data.map(rec => rec.id));
+      }
+    } catch (error) {
+      console.error('Error loading recommendations:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadUserLikes = async () => {
+    if (!userEmail || recommendations.length === 0) return;
+
+    try {
+      const recommendationIds = recommendations.map(rec => rec.id);
+      
+      const { data, error } = await supabase
+        .from('likes_in_recommendation')
+        .select('recommendation_id')
+        .eq('liker_email', userEmail)
+        .in('recommendation_id', recommendationIds);
+
+      if (error) throw error;
+
+      const likedIds = new Set(data.map(like => like.recommendation_id));
+      setLikedRecommendations(likedIds);
+    } catch (error) {
+      console.error('Error loading user likes:', error);
+    }
+  };
+
+  const loadLikeCounts = async (recommendationIds) => {
+    try {
+      const counts = {};
+      
+      for (const id of recommendationIds) {
+        const { data, error } = await supabase
+          .from('likes_in_recommendation')
+          .select('id', { count: 'exact' })
+          .eq('recommendation_id', id);
+
+        if (!error) {
+          counts[id] = data?.length || 0;
+        }
+      }
+
+      setLikeCounts(counts);
+    } catch (error) {
+      console.error('Error loading like counts:', error);
+    }
+  };
+
+  const toggleLike = async (recommendationId) => {
+    if (!userEmail) {
+      alert('Please log in to like recommendations');
+      return;
+    }
+
+    const isLiked = likedRecommendations.has(recommendationId);
+
+    try {
+      if (isLiked) {
+        // Unlike
+        const { error } = await supabase
+          .from('likes_in_recommendation')
+          .delete()
+          .eq('recommendation_id', recommendationId)
+          .eq('liker_email', userEmail);
+
+        if (error) throw error;
+
+        // Update state
+        const newLiked = new Set(likedRecommendations);
+        newLiked.delete(recommendationId);
+        setLikedRecommendations(newLiked);
+        
+        setLikeCounts(prev => ({
+          ...prev,
+          [recommendationId]: Math.max(0, (prev[recommendationId] || 0) - 1)
+        }));
+      } else {
+        // Like
+        const { error } = await supabase
+          .from('likes_in_recommendation')
+          .insert([{
+            recommendation_id: recommendationId,
+            liker_email: userEmail,
+            created_at: new Date().toISOString()
+          }]);
+
+        if (error) throw error;
+
+        // Update state
+        const newLiked = new Set(likedRecommendations);
+        newLiked.add(recommendationId);
+        setLikedRecommendations(newLiked);
+        
+        setLikeCounts(prev => ({
+          ...prev,
+          [recommendationId]: (prev[recommendationId] || 0) + 1
+        }));
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      alert('Failed to update like. Please try again.');
+    }
+  };
+
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diffMs = now - time;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
+    if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+    return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+  };
+
+  return (
+    <div className="rp-page-wrapper">
+      <UserHeader />
+      
+      {/* Background Effects */}
+      <div className="rp-bg-glow"></div>
+
+      <main className="rp-main-content">
+        <div className="rp-container">
+          {/* Filter Tabs */}
+          <div className="rp-sticky-filters">
+            <div className="rp-filter-tabs">
+              <button
+                className={`rp-tab ${activeTab === 'all' ? 'rp-tab-active' : ''}`}
+                onClick={() => setActiveTab('all')}
+              >
+                All
+              </button>
+              <button
+                className={`rp-tab ${activeTab === 'normal' ? 'rp-tab-active' : ''}`}
+                onClick={() => setActiveTab('normal')}
+              >
+                Single
+              </button>
+              <button
+                className={`rp-tab ${activeTab === 'pair' ? 'rp-tab-active' : ''}`}
+                onClick={() => setActiveTab('pair')}
+              >
+                Pairings
+              </button>
+            </div>
+          </div>
+
+          {/* Recommendations Feed */}
+          <section className="rp-feed">
+            {loading ? (
+              <div className="rp-loading">
+                <div className="rp-spinner"></div>
+                <p>Loading recommendations...</p>
+              </div>
+            ) : recommendations.length === 0 ? (
+              <div className="rp-empty-state">
+                <span className="material-symbols-outlined rp-empty-icon">movie_filter</span>
+                <h3>No recommendations yet</h3>
+                <p>Be the first to share your cinematic discoveries</p>
+              </div>
+            ) : (
+              recommendations.map((rec) => (
+                <article
+                  key={rec.id}
+                  className={`rp-card ${rec.type_of_recommendation === 'like_based' ? 'rp-card-pairing' : ''}`}
+                >
+                  {/* Card Header */}
+                  <div className="rp-card-header">
+                    <div className="rp-user-info">
+                      <img
+                        src={rec.user?.avatar_url || 'https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg'}
+                        alt={rec.user?.name || 'User'}
+                        className="rp-user-avatar"
+                      />
+                      <div>
+                        <h3 className="rp-user-name">{rec.user?.name || 'Anonymous'}</h3>
+                        <p className="rp-timestamp">
+                          {rec.type_of_recommendation === 'like_based' ? 'Paired' : 'Recommended'} {formatTimeAgo(rec.created_at)}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {rec.type_of_recommendation === 'like_based' && (
+                      <div className="rp-pairing-badge">
+                        <span className="material-symbols-outlined">link</span>
+                        <span>Double Feature</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Normal Recommendation */}
+                  {rec.type_of_recommendation === 'normal_based' && rec.movie1 && (
+                    <div className="rp-normal-content">
+                      <div className="rp-movie-poster-section">
+                        <div className="rp-poster-overlay"></div>
+                        <img
+                          src={rec.movie1.poster_url}
+                          alt={rec.movie1.title}
+                          className="rp-movie-poster"
+                        />
+                        <div className="rp-poster-info">
+                          <h2 className="rp-movie-title">{rec.movie1.title}</h2>
+                          <p className="rp-movie-meta">
+                            {rec.movie1.year} • {rec.movie1.type}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="rp-content-section">
+                        <h4 className="rp-section-title">Why you should watch</h4>
+                        <p className="rp-message">{rec.message}</p>
+                        
+                        <div className="rp-card-actions">
+                          <div className="rp-action-group">
+                            <button 
+                              className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
+                              onClick={() => toggleLike(rec.id)}
+                            >
+                              <div className="rp-action-icon-wrapper">
+                                <span className="material-symbols-outlined">
+                                  {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
+                                </span>
+                              </div>
+                              <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
+                            </button>
+                           
+                          </div>
+                         
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pairing Recommendation */}
+                  {rec.type_of_recommendation === 'like_based' && rec.movie1 && rec.movie2 && (
+                    <div className="rp-pairing-content">
+                      <div className="rp-movie-pair">
+                        <div className="rp-pair-connector">
+                          <span className="material-symbols-outlined">add</span>
+                        </div>
+                        
+                        <div className="rp-pair-movie">
+                          <img
+                            src={rec.movie1.poster_url}
+                            alt={rec.movie1.title}
+                            className="rp-pair-poster"
+                          />
+                          <div className="rp-pair-overlay"></div>
+                          <div className="rp-pair-info">
+                            <h3 className="rp-pair-title">{rec.movie1.title}</h3>
+                            <p className="rp-pair-meta">{rec.movie1.year}</p>
+                          </div>
+                        </div>
+
+                        <div className="rp-pair-movie">
+                          <img
+                            src={rec.movie2.poster_url}
+                            alt={rec.movie2.title}
+                            className="rp-pair-poster"
+                          />
+                          <div className="rp-pair-overlay"></div>
+                          <div className="rp-pair-info">
+                            <h3 className="rp-pair-title">{rec.movie2.title}</h3>
+                            <p className="rp-pair-meta">{rec.movie2.year}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="rp-pairing-description">
+                        <h4 className="rp-connection-title">
+                          <span className="material-symbols-outlined">auto_awesome</span>
+                          The Connection
+                        </h4>
+                        <p className="rp-connection-text">{rec.message}</p>
+                      </div>
+
+                      <div className="rp-card-actions">
+                        <div className="rp-action-group">
+                          <button 
+                            className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
+                            onClick={() => toggleLike(rec.id)}
+                          >
+                            <div className="rp-action-icon-wrapper">
+                              <span className="material-symbols-outlined">
+                                {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
+                              </span>
+                            </div>
+                            <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
+                          </button>
+                        
+                        </div>
+                        {/* <button className="rp-playlist-btn">
+                          <span className="material-symbols-outlined">playlist_add</span>
+                        </button> */}
+                      </div>
+                    </div>
+                  )}
+                </article>
+              ))
+            )}
+
+            {!loading && recommendations.length > 0 && (
+              <div className="rp-end-message">
+                <span>You're all caught up for now</span>
+              </div>
+            )}
+          </section>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default RecommendationPage;
