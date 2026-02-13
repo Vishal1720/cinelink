@@ -586,14 +586,21 @@
 .reviews-delete-btn {
   background: none;
   border: none;
-  color: #ff4f4f;
+  color: #8B5CF6;   /* navy blue */
   cursor: pointer;
   margin-left: 8px;
+  transition: all 0.2s ease;
 }
 
 .reviews-delete-btn .material-symbols-outlined {
   font-size: 20px;
 }
+
+.reviews-delete-btn:hover {
+  color:  #A78BFA;   /* brighter blue on hover */
+  transform: scale(1.1);
+}
+
 .your-username {
   color: #5c9ce5;       /* Green or choose your color */
   font-weight: 600;
@@ -724,4 +731,61 @@
 
 .ai-summary-text {
   line-height: 1.6;
+}
+
+.reviews-edit-container {
+  margin-top: 8px;
+}
+
+.reviews-save-btn {
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  border: 1px solid #8b5cf6;
+  padding: 6px 18px;
+  border-radius: 25px;
+  font-weight: 600;
+  color: #e9d5ff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+}
+
+.reviews-save-btn:hover {
+  background: linear-gradient(135deg, #312e81, #4338ca);
+  box-shadow: 0 0 14px rgba(139, 92, 246, 0.6);
+  transform: translateY(-2px);
+}
+
+.reviews-cancel-btn {
+  background: transparent;
+  border: 1px solid #8b5cf6;
+  padding: 6px 18px;
+  border-radius: 25px;
+  font-weight: 600;
+  color: #c4b5fd;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.reviews-cancel-btn:hover {
+  background: rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.reviews-edit-btn {
+  background: none;
+  border: none;
+  color: #8B5CF6;   /* purple icon */
+  cursor: pointer;
+  margin-left: 8px;
+  transition: all 0.2s ease;
+}
+
+.reviews-edit-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.reviews-edit-btn:hover {
+  color: #A78BFA;
+  transform: scale(1.1);
 }
