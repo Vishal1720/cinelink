@@ -3,14 +3,17 @@ import UserHeader from './UserHeader';
 import { supabase } from './supabase';
 import './RecommendationPage.css';
 import { useNavigate } from 'react-router-dom';
+
 const RecommendationPage = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'normal', 'pair'
+  const [sortBy, setSortBy] = useState('latest'); // 'latest', 'popular'
   const [userEmail, setUserEmail] = useState('');
   const [likedRecommendations, setLikedRecommendations] = useState(new Set());
   const [likeCounts, setLikeCounts] = useState({});
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -30,6 +33,13 @@ const navigate = useNavigate();
       loadUserLikes();
     }
   }, [userEmail, recommendations]);
+
+  // Sort recommendations when sortBy changes
+  useEffect(() => {
+    if (recommendations.length > 0) {
+      sortRecommendations();
+    }
+  }, [sortBy, likeCounts]);
 
   const loadRecommendations = async () => {
     setLoading(true);
@@ -110,6 +120,25 @@ const navigate = useNavigate();
     }
   };
 
+  const sortRecommendations = () => {
+    const sorted = [...recommendations].sort((a, b) => {
+      if (sortBy === 'popular') {
+        // Sort by likes (descending)
+        const likesA = likeCounts[a.id] || 0;
+        const likesB = likeCounts[b.id] || 0;
+        if (likesB !== likesA) {
+          return likesB - likesA;
+        }
+        // If likes are equal, sort by date
+        return new Date(b.created_at) - new Date(a.created_at);
+      } else {
+        // Sort by latest (default)
+        return new Date(b.created_at) - new Date(a.created_at);
+      }
+    });
+    setRecommendations(sorted);
+  };
+
   const toggleLike = async (recommendationId) => {
     if (!userEmail) {
       alert('Please log in to like recommendations');
@@ -166,6 +195,10 @@ const navigate = useNavigate();
     }
   };
 
+  const handlePosterClick = (movieId) => {
+    navigate(`/movie/${movieId}`);
+  };
+
   const formatTimeAgo = (timestamp) => {
     const now = new Date();
     const time = new Date(timestamp);
@@ -188,45 +221,55 @@ const navigate = useNavigate();
 
       <main className="rp-main-content">
         <div className="rp-container">
-          {/* Filter Tabs */}
-         {/* Sticky Filter Tabs + Add Button */}
-<div className="rp-sticky-filters">
-  <div className="rp-sticky-inner">
+          {/* Sticky Filter Tabs + Sort + Add Button */}
+          <div className="rp-sticky-filters">
+            <div className="rp-sticky-inner">
+              <div className="rp-filter-tabs">
+                <button
+                  className={`rp-tab ${activeTab === 'all' ? 'rp-tab-active' : ''}`}
+                  onClick={() => setActiveTab('all')}
+                >
+                  All
+                </button>
 
-    <div className="rp-filter-tabs">
-      <button
-        className={`rp-tab ${activeTab === 'all' ? 'rp-tab-active' : ''}`}
-        onClick={() => setActiveTab('all')}
-      >
-        All
-      </button>
+                <button
+                  className={`rp-tab ${activeTab === 'normal' ? 'rp-tab-active' : ''}`}
+                  onClick={() => setActiveTab('normal')}
+                >
+                  Single
+                </button>
 
-      <button
-        className={`rp-tab ${activeTab === 'normal' ? 'rp-tab-active' : ''}`}
-        onClick={() => setActiveTab('normal')}
-      >
-        Single
-      </button>
+                <button
+                  className={`rp-tab ${activeTab === 'pair' ? 'rp-tab-active' : ''}`}
+                  onClick={() => setActiveTab('pair')}
+                >
+                  Pairings
+                </button>
+              </div>
 
-      <button
-        className={`rp-tab ${activeTab === 'pair' ? 'rp-tab-active' : ''}`}
-        onClick={() => setActiveTab('pair')}
-      >
-        Pairings
-      </button>
-    </div>
+              <div className="rp-controls-group">
+                {/* Sort Dropdown */}
+                <div className="rp-sort-container">
+                  <select
+                    className="rp-sort-select"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                  >
+                    <option value="latest">Latest</option>
+                    <option value="popular">Most Popular</option>
+                  </select>
+                  <span className="material-symbols-outlined rp-sort-icon">sort</span>
+                </div>
 
-    <button
-      className="rp-add-btn"
-      onClick={() => navigate('/add-recommendation')}
-    >
-     
-      Add
-    </button>
-
-  </div>
-</div>
-
+                <button
+                  className="rp-add-btn"
+                  onClick={() => navigate('/add-recommendation')}
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Recommendations Feed */}
           <section className="rp-feed">
@@ -274,7 +317,10 @@ const navigate = useNavigate();
                   {/* Normal Recommendation */}
                   {rec.type_of_recommendation === 'normal_based' && rec.movie1 && (
                     <div className="rp-normal-content">
-                      <div className="rp-movie-poster-section">
+                      <div 
+                        className="rp-movie-poster-section"
+                        onClick={() => handlePosterClick(rec.movie1.id)}
+                      >
                         <div className="rp-poster-overlay"></div>
                         <img
                           src={rec.movie1.poster_url}
@@ -306,9 +352,7 @@ const navigate = useNavigate();
                               </div>
                               <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
                             </button>
-                           
                           </div>
-                         
                         </div>
                       </div>
                     </div>
@@ -322,7 +366,10 @@ const navigate = useNavigate();
                           <span className="material-symbols-outlined">add</span>
                         </div>
                         
-                        <div className="rp-pair-movie">
+                        <div 
+                          className="rp-pair-movie"
+                          onClick={() => handlePosterClick(rec.movie1.id)}
+                        >
                           <img
                             src={rec.movie1.poster_url}
                             alt={rec.movie1.title}
@@ -335,7 +382,10 @@ const navigate = useNavigate();
                           </div>
                         </div>
 
-                        <div className="rp-pair-movie">
+                        <div 
+                          className="rp-pair-movie"
+                          onClick={() => handlePosterClick(rec.movie2.id)}
+                        >
                           <img
                             src={rec.movie2.poster_url}
                             alt={rec.movie2.title}
@@ -370,11 +420,7 @@ const navigate = useNavigate();
                             </div>
                             <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
                           </button>
-                        
                         </div>
-                        {/* <button className="rp-playlist-btn">
-                          <span className="material-symbols-outlined">playlist_add</span>
-                        </button> */}
                       </div>
                     </div>
                   )}
