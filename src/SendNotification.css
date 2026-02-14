@@ -29,6 +29,7 @@
 }
 
 @media (min-width: 768px) {
+   
     .send-notif-main {
         padding: 3rem 3rem 3rem 3rem;
     }
@@ -804,6 +805,9 @@
 
 /* Responsive Adjustments */
 @media (max-width: 640px) {
+     .send-notif-page {
+        margin-left: 0;
+    }
     .send-notif-actions {
         flex-direction: column;
     }

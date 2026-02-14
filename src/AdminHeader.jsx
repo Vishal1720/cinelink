@@ -91,6 +91,11 @@ useEffect(() => {
     localStorage.clear();
     navigate("/Login");
   };
+
+  const addnotif=()=>{
+    setIsMenuOpen(false);
+    navigate("/add-notification");
+  }
 const location = useLocation();
 
 // selecting tab when page change
@@ -136,7 +141,7 @@ const isActive = (path) =>
 
         <nav className="nav-menu">
           <ul>
-            <li>
+          
               <li>
               <button className={`admin-nav-item ${isActive("/movie-requests")}`} onClick={movie_requests}>
               
@@ -145,6 +150,16 @@ const isActive = (path) =>
                 Requests
               </button>
             </li>
+
+            <li>
+              <button className={`admin-nav-item ${isActive("/add-notification")}`} onClick={addnotif}>
+              
+                <span className="material-icons-round">notifications</span>
+
+                Notifications
+              </button>
+            </li>
+            <li>
               <button className={`admin-nav-item ${isActive("/upload-banner")}`} onClick={banner}>
               
                 <span className="material-icons-round">campaign</span>
@@ -159,12 +174,14 @@ const isActive = (path) =>
                 Movies
               </button>
             </li>
+
             <li>
               <button className={`admin-nav-item ${isActive("/useranalytics")}`} onClick={user_analytics}>
                 <span className="admin-icon">👥</span>
                 Users
               </button>
             </li>
+
            <li>
               <button
                  className={`admin-nav-item ${isActive("/admin-reviews")}`}
