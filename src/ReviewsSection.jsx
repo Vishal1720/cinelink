@@ -18,7 +18,10 @@ const ReviewsSection = ({ movieId, pieData,totalreviews,summary,moviename,type }
   const [user, setUser] = useState(null);
   const [ratingCategories, setRatingCategories] = useState([]);
   const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
-const [aiRequested, setAiRequested] = useState(false);//only one time load
+  const [aiRequested, setAiRequested] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState(null);
+  const [editedText, setEditedText] = useState("");
+
 
 
   const [aiSummary, setAiSummary] = useState(null);
@@ -40,6 +43,51 @@ const [posting, setPosting] = useState(false);
 setPosting(false);//enabling button after review is deleted since review option comes again
   fetchReviews(); // refresh list
 };
+
+const handleEditClick = (review) => {
+  setEditingReviewId(review.id);
+  setEditedText(review.review_text);
+};
+
+const handleUpdateReview = async (reviewId) => {
+  if (!editedText.trim()) return alert("Review cannot be empty");
+
+  const { data, error } = await supabase
+    .from("reviews")
+    .update({ review_text: editedText })
+    .eq("id", reviewId)
+    .select();
+
+  if (error) {
+    console.error(error);
+    alert("Update failed");
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    alert("Update failed.");
+    return;
+  }
+
+  setEditingReviewId(null);
+  setEditedText("");
+  setReviews(prev =>
+  prev.map(r =>
+    r.id === reviewId
+      ? { ...r, review_text: editedText }
+      : r
+  )
+);
+
+};
+
+
+
+const handleCancelEdit = () => {
+  setEditingReviewId(null);
+  setEditedText("");
+};
+
 
 const fetchUserRanks = async (emails) => {
   if (emails.length === 0) return {};
@@ -490,19 +538,54 @@ try {
                       <div className={`reviews-item-rating ${getRatingClass(reviews[0].rating.cat_name)}`}>
                         {getRatingEmoji(reviews[0].rating.cat_name)} {reviews[0].rating.cat_name}
                       </div>
-                      {reviews[0].email === user?.email && (
-  <button
-    className="reviews-delete-btn"
-    onClick={() => handleDeleteReview(reviews[0].id)}
-  >
-    <span className="material-symbols-outlined">delete</span>
-  </button>
+                      {reviews[0].email?.toLowerCase() === user?.email?.toLowerCase() && (
+  <>
+    <button
+      className="reviews-edit-btn"
+      onClick={() => handleEditClick(reviews[0])}
+    >
+      <span className="material-symbols-outlined">edit</span>
+    </button>
+
+    <button
+      className="reviews-delete-btn"
+      onClick={() => handleDeleteReview(reviews[0].id)}
+    >
+      <span className="material-symbols-outlined">delete</span>
+    </button>
+  </>
 )}
+
                     </div>
                     
-                    <p className="reviews-item-text">
-                      {reviews[0].review_text}
-                    </p>
+                    {editingReviewId === reviews[0].id ? (
+  <div className="reviews-edit-container">
+    <textarea
+      className="reviews-textarea"
+      value={editedText}
+      onChange={(e) => setEditedText(e.target.value)}
+    />
+    <div className="reviews-edit-actions">
+      <button
+        className="reviews-save-btn"
+        onClick={() => handleUpdateReview(reviews[0].id)}
+      >
+        Save
+      </button>
+      <button
+        className="reviews-cancel-btn"
+        onClick={handleCancelEdit}
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+) : (
+  <p className="reviews-item-text">
+    {reviews[0].review_text}
+  </p>
+)}
+
                     <button
                     className="reviews-like-btn"
                     onClick={() => handleLikeReview(reviews[0].id)}
@@ -559,7 +642,8 @@ try {
                   <div className="reviews-item-header">
                    <p
                         className={
-                          review.email === user?.email
+                          review.email?.toLowerCase() === user?.email?.toLowerCase()
+
                             ? "reviews-item-username your-username"
                             : "reviews-item-username"
                         }
@@ -576,17 +660,53 @@ try {
                     <div className={`reviews-item-rating ${getRatingClass(review.rating.cat_name)}`}>
                       {getRatingEmoji(review.rating.cat_name)} {review.rating.cat_name}
                     </div>
-                      {review.email === user?.email && (
-  <button
-    className="reviews-delete-btn"
-    onClick={() => handleDeleteReview(review.id)}
-  >
-    <span className="material-symbols-outlined">delete</span>
-  </button>
+                     {review.email?.toLowerCase() === user?.email?.toLowerCase()
+ && (
+  <>
+    <button
+      className="reviews-edit-btn"
+      onClick={() => handleEditClick(review)}
+    >
+      <span className="material-symbols-outlined">edit</span>
+    </button>
+
+    <button
+      className="reviews-delete-btn"
+      onClick={() => handleDeleteReview(review.id)}
+    >
+      <span className="material-symbols-outlined">delete</span>
+    </button>
+  </>
 )}
+
                   </div>
 
-                  <p className="reviews-item-text">{review.review_text}</p>
+                  {editingReviewId === review.id ? (
+  <div className="reviews-edit-container">
+    <textarea
+      className="reviews-textarea"
+      value={editedText}
+      onChange={(e) => setEditedText(e.target.value)}
+    />
+    <div className="reviews-edit-actions">
+      <button
+        className="reviews-save-btn"
+        onClick={() => handleUpdateReview(review.id)}
+      >
+        Save
+      </button>
+      <button
+        className="reviews-cancel-btn"
+        onClick={handleCancelEdit}
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+) : (
+  <p className="reviews-item-text">{review.review_text}</p>
+)}
+
 
                   <button
                     className="reviews-like-btn"
