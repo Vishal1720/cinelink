@@ -225,12 +225,7 @@ const UserNotificationPage = () => {
                             >
                                 Reviews
                             </button>
-                            <button 
-                                className={`notif-filter-btn ${filter === 'promotions' ? 'active' : ''}`}
-                                onClick={() => setFilter('promotions')}
-                            >
-                                Offers
-                            </button>
+                        
                             <button 
                                 className={`notif-filter-btn ${filter === 'discussions' ? 'active' : ''}`}
                                 onClick={() => setFilter('discussions')}
