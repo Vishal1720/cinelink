@@ -93,7 +93,7 @@
 @media (min-width: 768px) {
     .send-notif-glass-panel {
         padding: 2.5rem;
-    }
+    }   
 }
 
 /* Tabs */
@@ -804,7 +804,7 @@
 }
 
 /* Responsive Adjustments */
-@media (max-width: 640px) {
+@media (max-width: 769px) {
      .send-notif-page {
         margin-left: 0;
     }
