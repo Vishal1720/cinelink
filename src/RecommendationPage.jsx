@@ -10,6 +10,7 @@ const RecommendationPage = () => {
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'normal', 'pair'
   const [sortBy, setSortBy] = useState('latest'); // 'latest', 'popular'
   const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [likedRecommendations, setLikedRecommendations] = useState(new Set());
   const [likeCounts, setLikeCounts] = useState({});
   const [editingId, setEditingId] = useState(null);
@@ -22,6 +23,17 @@ const RecommendationPage = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user?.email) {
         setUserEmail(session.user.email);
+        
+        // Get user name
+        const { data: userData } = await supabase
+          .from('user')
+          .select('name')
+          .eq('email', session.user.email)
+          .single();
+        
+        if (userData) {
+          setUserName(userData.name);
+        }
       }
     };
     getUser();
@@ -142,6 +154,99 @@ const RecommendationPage = () => {
     setRecommendations(sorted);
   };
 
+  const createOrUpdateNotification = async (recommendation) => {
+    try {
+      // Get all likers for this recommendation
+      const { data: likersData, error: likersError } = await supabase
+        .from('likes_in_recommendation')
+        .select('liker_email')
+        .eq('recommendation_id', recommendation.id);
+
+      if (likersError) throw likersError;
+
+      if (!likersData || likersData.length === 0) return;
+
+      // Get the names of all likers
+      const likerEmails = likersData.map(l => l.liker_email);
+      const { data: usersData, error: usersError } = await supabase
+        .from('user')
+        .select('email, name')
+        .in('email', likerEmails);
+
+      if (usersError) throw usersError;
+
+      // Create a map of email to name
+      const emailToName = {};
+      usersData.forEach(user => {
+        emailToName[user.email] = user.name;
+      });
+
+      // Get the most recent liker's name
+      const mostRecentLiker = likersData[likersData.length - 1].liker_email;
+      const mostRecentLikerName = emailToName[mostRecentLiker] || 'Someone';
+
+      // Create notification text
+      const totalLikes = likersData.length;
+      let notificationText;
+      
+      // Different text for pairing vs normal recommendations
+      if (recommendation.type_of_recommendation === 'like_based' && recommendation.movie2) {
+        // Pairing recommendation - mention both movies
+        if (totalLikes === 1) {
+          notificationText = `${mostRecentLikerName} liked your pairing of ${recommendation.movie1.title} and ${recommendation.movie2.title}`;
+        } else {
+          const othersCount = totalLikes - 1;
+          notificationText = `${mostRecentLikerName} and ${othersCount} ${othersCount === 1 ? 'other' : 'others'} liked your pairing of ${recommendation.movie1.title} and ${recommendation.movie2.title}`;
+        }
+      } else {
+        // Normal recommendation - mention single movie
+        if (totalLikes === 1) {
+          notificationText = `${mostRecentLikerName} liked your recommendation on ${recommendation.movie1.title}`;
+        } else {
+          const othersCount = totalLikes - 1;
+          notificationText = `${mostRecentLikerName} and ${othersCount} ${othersCount === 1 ? 'other' : 'others'} liked your recommendation on ${recommendation.movie1.title}`;
+        }
+      }
+
+      // Determine notification type
+      const notificationType = recommendation.type_of_recommendation === 'like_based' 
+        ? 'pairing_recommendation' 
+        : 'normal_recommendation';
+
+      // Delete existing notification for this recommendation (if any)
+      await supabase
+        .from('notification')
+        .delete()
+        .eq('email', recommendation.email)
+        .eq('movie_id', recommendation.movie_id1)
+        .eq('type', notificationType);
+
+      // Insert new notification
+      const notificationData = {
+        email: recommendation.email,
+        movie_id: recommendation.movie_id1,
+        notification_text: notificationText,
+        type: notificationType,
+        status: 'unread',
+        created_at: new Date().toISOString()
+      };
+
+      // Add movie_id2 only for pairing recommendations
+      if (recommendation.type_of_recommendation === 'like_based' && recommendation.movie_id2) {
+        notificationData.movie_id2 = recommendation.movie_id2;
+      }
+
+      const { error: insertError } = await supabase
+        .from('notification')
+        .insert([notificationData]);
+
+      if (insertError) throw insertError;
+
+    } catch (error) {
+      console.error('Error creating/updating notification:', error);
+    }
+  };
+
   const toggleLike = async (recommendationId) => {
     if (!userEmail) {
       alert('Please log in to like recommendations');
@@ -177,6 +282,26 @@ const RecommendationPage = () => {
           ...prev,
           [recommendationId]: Math.max(0, (prev[recommendationId] || 0) - 1)
         }));
+
+        // Update or delete notification
+        if (recommendation) {
+          const remainingLikes = (likeCounts[recommendationId] || 1) - 1;
+          if (remainingLikes > 0) {
+            await createOrUpdateNotification(recommendation);
+          } else {
+            // Delete notification if no likes remain
+            const notificationType = recommendation.type_of_recommendation === 'like_based' 
+              ? 'pairing_recommendation' 
+              : 'normal_recommendation';
+            
+            await supabase
+              .from('notification')
+              .delete()
+              .eq('email', recommendation.email)
+              .eq('movie_id', recommendation.movie_id1)
+              .eq('type', notificationType);
+          }
+        }
       } else {
         // Like
         const { error } = await supabase
@@ -198,6 +323,11 @@ const RecommendationPage = () => {
           ...prev,
           [recommendationId]: (prev[recommendationId] || 0) + 1
         }));
+
+        // Create or update notification
+        if (recommendation) {
+          await createOrUpdateNotification(recommendation);
+        }
       }
     } catch (error) {
       console.error('Error toggling like:', error);

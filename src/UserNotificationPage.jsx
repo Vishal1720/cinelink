@@ -60,7 +60,9 @@ const UserNotificationPage = () => {
                 .eq('email', user.email)
                 .order('created_at', { ascending: false });
 
-            if (filter !== 'all') {
+            if (filter === 'recommendations') {
+                query = query.in('type', ['normal_recommendation', 'pairing_recommendation']);
+            } else if (filter !== 'all') {
                 query = query.eq('type', filter);
             }
 
@@ -70,7 +72,15 @@ const UserNotificationPage = () => {
             setNotifications(data || []);
             
             // Fetch movie posters for notifications with movie_id
-            const movieIds = [...new Set(data.filter(n => n.movie_id).map(n => n.movie_id))];
+            const movieIds = [...new Set(
+                data.flatMap(n => {
+                    const ids = [];
+                    if (n.movie_id) ids.push(n.movie_id);
+                    if (n.movie_id2) ids.push(n.movie_id2);
+                    return ids;
+                })
+            )];
+            
             if (movieIds.length > 0) {
                 fetchMoviePosters(movieIds);
             }
@@ -141,6 +151,10 @@ const UserNotificationPage = () => {
 
     const getNotificationIcon = (type) => {
         switch (type) {
+            case 'normal_recommendation':
+                return { icon: 'favorite', color: 'pink-400', borderColor: 'notif-border-recommendation' };
+            case 'pairing_recommendation':
+                return { icon: 'favorite', color: 'pink-400', borderColor: 'notif-border-recommendation' };
             case 'reviews':
                 return { icon: 'rate_review', color: 'green-400', borderColor: 'border-l-green-500' };
             case 'promotions':
@@ -156,6 +170,14 @@ const UserNotificationPage = () => {
         const diffMs = new Date() - new Date(timestamp);
         const diffHours = diffMs / 3600000;
         return diffHours < 1;
+    };
+
+    const isRecommendation = (type) => {
+        return type === 'normal_recommendation' || type === 'pairing_recommendation';
+    };
+
+    const isPairing = (type) => {
+        return type === 'pairing_recommendation';
     };
 
     const newNotifications = notifications.filter(n => isRecent(n.created_at));
@@ -178,6 +200,12 @@ const UserNotificationPage = () => {
                                 onClick={() => setFilter('all')}
                             >
                                 All
+                            </button>
+                            <button 
+                                className={`notif-filter-btn ${filter === 'recommendations' ? 'active' : ''}`}
+                                onClick={() => setFilter('recommendations')}
+                            >
+                                Recommendations
                             </button>
                             <button 
                                 className={`notif-filter-btn ${filter === 'reviews' ? 'active' : ''}`}
@@ -229,12 +257,15 @@ const UserNotificationPage = () => {
                                 {newNotifications.map((notification) => {
                                     const { icon, color, borderColor } = getNotificationIcon(notification.type);
                                     const hasMovie = notification.movie_id && moviePosters[notification.movie_id];
+                                    const hasMovie2 = notification.movie_id2 && moviePosters[notification.movie_id2];
                                     const isClickable = notification.movie_id;
+                                    const isRec = isRecommendation(notification.type);
+                                    const isPair = isPairing(notification.type);
                                     
                                     return (
                                         <div 
                                             key={notification.id} 
-                                            className={`notif-card ${borderColor} ${isClickable ? 'clickable' : ''}`}
+                                            className={`notif-card ${borderColor} ${isClickable ? 'clickable' : ''} ${isRec ? 'notif-card-recommendation' : ''}`}
                                             onClick={() => handleNotificationClick(notification)}
                                             style={{ cursor: isClickable ? 'pointer' : 'default' }}
                                         >
@@ -250,25 +281,73 @@ const UserNotificationPage = () => {
                                                         {getTimeAgo(notification.created_at)}
                                                     </p>
                                                 </div>
-                                                {hasMovie ? (
-                                                    <div className="notif-movie-poster">
-                                                        <img 
-                                                            src={moviePosters[notification.movie_id]} 
-                                                            alt="Movie poster"
-                                                            onError={(e) => {
-                                                                e.target.style.display = 'none';
-                                                                e.target.nextSibling.style.display = 'flex';
-                                                            }}
-                                                        />
-                                                        <div className="notif-movie-placeholder" style={{ display: 'none' }}>
-                                                            <span className="material-icons-round">movie</span>
-                                                        </div>
+                                                {isRec && (
+                                                    <div className={`notif-movie-container ${isPair ? 'notif-movie-pair' : ''}`}>
+                                                        {hasMovie ? (
+                                                            <div className="notif-movie-poster notif-rec-poster">
+                                                                <img 
+                                                                    src={moviePosters[notification.movie_id]} 
+                                                                    alt="Movie poster"
+                                                                    onError={(e) => {
+                                                                        e.target.style.display = 'none';
+                                                                        e.target.nextSibling.style.display = 'flex';
+                                                                    }}
+                                                                />
+                                                                <div className="notif-movie-placeholder" style={{ display: 'none' }}>
+                                                                    <span className="material-icons-round">movie</span>
+                                                                </div>
+                                                            </div>
+                                                        ) : notification.movie_id ? (
+                                                            <div className="notif-movie-placeholder notif-rec-poster">
+                                                                <span className="material-icons-round">movie</span>
+                                                            </div>
+                                                        ) : null}
+                                                        
+                                                        {isPair && hasMovie2 && (
+                                                            <>
+                                                                <div className="notif-pair-connector">
+                                                                    <span className="material-icons-round">add</span>
+                                                                </div>
+                                                                <div className="notif-movie-poster notif-rec-poster">
+                                                                    <img 
+                                                                        src={moviePosters[notification.movie_id2]} 
+                                                                        alt="Movie poster"
+                                                                        onError={(e) => {
+                                                                            e.target.style.display = 'none';
+                                                                            e.target.nextSibling.style.display = 'flex';
+                                                                        }}
+                                                                    />
+                                                                    <div className="notif-movie-placeholder" style={{ display: 'none' }}>
+                                                                        <span className="material-icons-round">movie</span>
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )}
                                                     </div>
-                                                ) : notification.movie_id ? (
-                                                    <div className="notif-movie-placeholder">
-                                                        <span className="material-icons-round">movie</span>
-                                                    </div>
-                                                ) : null}
+                                                )}
+                                                {!isRec && (
+                                                    <>
+                                                        {hasMovie ? (
+                                                            <div className="notif-movie-poster">
+                                                                <img 
+                                                                    src={moviePosters[notification.movie_id]} 
+                                                                    alt="Movie poster"
+                                                                    onError={(e) => {
+                                                                        e.target.style.display = 'none';
+                                                                        e.target.nextSibling.style.display = 'flex';
+                                                                    }}
+                                                                />
+                                                                <div className="notif-movie-placeholder" style={{ display: 'none' }}>
+                                                                    <span className="material-icons-round">movie</span>
+                                                                </div>
+                                                            </div>
+                                                        ) : notification.movie_id ? (
+                                                            <div className="notif-movie-placeholder">
+                                                                <span className="material-icons-round">movie</span>
+                                                            </div>
+                                                        ) : null}
+                                                    </>
+                                                )}
                                             </div>
                                         </div>
                                     );
@@ -286,12 +365,15 @@ const UserNotificationPage = () => {
                                 {olderNotifications.map((notification) => {
                                     const { icon, color, borderColor } = getNotificationIcon(notification.type);
                                     const hasMovie = notification.movie_id && moviePosters[notification.movie_id];
+                                    const hasMovie2 = notification.movie_id2 && moviePosters[notification.movie_id2];
                                     const isClickable = notification.movie_id;
+                                    const isRec = isRecommendation(notification.type);
+                                    const isPair = isPairing(notification.type);
                                     
                                     return (
                                         <div 
                                             key={notification.id} 
-                                            className={`notif-card older ${borderColor} ${isClickable ? 'clickable' : ''}`}
+                                            className={`notif-card older ${borderColor} ${isClickable ? 'clickable' : ''} ${isRec ? 'notif-card-recommendation' : ''}`}
                                             onClick={() => handleNotificationClick(notification)}
                                             style={{ cursor: isClickable ? 'pointer' : 'default' }}
                                         >
@@ -307,25 +389,73 @@ const UserNotificationPage = () => {
                                                         {getTimeAgo(notification.created_at)}
                                                     </p>
                                                 </div>
-                                                {hasMovie ? (
-                                                    <div className="notif-movie-poster">
-                                                        <img 
-                                                            src={moviePosters[notification.movie_id]} 
-                                                            alt="Movie poster"
-                                                            onError={(e) => {
-                                                                e.target.style.display = 'none';
-                                                                e.target.nextSibling.style.display = 'flex';
-                                                            }}
-                                                        />
-                                                        <div className="notif-movie-placeholder" style={{ display: 'none' }}>
-                                                            <span className="material-icons-round">movie</span>
-                                                        </div>
+                                                {isRec && (
+                                                    <div className={`notif-movie-container ${isPair ? 'notif-movie-pair' : ''}`}>
+                                                        {hasMovie ? (
+                                                            <div className="notif-movie-poster notif-rec-poster">
+                                                                <img 
+                                                                    src={moviePosters[notification.movie_id]} 
+                                                                    alt="Movie poster"
+                                                                    onError={(e) => {
+                                                                        e.target.style.display = 'none';
+                                                                        e.target.nextSibling.style.display = 'flex';
+                                                                    }}
+                                                                />
+                                                                <div className="notif-movie-placeholder" style={{ display: 'none' }}>
+                                                                    <span className="material-icons-round">movie</span>
+                                                                </div>
+                                                            </div>
+                                                        ) : notification.movie_id ? (
+                                                            <div className="notif-movie-placeholder notif-rec-poster">
+                                                                <span className="material-icons-round">movie</span>
+                                                            </div>
+                                                        ) : null}
+                                                        
+                                                        {isPair && hasMovie2 && (
+                                                            <>
+                                                                <div className="notif-pair-connector">
+                                                                    <span className="material-icons-round">add</span>
+                                                                </div>
+                                                                <div className="notif-movie-poster notif-rec-poster">
+                                                                    <img 
+                                                                        src={moviePosters[notification.movie_id2]} 
+                                                                        alt="Movie poster"
+                                                                        onError={(e) => {
+                                                                            e.target.style.display = 'none';
+                                                                            e.target.nextSibling.style.display = 'flex';
+                                                                        }}
+                                                                    />
+                                                                    <div className="notif-movie-placeholder" style={{ display: 'none' }}>
+                                                                        <span className="material-icons-round">movie</span>
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )}
                                                     </div>
-                                                ) : notification.movie_id ? (
-                                                    <div className="notif-movie-placeholder">
-                                                        <span className="material-icons-round">movie</span>
-                                                    </div>
-                                                ) : null}
+                                                )}
+                                                {!isRec && (
+                                                    <>
+                                                        {hasMovie ? (
+                                                            <div className="notif-movie-poster">
+                                                                <img 
+                                                                    src={moviePosters[notification.movie_id]} 
+                                                                    alt="Movie poster"
+                                                                    onError={(e) => {
+                                                                        e.target.style.display = 'none';
+                                                                        e.target.nextSibling.style.display = 'flex';
+                                                                    }}
+                                                                />
+                                                                <div className="notif-movie-placeholder" style={{ display: 'none' }}>
+                                                                    <span className="material-icons-round">movie</span>
+                                                                </div>
+                                                            </div>
+                                                        ) : notification.movie_id ? (
+                                                            <div className="notif-movie-placeholder">
+                                                                <span className="material-icons-round">movie</span>
+                                                            </div>
+                                                        ) : null}
+                                                    </>
+                                                )}
                                             </div>
                                         </div>
                                     );
