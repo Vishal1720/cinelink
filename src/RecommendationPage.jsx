@@ -148,6 +148,13 @@ const RecommendationPage = () => {
       return;
     }
 
+    // Find the recommendation to check if user owns it
+    const recommendation = recommendations.find(rec => rec.id === recommendationId);
+    if (recommendation && recommendation.email === userEmail) {
+      alert('You cannot like your own recommendation');
+      return;
+    }
+
     const isLiked = likedRecommendations.has(recommendationId);
 
     try {
@@ -479,17 +486,27 @@ const RecommendationPage = () => {
                         
                         <div className="rp-card-actions">
                           <div className="rp-action-group">
-                            <button 
-                              className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
-                              onClick={() => toggleLike(rec.id)}
-                            >
-                              <div className="rp-action-icon-wrapper">
-                                <span className="material-symbols-outlined">
-                                  {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
-                                </span>
+                            {userEmail !== rec.email && (
+                              <button 
+                                className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
+                                onClick={() => toggleLike(rec.id)}
+                              >
+                                <div className="rp-action-icon-wrapper">
+                                  <span className="material-symbols-outlined">
+                                    {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
+                                  </span>
+                                </div>
+                                <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
+                              </button>
+                            )}
+                            {userEmail === rec.email && likeCounts[rec.id] > 0 && (
+                              <div className="rp-like-count-display">
+                                <div className="rp-action-icon-wrapper">
+                                  <span className="material-symbols-outlined">favorite</span>
+                                </div>
+                                <span className="rp-action-count">{likeCounts[rec.id]}</span>
                               </div>
-                              <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
-                            </button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -582,17 +599,27 @@ const RecommendationPage = () => {
 
                       <div className="rp-card-actions">
                         <div className="rp-action-group">
-                          <button 
-                            className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
-                            onClick={() => toggleLike(rec.id)}
-                          >
-                            <div className="rp-action-icon-wrapper">
-                              <span className="material-symbols-outlined">
-                                {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
-                              </span>
+                          {userEmail !== rec.email && (
+                            <button 
+                              className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
+                              onClick={() => toggleLike(rec.id)}
+                            >
+                              <div className="rp-action-icon-wrapper">
+                                <span className="material-symbols-outlined">
+                                  {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
+                                </span>
+                              </div>
+                              <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
+                            </button>
+                          )}
+                          {userEmail === rec.email && likeCounts[rec.id] > 0 && (
+                            <div className="rp-like-count-display">
+                              <div className="rp-action-icon-wrapper">
+                                <span className="material-symbols-outlined">favorite</span>
+                              </div>
+                              <span className="rp-action-count">{likeCounts[rec.id]}</span>
                             </div>
-                            <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
-                          </button>
+                          )}
                         </div>
                       </div>
                     </div>

@@ -716,6 +716,32 @@
   font-size: 1.25rem;
 }
 
+/* Like Count Display (for user's own recommendations) */
+.rp-like-count-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #a855f7;
+  font-family: 'Spline Sans', sans-serif;
+  pointer-events: none;
+}
+
+.rp-like-count-display .rp-action-icon-wrapper {
+  background: rgba(168, 85, 247, 0.2);
+}
+
+.rp-like-count-display .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.rp-like-count-display .rp-action-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #a855f7;
+  min-width: 1.5rem;
+  text-align: left;
+}
+
 .rp-icon-btn {
   padding: 0.75rem;
   border-radius: 50%;
