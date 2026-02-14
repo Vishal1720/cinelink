@@ -334,12 +334,15 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 1rem;
 }
 
 .rp-user-info {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .rp-user-avatar {
@@ -348,6 +351,7 @@
   border-radius: 50%;
   border: 1px solid rgba(168, 85, 247, 0.3);
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .rp-user-name {
@@ -361,6 +365,59 @@
   font-size: 0.75rem;
   color: #94a3b8;
   margin: 0;
+}
+
+/* Header Actions Container */
+.rp-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Owner Actions (Edit/Delete) */
+.rp-owner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rp-edit-btn,
+.rp-delete-btn {
+  padding: 0.5rem;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rp-edit-btn {
+  color: #94a3b8;
+}
+
+.rp-edit-btn:hover {
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+}
+
+.rp-delete-btn {
+  color: #94a3b8;
+}
+
+.rp-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+.rp-edit-btn .material-symbols-outlined,
+.rp-delete-btn .material-symbols-outlined {
+  font-size: 1.125rem;
 }
 
 /* Pairing Badge */
@@ -482,6 +539,110 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+/* Edit Mode */
+.rp-edit-mode {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rp-edit-textarea {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(168, 85, 247, 0.3);
+  color: #cbd5e1;
+  font-size: 1rem;
+  font-family: 'Spline Sans', sans-serif;
+  line-height: 1.75;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.rp-edit-textarea:focus {
+  outline: none;
+  border-color: #a855f7;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+}
+
+.rp-edit-textarea::placeholder {
+  color: #64748b;
+}
+
+.rp-edit-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 0.5rem;
+  color: #fca5a5;
+  font-size: 0.875rem;
+}
+
+.rp-edit-error .material-symbols-outlined {
+  font-size: 1.125rem;
+  color: #ef4444;
+}
+
+.rp-edit-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.rp-save-btn,
+.rp-cancel-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Spline Sans', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.rp-save-btn {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: white;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+}
+
+.rp-save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(168, 85, 247, 0.4);
+}
+
+.rp-save-btn:active {
+  transform: translateY(0);
+}
+
+.rp-cancel-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rp-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.rp-save-btn .material-symbols-outlined,
+.rp-cancel-btn .material-symbols-outlined {
+  font-size: 1.125rem;
 }
 
 /* Card Actions */
@@ -850,6 +1011,35 @@
   }
 
   .rp-action-group {
+    justify-content: center;
+  }
+
+  .rp-header-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .rp-owner-actions {
+    gap: 0.375rem;
+  }
+
+  .rp-edit-btn,
+  .rp-delete-btn {
+    padding: 0.4rem;
+  }
+
+  .rp-edit-btn .material-symbols-outlined,
+  .rp-delete-btn .material-symbols-outlined {
+    font-size: 1rem;
+  }
+
+  .rp-edit-actions {
+    flex-direction: column;
+  }
+
+  .rp-save-btn,
+  .rp-cancel-btn {
+    width: 100%;
     justify-content: center;
   }
 }

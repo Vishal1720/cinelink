@@ -12,6 +12,9 @@ const RecommendationPage = () => {
   const [userEmail, setUserEmail] = useState('');
   const [likedRecommendations, setLikedRecommendations] = useState(new Set());
   const [likeCounts, setLikeCounts] = useState({});
+  const [editingId, setEditingId] = useState(null);
+  const [editMessage, setEditMessage] = useState('');
+  const [editError, setEditError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -199,6 +202,84 @@ const RecommendationPage = () => {
     navigate(`/movie/${movieId}`);
   };
 
+  const handleEdit = (recommendation) => {
+    setEditingId(recommendation.id);
+    setEditMessage(recommendation.message);
+    setEditError('');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditMessage('');
+    setEditError('');
+  };
+
+  const handleSaveEdit = async (recommendationId) => {
+    // Validate message is not empty
+    const trimmedMessage = editMessage.trim();
+    
+    if (!trimmedMessage) {
+      setEditError('Review cannot be empty');
+      return;
+    }
+
+    if (trimmedMessage.length < 10) {
+      setEditError('Review must be at least 10 characters');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('user_recommendation')
+        .update({ message: trimmedMessage })
+        .eq('id', recommendationId);
+
+      if (error) throw error;
+
+      // Update local state
+      setRecommendations(prev =>
+        prev.map(rec =>
+          rec.id === recommendationId
+            ? { ...rec, message: trimmedMessage }
+            : rec
+        )
+      );
+
+      // Exit edit mode
+      setEditingId(null);
+      setEditMessage('');
+      setEditError('');
+      
+      alert('Recommendation updated successfully');
+    } catch (error) {
+      console.error('Error updating recommendation:', error);
+      setEditError('Failed to update recommendation. Please try again.');
+    }
+  };
+
+  const handleDelete = async (recommendationId) => {
+    if (!window.confirm('Are you sure you want to delete this recommendation?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('user_recommendation')
+        .delete()
+        .eq('id', recommendationId);
+
+      if (error) throw error;
+
+      // Remove from local state
+      setRecommendations(prev => prev.filter(rec => rec.id !== recommendationId));
+      
+      alert('Recommendation deleted successfully');
+    } catch (error) {
+      console.error('Error deleting recommendation:', error);
+      alert('Failed to delete recommendation. Please try again.');
+    }
+  };
+
   const formatTimeAgo = (timestamp) => {
     const now = new Date();
     const time = new Date(timestamp);
@@ -306,12 +387,34 @@ const RecommendationPage = () => {
                       </div>
                     </div>
                     
-                    {rec.type_of_recommendation === 'like_based' && (
-                      <div className="rp-pairing-badge">
-                        <span className="material-symbols-outlined">link</span>
-                        <span>Double Feature</span>
-                      </div>
-                    )}
+                    <div className="rp-header-actions">
+                      {rec.type_of_recommendation === 'like_based' && (
+                        <div className="rp-pairing-badge">
+                          <span className="material-symbols-outlined">link</span>
+                          <span>Double Feature</span>
+                        </div>
+                      )}
+                      
+                      {/* Edit and Delete buttons for user's own recommendations */}
+                      {userEmail && rec.email === userEmail && (
+                        <div className="rp-owner-actions">
+                          <button
+                            className="rp-edit-btn"
+                            onClick={() => handleEdit(rec)}
+                            title="Edit recommendation"
+                          >
+                            <span className="material-symbols-outlined">edit</span>
+                          </button>
+                          <button
+                            className="rp-delete-btn"
+                            onClick={() => handleDelete(rec.id)}
+                            title="Delete recommendation"
+                          >
+                            <span className="material-symbols-outlined">delete</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Normal Recommendation */}
@@ -337,7 +440,42 @@ const RecommendationPage = () => {
 
                       <div className="rp-content-section">
                         <h4 className="rp-section-title">Why you should watch</h4>
-                        <p className="rp-message">{rec.message}</p>
+                        
+                        {editingId === rec.id ? (
+                          <div className="rp-edit-mode">
+                            <textarea
+                              className="rp-edit-textarea"
+                              value={editMessage}
+                              onChange={(e) => setEditMessage(e.target.value)}
+                              placeholder="Share why you recommend this..."
+                              rows={6}
+                            />
+                            {editError && (
+                              <div className="rp-edit-error">
+                                <span className="material-symbols-outlined">error</span>
+                                {editError}
+                              </div>
+                            )}
+                            <div className="rp-edit-actions">
+                              <button
+                                className="rp-save-btn"
+                                onClick={() => handleSaveEdit(rec.id)}
+                              >
+                                <span className="material-symbols-outlined">check</span>
+                                Save
+                              </button>
+                              <button
+                                className="rp-cancel-btn"
+                                onClick={handleCancelEdit}
+                              >
+                                <span className="material-symbols-outlined">close</span>
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="rp-message">{rec.message}</p>
+                        )}
                         
                         <div className="rp-card-actions">
                           <div className="rp-action-group">
@@ -404,7 +542,42 @@ const RecommendationPage = () => {
                           <span className="material-symbols-outlined">auto_awesome</span>
                           The Connection
                         </h4>
-                        <p className="rp-connection-text">{rec.message}</p>
+                        
+                        {editingId === rec.id ? (
+                          <div className="rp-edit-mode">
+                            <textarea
+                              className="rp-edit-textarea"
+                              value={editMessage}
+                              onChange={(e) => setEditMessage(e.target.value)}
+                              placeholder="Explain the connection between these movies..."
+                              rows={6}
+                            />
+                            {editError && (
+                              <div className="rp-edit-error">
+                                <span className="material-symbols-outlined">error</span>
+                                {editError}
+                              </div>
+                            )}
+                            <div className="rp-edit-actions">
+                              <button
+                                className="rp-save-btn"
+                                onClick={() => handleSaveEdit(rec.id)}
+                              >
+                                <span className="material-symbols-outlined">check</span>
+                                Save
+                              </button>
+                              <button
+                                className="rp-cancel-btn"
+                                onClick={handleCancelEdit}
+                              >
+                                <span className="material-symbols-outlined">close</span>
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="rp-connection-text">{rec.message}</p>
+                        )}
                       </div>
 
                       <div className="rp-card-actions">
