@@ -59,7 +59,7 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.15) 0%, rgba(19, 13, 26, 0) 70%);
+  
 }
 
 /* Main Content */
@@ -70,6 +70,7 @@
   padding-bottom: 5rem;
   padding-left: 1rem;
   padding-right: 1rem;
+  background:linear-gradient(135deg, #121c2a, #141c27);
 }
 
 .rp-container {
