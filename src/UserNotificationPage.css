@@ -275,6 +275,10 @@
     border-left-color: #A855F7;
 }
 
+.notif-card.border-l-blue-500 {
+    border-left-color: #3B82F6;
+}
+
 .notif-card.border-l-gray-700 {
     border-left-color: #374151;
 }
@@ -305,6 +309,10 @@
 
 .notif-gradient.purple-400 {
     background: linear-gradient(to right, rgba(168, 85, 247, 0.1), transparent);
+}
+
+.notif-gradient.blue-400 {
+    background: linear-gradient(to right, rgba(59, 130, 246, 0.1), transparent);
 }
 
 .notif-gradient.gray-400 {
@@ -356,6 +364,12 @@
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
 }
 
+.notif-icon-wrapper.blue-400 {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
 .notif-icon-wrapper.gray-400 {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
@@ -379,6 +393,10 @@
 
 .notif-icon-wrapper.purple-400 .notif-icon {
     color: #C084FC;
+}
+
+.notif-icon-wrapper.blue-400 .notif-icon {
+    color: #60A5FA;
 }
 
 .notif-icon-wrapper.gray-400 .notif-icon {

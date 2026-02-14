@@ -62,6 +62,8 @@ const UserNotificationPage = () => {
 
             if (filter === 'recommendations') {
                 query = query.in('type', ['normal_recommendation', 'pairing_recommendation']);
+            } else if (filter === 'promotions_admin') {
+                query = query.in('type', ['m_promotion', 'g_promotion']);
             } else if (filter !== 'all') {
                 query = query.eq('type', filter);
             }
@@ -155,6 +157,10 @@ const UserNotificationPage = () => {
                 return { icon: 'favorite', color: 'pink-400', borderColor: 'notif-border-recommendation' };
             case 'pairing_recommendation':
                 return { icon: 'favorite', color: 'pink-400', borderColor: 'notif-border-recommendation' };
+            case 'm_promotion':
+                return { icon: 'movie', color: 'purple-400', borderColor: 'border-l-purple-500' };
+            case 'g_promotion':
+                return { icon: 'campaign', color: 'blue-400', borderColor: 'border-l-blue-500' };
             case 'reviews':
                 return { icon: 'rate_review', color: 'green-400', borderColor: 'border-l-green-500' };
             case 'promotions':
@@ -208,6 +214,12 @@ const UserNotificationPage = () => {
                                 Recommendations
                             </button>
                             <button 
+                                className={`notif-filter-btn ${filter === 'promotions_admin' ? 'active' : ''}`}
+                                onClick={() => setFilter('promotions_admin')}
+                            >
+                                Promotions
+                            </button>
+                            <button 
                                 className={`notif-filter-btn ${filter === 'reviews' ? 'active' : ''}`}
                                 onClick={() => setFilter('reviews')}
                             >
@@ -217,7 +229,7 @@ const UserNotificationPage = () => {
                                 className={`notif-filter-btn ${filter === 'promotions' ? 'active' : ''}`}
                                 onClick={() => setFilter('promotions')}
                             >
-                                Promotions
+                                Offers
                             </button>
                             <button 
                                 className={`notif-filter-btn ${filter === 'discussions' ? 'active' : ''}`}
