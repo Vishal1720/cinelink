@@ -20,7 +20,7 @@ const ReviewsSection = ({ movieId, pieData,totalreviews,summary,moviename,type }
   const [AlreadyReviewed, setAlreadyReviewed] = useState(false);
   const [aiRequested, setAiRequested] = useState(false);
   const [editingReviewId, setEditingReviewId] = useState(null);
-  const [editedText, setEditedText] = useState("");
+   const [editedText, setEditedText] = useState("");
 
 
 
@@ -29,6 +29,49 @@ const [aiLoading, setAiLoading] = useState(false);
 const [aiError, setAiError] = useState(null);
 
 const [posting, setPosting] = useState(false);
+
+const getRatingEmoji = (rating) => ({
+    'Unbearable': '😫',
+    'One Time Watch': '👍',
+    'Amazing': '🤩',
+    'Masterpiece': '🏆'
+  }[rating] || '⭐');
+
+  const getRatingClass = (rating) => ({
+    'Unbearable': 'reviews-rating-unbearable',
+    'One Time Watch': 'reviews-rating-onetime',
+    'Amazing': 'reviews-rating-amazing',
+    'Masterpiece': 'reviews-rating-masterpiece'
+  }[rating] || '');
+
+const calculatePieData = (reviewsList) => {
+  const counts = {};
+
+  
+
+  ratingCategories.forEach(cat => {
+    counts[cat.id] = {
+      id: cat.id,
+      name: cat.cat_name,
+      emoji: getRatingEmoji(cat.cat_name),
+      value: 0
+    };
+  });
+
+  reviewsList.forEach(r => {
+    if (counts[r.rating_cat]) {
+      counts[r.rating_cat].value += 1;
+    }
+  });
+
+  return Object.values(counts);
+};
+
+const localPieData = React.useMemo(() => {
+  if (!reviews.length || !ratingCategories.length) return [];
+  return calculatePieData(reviews);
+}, [reviews, ratingCategories]);
+
 
 
   const handleDeleteReview = async (reviewId) => {
@@ -178,12 +221,19 @@ const rankMap = await fetchUserRanks(emails);
         })
       );
 
+      
       setReviews(reviewsWithLikes);
+     
+
+
      
     } finally {
       setLoading(false);
     }
   };
+
+  
+
 
   const saveAiSummaryToMovie = async (summary) => {
   const { error } = await supabase
@@ -360,19 +410,7 @@ try {
     fetchReviews();
   };
 
-  const getRatingEmoji = (rating) => ({
-    'Unbearable': '😫',
-    'One Time Watch': '👍',
-    'Amazing': '🤩',
-    'Masterpiece': '🏆'
-  }[rating] || '⭐');
-
-  const getRatingClass = (rating) => ({
-    'Unbearable': 'reviews-rating-unbearable',
-    'One Time Watch': 'reviews-rating-onetime',
-    'Amazing': 'reviews-rating-amazing',
-    'Masterpiece': 'reviews-rating-masterpiece'
-  }[rating] || '');
+  
 
   const getTimeAgo = (timestamp) => {
     const now = new Date();
@@ -468,7 +506,7 @@ try {
 
           {/* Chart */}
           {totalreviews>0&& <div className="reviews-chart-box">
-            <RatingDonutChart data={pieData} />
+            <RatingDonutChart data={localPieData} />
           </div>}
          
         </div>
@@ -599,7 +637,7 @@ try {
                   </div>
                 </div>
                 {totalreviews>0&&<div className="reviews-chart-box">
-                  <RatingDonutChart data={pieData} />
+                  <RatingDonutChart data={localPieData} />
                 </div>}
                 
               </div>
