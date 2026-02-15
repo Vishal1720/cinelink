@@ -11,7 +11,7 @@
     padding-bottom: 3rem;
     padding-left: 1rem;
     padding-right: 1rem;
-    max-width: 56rem;
+    max-width: 80rem;
     margin: 0 auto;
     min-height: 100vh;
 }
@@ -247,7 +247,22 @@
     opacity: 1;
 }
 
+/* Recommendation Card Specific Styles */
+.notif-card-recommendation {
+    background: rgba(236, 72, 153, 0.05);
+    border-left-width: 4px;
+}
+
+.notif-card-recommendation:hover {
+    background: rgba(236, 72, 153, 0.1);
+    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
+}
+
 /* Border Colors */
+.notif-border-recommendation {
+    border-left-color: #EC4899;
+}
+
 .notif-card.border-l-green-500 {
     border-left-color: #10B981;
 }
@@ -258,6 +273,10 @@
 
 .notif-card.border-l-purple-500 {
     border-left-color: #A855F7;
+}
+
+.notif-card.border-l-blue-500 {
+    border-left-color: #3B82F6;
 }
 
 .notif-card.border-l-gray-700 {
@@ -276,6 +295,10 @@
     opacity: 1;
 }
 
+.notif-gradient.pink-400 {
+    background: linear-gradient(to right, rgba(236, 72, 153, 0.15), transparent);
+}
+
 .notif-gradient.green-400 {
     background: linear-gradient(to right, rgba(16, 185, 129, 0.1), transparent);
 }
@@ -286,6 +309,10 @@
 
 .notif-gradient.purple-400 {
     background: linear-gradient(to right, rgba(168, 85, 247, 0.1), transparent);
+}
+
+.notif-gradient.blue-400 {
+    background: linear-gradient(to right, rgba(59, 130, 246, 0.1), transparent);
 }
 
 .notif-gradient.gray-400 {
@@ -313,6 +340,12 @@
     border: 1px solid;
 }
 
+.notif-icon-wrapper.pink-400 {
+    background: rgba(236, 72, 153, 0.15);
+    border-color: rgba(236, 72, 153, 0.3);
+    box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
+}
+
 .notif-icon-wrapper.green-400 {
     background: rgba(16, 185, 129, 0.1);
     border-color: rgba(16, 185, 129, 0.2);
@@ -331,6 +364,12 @@
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
 }
 
+.notif-icon-wrapper.blue-400 {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
 .notif-icon-wrapper.gray-400 {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
@@ -338,6 +377,10 @@
 
 .notif-icon {
     font-size: 1.25rem !important;
+}
+
+.notif-icon-wrapper.pink-400 .notif-icon {
+    color: #F472B6;
 }
 
 .notif-icon-wrapper.green-400 .notif-icon {
@@ -350,6 +393,10 @@
 
 .notif-icon-wrapper.purple-400 .notif-icon {
     color: #C084FC;
+}
+
+.notif-icon-wrapper.blue-400 .notif-icon {
+    color: #60A5FA;
 }
 
 .notif-icon-wrapper.gray-400 .notif-icon {
@@ -387,7 +434,67 @@
     font-size: 0.625rem !important;
 }
 
-/* Movie Poster */
+/* Movie Container for Recommendations */
+.notif-movie-container {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notif-movie-container.notif-movie-pair {
+    position: relative;
+}
+
+/* Recommendation Movie Poster */
+.notif-rec-poster {
+    height: 5rem;
+    width: 3.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 2px solid rgba(236, 72, 153, 0.3);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.notif-card-recommendation:hover .notif-rec-poster {
+    border-color: rgba(236, 72, 153, 0.6);
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.4);
+    transform: translateY(-2px);
+}
+
+.notif-rec-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Pair Connector */
+.notif-pair-connector {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: rgba(236, 72, 153, 0.2);
+    border: 2px solid #EC4899;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 15;
+}
+
+.notif-pair-connector .material-icons-round {
+    color: #EC4899;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.notif-card-recommendation:hover .notif-pair-connector {
+    background: rgba(236, 72, 153, 0.3);
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
+}
+
+/* Regular Movie Poster (for non-recommendation notifications) */
 .notif-movie-poster {
     flex-shrink: 0;
     height: 4rem;
@@ -424,9 +531,21 @@
     transition: all 0.3s ease;
 }
 
+.notif-movie-placeholder.notif-rec-poster {
+    height: 5rem;
+    width: 3.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid rgba(236, 72, 153, 0.3);
+}
+
 .notif-card:hover .notif-movie-placeholder {
     border-color: rgba(229, 9, 20, 0.5);
     box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+}
+
+.notif-card-recommendation:hover .notif-movie-placeholder.notif-rec-poster {
+    border-color: rgba(236, 72, 153, 0.6);
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.4);
 }
 
 .notif-movie-placeholder .material-icons-round {
@@ -463,4 +582,25 @@
 
 .notif-load-btn:hover .notif-refresh {
     animation: spin 1s linear infinite;
+}
+
+/* Responsive Adjustments for Recommendation Cards */
+@media (max-width: 640px) {
+    .notif-movie-container {
+        gap: 0.25rem;
+    }
+    
+    .notif-rec-poster {
+        height: 4rem;
+        width: 2.75rem;
+    }
+    
+    .notif-pair-connector {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+    
+    .notif-pair-connector .material-icons-round {
+        font-size: 0.875rem;
+    }
 }

@@ -31,7 +31,7 @@
 .ar-bg-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center top, #1e1b4b, #020617, #000000);
+  background: radial-gradient(circle at center top, #060608, #020617, #000000);
 }
 
 .ar-glow-orb {

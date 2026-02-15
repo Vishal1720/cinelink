@@ -30,6 +30,7 @@ import RequestsPage from "./RequestPage";
 import UserNotificationPage from "./UserNotificationPage";
 import AddRecommendation from "./AddRecommendation";
 import RecommendationPage from "./RecommendationPage";
+import SendNotification from "./SendNotification";
 function App() {
   
 
@@ -64,6 +65,7 @@ function App() {
           <Route path="/usernotifications" element={<UserNotificationPage />}></Route>
           <Route path="/recommendations" element={<RecommendationPage />}></Route>
           <Route path="/add-recommendation" element={<AddRecommendation />}></Route>
+          <Route path="/add-notification" element={<SendNotification />} />
       </Routes>
     </BrowserRouter>
   );

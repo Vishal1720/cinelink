@@ -3,19 +3,37 @@ import UserHeader from './UserHeader';
 import { supabase } from './supabase';
 import './RecommendationPage.css';
 import { useNavigate } from 'react-router-dom';
+
 const RecommendationPage = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'normal', 'pair'
+  const [sortBy, setSortBy] = useState('latest'); // 'latest', 'popular'
   const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [likedRecommendations, setLikedRecommendations] = useState(new Set());
   const [likeCounts, setLikeCounts] = useState({});
-const navigate = useNavigate();
+  const [editingId, setEditingId] = useState(null);
+  const [editMessage, setEditMessage] = useState('');
+  const [editError, setEditError] = useState('');
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user?.email) {
         setUserEmail(session.user.email);
+        
+        // Get user name
+        const { data: userData } = await supabase
+          .from('user')
+          .select('name')
+          .eq('email', session.user.email)
+          .single();
+        
+        if (userData) {
+          setUserName(userData.name);
+        }
       }
     };
     getUser();
@@ -30,6 +48,13 @@ const navigate = useNavigate();
       loadUserLikes();
     }
   }, [userEmail, recommendations]);
+
+  // Sort recommendations when sortBy changes
+  useEffect(() => {
+    if (recommendations.length > 0) {
+      sortRecommendations();
+    }
+  }, [sortBy, likeCounts]);
 
   const loadRecommendations = async () => {
     setLoading(true);
@@ -110,9 +135,128 @@ const navigate = useNavigate();
     }
   };
 
+  const sortRecommendations = () => {
+    const sorted = [...recommendations].sort((a, b) => {
+      if (sortBy === 'popular') {
+        // Sort by likes (descending)
+        const likesA = likeCounts[a.id] || 0;
+        const likesB = likeCounts[b.id] || 0;
+        if (likesB !== likesA) {
+          return likesB - likesA;
+        }
+        // If likes are equal, sort by date
+        return new Date(b.created_at) - new Date(a.created_at);
+      } else {
+        // Sort by latest (default)
+        return new Date(b.created_at) - new Date(a.created_at);
+      }
+    });
+    setRecommendations(sorted);
+  };
+
+  const createOrUpdateNotification = async (recommendation) => {
+    try {
+      // Get all likers for this recommendation
+      const { data: likersData, error: likersError } = await supabase
+        .from('likes_in_recommendation')
+        .select('liker_email')
+        .eq('recommendation_id', recommendation.id);
+
+      if (likersError) throw likersError;
+
+      if (!likersData || likersData.length === 0) return;
+
+      // Get the names of all likers
+      const likerEmails = likersData.map(l => l.liker_email);
+      const { data: usersData, error: usersError } = await supabase
+        .from('user')
+        .select('email, name')
+        .in('email', likerEmails);
+
+      if (usersError) throw usersError;
+
+      // Create a map of email to name
+      const emailToName = {};
+      usersData.forEach(user => {
+        emailToName[user.email] = user.name;
+      });
+
+      // Get the most recent liker's name
+      const mostRecentLiker = likersData[likersData.length - 1].liker_email;
+      const mostRecentLikerName = emailToName[mostRecentLiker] || 'Someone';
+
+      // Create notification text
+      const totalLikes = likersData.length;
+      let notificationText;
+      
+      // Different text for pairing vs normal recommendations
+      if (recommendation.type_of_recommendation === 'like_based' && recommendation.movie2) {
+        // Pairing recommendation - mention both movies
+        if (totalLikes === 1) {
+          notificationText = `${mostRecentLikerName} liked your pairing of ${recommendation.movie1.title} and ${recommendation.movie2.title}`;
+        } else {
+          const othersCount = totalLikes - 1;
+          notificationText = `${mostRecentLikerName} and ${othersCount} ${othersCount === 1 ? 'other' : 'others'} liked your pairing of ${recommendation.movie1.title} and ${recommendation.movie2.title}`;
+        }
+      } else {
+        // Normal recommendation - mention single movie
+        if (totalLikes === 1) {
+          notificationText = `${mostRecentLikerName} liked your recommendation on ${recommendation.movie1.title}`;
+        } else {
+          const othersCount = totalLikes - 1;
+          notificationText = `${mostRecentLikerName} and ${othersCount} ${othersCount === 1 ? 'other' : 'others'} liked your recommendation on ${recommendation.movie1.title}`;
+        }
+      }
+
+      // Determine notification type
+      const notificationType = recommendation.type_of_recommendation === 'like_based' 
+        ? 'pairing_recommendation' 
+        : 'normal_recommendation';
+
+      // Delete existing notification for this recommendation (if any)
+      await supabase
+        .from('notification')
+        .delete()
+        .eq('email', recommendation.email)
+        .eq('movie_id', recommendation.movie_id1)
+        .eq('type', notificationType);
+
+      // Insert new notification
+      const notificationData = {
+        email: recommendation.email,
+        movie_id: recommendation.movie_id1,
+        notification_text: notificationText,
+        type: notificationType,
+        status: 'unread',
+        created_at: new Date().toISOString()
+      };
+
+      // Add movie_id2 only for pairing recommendations
+      if (recommendation.type_of_recommendation === 'like_based' && recommendation.movie_id2) {
+        notificationData.movie_id2 = recommendation.movie_id2;
+      }
+
+      const { error: insertError } = await supabase
+        .from('notification')
+        .insert([notificationData]);
+
+      if (insertError) throw insertError;
+
+    } catch (error) {
+      console.error('Error creating/updating notification:', error);
+    }
+  };
+
   const toggleLike = async (recommendationId) => {
     if (!userEmail) {
       alert('Please log in to like recommendations');
+      return;
+    }
+
+    // Find the recommendation to check if user owns it
+    const recommendation = recommendations.find(rec => rec.id === recommendationId);
+    if (recommendation && recommendation.email === userEmail) {
+      alert('You cannot like your own recommendation');
       return;
     }
 
@@ -138,6 +282,26 @@ const navigate = useNavigate();
           ...prev,
           [recommendationId]: Math.max(0, (prev[recommendationId] || 0) - 1)
         }));
+
+        // Update or delete notification
+        if (recommendation) {
+          const remainingLikes = (likeCounts[recommendationId] || 1) - 1;
+          if (remainingLikes > 0) {
+            await createOrUpdateNotification(recommendation);
+          } else {
+            // Delete notification if no likes remain
+            const notificationType = recommendation.type_of_recommendation === 'like_based' 
+              ? 'pairing_recommendation' 
+              : 'normal_recommendation';
+            
+            await supabase
+              .from('notification')
+              .delete()
+              .eq('email', recommendation.email)
+              .eq('movie_id', recommendation.movie_id1)
+              .eq('type', notificationType);
+          }
+        }
       } else {
         // Like
         const { error } = await supabase
@@ -159,10 +323,97 @@ const navigate = useNavigate();
           ...prev,
           [recommendationId]: (prev[recommendationId] || 0) + 1
         }));
+
+        // Create or update notification
+        if (recommendation) {
+          await createOrUpdateNotification(recommendation);
+        }
       }
     } catch (error) {
       console.error('Error toggling like:', error);
       alert('Failed to update like. Please try again.');
+    }
+  };
+
+  const handlePosterClick = (movieId) => {
+    navigate(`/movie/${movieId}`);
+  };
+
+  const handleEdit = (recommendation) => {
+    setEditingId(recommendation.id);
+    setEditMessage(recommendation.message);
+    setEditError('');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditMessage('');
+    setEditError('');
+  };
+
+  const handleSaveEdit = async (recommendationId) => {
+    // Validate message is not empty
+    const trimmedMessage = editMessage.trim();
+    
+    if (!trimmedMessage) {
+      setEditError('Review cannot be empty');
+      return;
+    }
+
+    if (trimmedMessage.length < 10) {
+      setEditError('Review must be at least 10 characters');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('user_recommendation')
+        .update({ message: trimmedMessage })
+        .eq('id', recommendationId);
+
+      if (error) throw error;
+
+      // Update local state
+      setRecommendations(prev =>
+        prev.map(rec =>
+          rec.id === recommendationId
+            ? { ...rec, message: trimmedMessage }
+            : rec
+        )
+      );
+
+      // Exit edit mode
+      setEditingId(null);
+      setEditMessage('');
+      setEditError('');
+      
+      alert('Recommendation updated successfully');
+    } catch (error) {
+      console.error('Error updating recommendation:', error);
+      setEditError('Failed to update recommendation. Please try again.');
+    }
+  };
+
+  const handleDelete = async (recommendationId) => {
+    if (!window.confirm('Are you sure you want to delete this recommendation?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('user_recommendation')
+        .delete()
+        .eq('id', recommendationId);
+
+      if (error) throw error;
+
+      // Remove from local state
+      setRecommendations(prev => prev.filter(rec => rec.id !== recommendationId));
+      
+      alert('Recommendation deleted successfully');
+    } catch (error) {
+      console.error('Error deleting recommendation:', error);
+      alert('Failed to delete recommendation. Please try again.');
     }
   };
 
@@ -188,45 +439,55 @@ const navigate = useNavigate();
 
       <main className="rp-main-content">
         <div className="rp-container">
-          {/* Filter Tabs */}
-         {/* Sticky Filter Tabs + Add Button */}
-<div className="rp-sticky-filters">
-  <div className="rp-sticky-inner">
+          {/* Sticky Filter Tabs + Sort + Add Button */}
+          <div className="rp-sticky-filters">
+            <div className="rp-sticky-inner">
+              <div className="rp-filter-tabs">
+                <button
+                  className={`rp-tab ${activeTab === 'all' ? 'rp-tab-active' : ''}`}
+                  onClick={() => setActiveTab('all')}
+                >
+                  All
+                </button>
 
-    <div className="rp-filter-tabs">
-      <button
-        className={`rp-tab ${activeTab === 'all' ? 'rp-tab-active' : ''}`}
-        onClick={() => setActiveTab('all')}
-      >
-        All
-      </button>
+                <button
+                  className={`rp-tab ${activeTab === 'normal' ? 'rp-tab-active' : ''}`}
+                  onClick={() => setActiveTab('normal')}
+                >
+                  Single
+                </button>
 
-      <button
-        className={`rp-tab ${activeTab === 'normal' ? 'rp-tab-active' : ''}`}
-        onClick={() => setActiveTab('normal')}
-      >
-        Single
-      </button>
+                <button
+                  className={`rp-tab ${activeTab === 'pair' ? 'rp-tab-active' : ''}`}
+                  onClick={() => setActiveTab('pair')}
+                >
+                  Pairings
+                </button>
+              </div>
 
-      <button
-        className={`rp-tab ${activeTab === 'pair' ? 'rp-tab-active' : ''}`}
-        onClick={() => setActiveTab('pair')}
-      >
-        Pairings
-      </button>
-    </div>
+              <div className="rp-controls-group">
+                {/* Sort Dropdown */}
+                <div className="rp-sort-container">
+                  <select
+                    className="rp-sort-select"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                  >
+                    <option value="latest">Latest</option>
+                    <option value="popular">Most Popular</option>
+                  </select>
+                  <span className="material-symbols-outlined rp-sort-icon">sort</span>
+                </div>
 
-    <button
-      className="rp-add-btn"
-      onClick={() => navigate('/add-recommendation')}
-    >
-     
-      Add
-    </button>
-
-  </div>
-</div>
-
+                <button
+                  className="rp-add-btn"
+                  onClick={() => navigate('/add-recommendation')}
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Recommendations Feed */}
           <section className="rp-feed">
@@ -263,18 +524,43 @@ const navigate = useNavigate();
                       </div>
                     </div>
                     
-                    {rec.type_of_recommendation === 'like_based' && (
-                      <div className="rp-pairing-badge">
-                        <span className="material-symbols-outlined">link</span>
-                        <span>Double Feature</span>
-                      </div>
-                    )}
+                    <div className="rp-header-actions">
+                      {rec.type_of_recommendation === 'like_based' && (
+                        <div className="rp-pairing-badge">
+                          <span className="material-symbols-outlined">link</span>
+                          <span>Double Feature</span>
+                        </div>
+                      )}
+                      
+                      {/* Edit and Delete buttons for user's own recommendations */}
+                      {userEmail && rec.email === userEmail && (
+                        <div className="rp-owner-actions">
+                          <button
+                            className="rp-edit-btn"
+                            onClick={() => handleEdit(rec)}
+                            title="Edit recommendation"
+                          >
+                            <span className="material-symbols-outlined">edit</span>
+                          </button>
+                          <button
+                            className="rp-delete-btn"
+                            onClick={() => handleDelete(rec.id)}
+                            title="Delete recommendation"
+                          >
+                            <span className="material-symbols-outlined">delete</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Normal Recommendation */}
                   {rec.type_of_recommendation === 'normal_based' && rec.movie1 && (
                     <div className="rp-normal-content">
-                      <div className="rp-movie-poster-section">
+                      <div 
+                        className="rp-movie-poster-section"
+                        onClick={() => handlePosterClick(rec.movie1.id)}
+                      >
                         <div className="rp-poster-overlay"></div>
                         <img
                           src={rec.movie1.poster_url}
@@ -291,24 +577,67 @@ const navigate = useNavigate();
 
                       <div className="rp-content-section">
                         <h4 className="rp-section-title">Why you should watch</h4>
-                        <p className="rp-message">{rec.message}</p>
+                        
+                        {editingId === rec.id ? (
+                          <div className="rp-edit-mode">
+                            <textarea
+                              className="rp-edit-textarea"
+                              value={editMessage}
+                              onChange={(e) => setEditMessage(e.target.value)}
+                              placeholder="Share why you recommend this..."
+                              rows={6}
+                            />
+                            {editError && (
+                              <div className="rp-edit-error">
+                                <span className="material-symbols-outlined">error</span>
+                                {editError}
+                              </div>
+                            )}
+                            <div className="rp-edit-actions">
+                              <button
+                                className="rp-save-btn"
+                                onClick={() => handleSaveEdit(rec.id)}
+                              >
+                                <span className="material-symbols-outlined">check</span>
+                                Save
+                              </button>
+                              <button
+                                className="rp-cancel-btn"
+                                onClick={handleCancelEdit}
+                              >
+                                <span className="material-symbols-outlined">close</span>
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="rp-message">{rec.message}</p>
+                        )}
                         
                         <div className="rp-card-actions">
                           <div className="rp-action-group">
-                            <button 
-                              className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
-                              onClick={() => toggleLike(rec.id)}
-                            >
-                              <div className="rp-action-icon-wrapper">
-                                <span className="material-symbols-outlined">
-                                  {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
-                                </span>
+                            {userEmail !== rec.email && (
+                              <button 
+                                className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
+                                onClick={() => toggleLike(rec.id)}
+                              >
+                                <div className="rp-action-icon-wrapper">
+                                  <span className="material-symbols-outlined">
+                                    {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
+                                  </span>
+                                </div>
+                                <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
+                              </button>
+                            )}
+                            {userEmail === rec.email && likeCounts[rec.id] > 0 && (
+                              <div className="rp-like-count-display">
+                                <div className="rp-action-icon-wrapper">
+                                  <span className="material-symbols-outlined">favorite</span>
+                                </div>
+                                <span className="rp-action-count">{likeCounts[rec.id]}</span>
                               </div>
-                              <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
-                            </button>
-                           
+                            )}
                           </div>
-                         
                         </div>
                       </div>
                     </div>
@@ -322,7 +651,10 @@ const navigate = useNavigate();
                           <span className="material-symbols-outlined">add</span>
                         </div>
                         
-                        <div className="rp-pair-movie">
+                        <div 
+                          className="rp-pair-movie"
+                          onClick={() => handlePosterClick(rec.movie1.id)}
+                        >
                           <img
                             src={rec.movie1.poster_url}
                             alt={rec.movie1.title}
@@ -335,7 +667,10 @@ const navigate = useNavigate();
                           </div>
                         </div>
 
-                        <div className="rp-pair-movie">
+                        <div 
+                          className="rp-pair-movie"
+                          onClick={() => handlePosterClick(rec.movie2.id)}
+                        >
                           <img
                             src={rec.movie2.poster_url}
                             alt={rec.movie2.title}
@@ -354,27 +689,68 @@ const navigate = useNavigate();
                           <span className="material-symbols-outlined">auto_awesome</span>
                           The Connection
                         </h4>
-                        <p className="rp-connection-text">{rec.message}</p>
+                        
+                        {editingId === rec.id ? (
+                          <div className="rp-edit-mode">
+                            <textarea
+                              className="rp-edit-textarea"
+                              value={editMessage}
+                              onChange={(e) => setEditMessage(e.target.value)}
+                              placeholder="Explain the connection between these movies..."
+                              rows={6}
+                            />
+                            {editError && (
+                              <div className="rp-edit-error">
+                                <span className="material-symbols-outlined">error</span>
+                                {editError}
+                              </div>
+                            )}
+                            <div className="rp-edit-actions">
+                              <button
+                                className="rp-save-btn"
+                                onClick={() => handleSaveEdit(rec.id)}
+                              >
+                                <span className="material-symbols-outlined">check</span>
+                                Save
+                              </button>
+                              <button
+                                className="rp-cancel-btn"
+                                onClick={handleCancelEdit}
+                              >
+                                <span className="material-symbols-outlined">close</span>
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="rp-connection-text">{rec.message}</p>
+                        )}
                       </div>
 
                       <div className="rp-card-actions">
                         <div className="rp-action-group">
-                          <button 
-                            className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
-                            onClick={() => toggleLike(rec.id)}
-                          >
-                            <div className="rp-action-icon-wrapper">
-                              <span className="material-symbols-outlined">
-                                {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
-                              </span>
+                          {userEmail !== rec.email && (
+                            <button 
+                              className={`rp-action-btn ${likedRecommendations.has(rec.id) ? 'rp-action-liked' : ''}`}
+                              onClick={() => toggleLike(rec.id)}
+                            >
+                              <div className="rp-action-icon-wrapper">
+                                <span className="material-symbols-outlined">
+                                  {likedRecommendations.has(rec.id) ? 'favorite' : 'favorite_border'}
+                                </span>
+                              </div>
+                              <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
+                            </button>
+                          )}
+                          {userEmail === rec.email && likeCounts[rec.id] > 0 && (
+                            <div className="rp-like-count-display">
+                              <div className="rp-action-icon-wrapper">
+                                <span className="material-symbols-outlined">favorite</span>
+                              </div>
+                              <span className="rp-action-count">{likeCounts[rec.id]}</span>
                             </div>
-                            <span className="rp-action-count">{likeCounts[rec.id] || 0}</span>
-                          </button>
-                        
+                          )}
                         </div>
-                        {/* <button className="rp-playlist-btn">
-                          <span className="material-symbols-outlined">playlist_add</span>
-                        </button> */}
                       </div>
                     </div>
                   )}
