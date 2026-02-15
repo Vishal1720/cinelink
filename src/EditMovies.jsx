@@ -14,6 +14,7 @@ const EditMovies = () => {
 
   const [genres, setGenres] = useState([]);
   const [allCast, setAllCast] = useState([]);
+  const [ottPlatforms, setOttPlatforms] = useState([]);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -27,11 +28,14 @@ const EditMovies = () => {
     castList: []
   });
 
+  const [ottUrls, setOttUrls] = useState({});
+
   /* ================= FETCH BASE DATA ================= */
 
   useEffect(() => {
     fetchGenres();
     fetchCast();
+    fetchOttPlatforms();
   }, []);
 
   const fetchGenres = async () => {
@@ -48,6 +52,24 @@ const EditMovies = () => {
       .select("*")
       .order("cast_name");
     setAllCast(data || []);
+  };
+
+  const fetchOttPlatforms = async () => {
+    const { data } = await supabase
+      .from("urls")
+      .select("ott_name")
+      .order("created_at");
+    
+    if (data) {
+      setOttPlatforms(data.map(item => item.ott_name));
+      // Initialize ottUrls state with empty strings for each platform
+      const initialUrls = {};
+      data.forEach(item => {
+        const key = item.ott_name.toLowerCase().replace(/\s+/g, '');
+        initialUrls[key] = "";
+      });
+      setOttUrls(initialUrls);
+    }
   };
 
   /* ================= SEARCH MOVIES ================= */
@@ -90,6 +112,29 @@ const EditMovies = () => {
       .select("cast_id, role_in_movie")
       .eq("movie_id", movie.id);
 
+    // Fetch OTT URLs
+    const { data: ottData } = await supabase
+      .from("url_in_movies")
+      .select("ott_name, ott_link")
+      .eq("movie_id", movie.id);
+
+    // Map OTT data to state - initialize with empty strings for all platforms
+    const ottUrlsMap = {};
+    ottPlatforms.forEach(platform => {
+      const key = platform.toLowerCase().replace(/\s+/g, '');
+      ottUrlsMap[key] = "";
+    });
+
+    // Fill in existing URLs
+    if (ottData) {
+      ottData.forEach(ott => {
+        const normalizedName = ott.ott_name.toLowerCase().replace(/\s+/g, '');
+        if (ottUrlsMap.hasOwnProperty(normalizedName)) {
+          ottUrlsMap[normalizedName] = ott.ott_link || "";
+        }
+      });
+    }
+
     setFormData({
       title: movieData.title,
       year: movieData.year,
@@ -102,6 +147,8 @@ const EditMovies = () => {
       castList: castData || []
     });
 
+    setOttUrls(ottUrlsMap);
+
     setSearchResults([]);
     setSearchTerm(movie.title);
   };
@@ -111,6 +158,10 @@ const EditMovies = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleOttUrlChange = (platform, value) => {
+    setOttUrls(prev => ({ ...prev, [platform]: value }));
   };
 
   const toggleGenre = (genre) => {
@@ -215,6 +266,53 @@ const EditMovies = () => {
         { onConflict: "movie_id,cast_id" }
       );
 
+    /* ---------- OTT URLS (SMART UPSERT/DELETE) ---------- */
+    // Get existing OTT URLs for this movie
+    const { data: existingOttData } = await supabase
+      .from("url_in_movies")
+      .select("ott_name, ott_link")
+      .eq("movie_id", selectedMovie.id);
+
+    const existingOttMap = {};
+    if (existingOttData) {
+      existingOttData.forEach(ott => {
+        existingOttMap[ott.ott_name] = ott.ott_link;
+      });
+    }
+
+    // Process each platform
+    for (const platform of ottPlatforms) {
+      const key = platform.toLowerCase().replace(/\s+/g, '');
+      const newUrl = ottUrls[key] ? ottUrls[key].trim() : "";
+      const existsInDb = existingOttMap.hasOwnProperty(platform);
+
+      if (newUrl === "" && existsInDb) {
+        // Delete if made null/empty
+        await supabase
+          .from("url_in_movies")
+          .delete()
+          .eq("movie_id", selectedMovie.id)
+          .eq("ott_name", platform);
+      } else if (newUrl !== "" && existsInDb) {
+        // Update if exists and has value
+        await supabase
+          .from("url_in_movies")
+          .update({ ott_link: newUrl })
+          .eq("movie_id", selectedMovie.id)
+          .eq("ott_name", platform);
+      } else if (newUrl !== "" && !existsInDb) {
+        // Insert if not found and has value
+        await supabase
+          .from("url_in_movies")
+          .insert({
+            movie_id: selectedMovie.id,
+            ott_name: platform,
+            ott_link: newUrl
+          });
+      }
+      // If newUrl is empty and doesn't exist in DB, do nothing
+    }
+
     alert("Movie / Series updated successfully!");
   };
 
@@ -298,6 +396,12 @@ const EditMovies = () => {
               >
                 Crew & Cast
               </button>
+              <button
+                className={`tab ${activeTab === "streaming" ? "active" : ""}`}
+                onClick={() => setActiveTab("streaming")}
+              >
+                Streaming Links
+              </button>
             </div>
 
             {/* CORE */}
@@ -379,6 +483,35 @@ const EditMovies = () => {
                 <button className="add-cast-btn" onClick={addCast}>
                   + Add Cast
                 </button>
+              </div>
+            )}
+
+            {/* STREAMING LINKS */}
+            {activeTab === "streaming" && (
+              <div className="form-content">
+                <h3 className="streaming-section-title">Streaming Platform Links</h3>
+                <p className="streaming-section-desc">Add URLs to streaming platforms where this content is available. Leave blank if not available.</p>
+                
+                <div className="streaming-grid">
+                  {ottPlatforms.map((platform) => {
+                    const key = platform.toLowerCase().replace(/\s+/g, '');
+                    return (
+                      <div className="streaming-item" key={platform}>
+                        <label className="streaming-label">{platform}</label>
+                        <input
+                          className="input-field"
+                          placeholder="Enter url"
+                          value={ottUrls[key] || ""}
+                          onChange={(e) => handleOttUrlChange(key, e.target.value)}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {ottPlatforms.length === 0 && (
+                  <p className="streaming-empty">No streaming platforms configured. Please add platforms in the URLs table.</p>
+                )}
               </div>
             )}
 

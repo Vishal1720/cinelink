@@ -120,6 +120,55 @@
 }
 
 /* ===============================
+   STREAMING LINKS SECTION
+================================ */
+
+.streaming-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+}
+
+.streaming-section-desc {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 2rem 0;
+  line-height: 1.5;
+}
+
+.streaming-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.streaming-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.streaming-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.streaming-item .input-field {
+  width: 100%;
+}
+
+.streaming-empty {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* ===============================
    FIX OVERFLOW / Z-INDEX
 ================================ */
 
@@ -141,6 +190,10 @@
   .edit-cast-card {
     grid-template-columns: 80px 1fr 1fr;
   }
+  
+  .streaming-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -153,10 +206,12 @@
   .edit-cast-card {
     grid-template-columns: 1fr;
   }
-}
-
-@media (max-width: 768px) {
-.edit-movie-container{
-  width: 100vw;
-}
+  
+  .streaming-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .edit-movie-container {
+    width: 100vw;
+  }
 }
