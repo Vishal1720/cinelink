@@ -316,7 +316,7 @@ try {
 
     setNewReview('');
     setSelectedRating(null);
-    fetchReviews();
+    await fetchReviews();
   }
   catch (err) {
     console.error(err);
@@ -505,9 +505,14 @@ try {
           </div>
 
           {/* Chart */}
-          {totalreviews>0&& <div className="reviews-chart-box">
-            <RatingDonutChart data={localPieData} />
-          </div>}
+         {reviews.length > 0 && (
+  <div className="reviews-chart-box">
+    <RatingDonutChart data={localPieData} />
+  </div>
+)}
+
+
+
          
         </div>
       )}
@@ -636,9 +641,12 @@ try {
                     
                   </div>
                 </div>
-                {totalreviews>0&&<div className="reviews-chart-box">
-                  <RatingDonutChart data={localPieData} />
-                </div>}
+                {reviews.length > 0 && (
+  <div className="reviews-chart-box">
+    <RatingDonutChart data={localPieData} />
+  </div>
+)}
+
                 
               </div>
             )}
