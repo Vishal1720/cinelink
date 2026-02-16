@@ -12,9 +12,7 @@ const defaultAvatar =
 
 const userimg= localStorage.getItem("userimage");
 const imgSrc = userimg || defaultAvatar;
-
-useEffect(() => {
-  const checkAdmin = async () => {
+ const checkAdmin = async () => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -44,6 +42,8 @@ useEffect(() => {
     setIsAdmin(true);
     setLoading(false);
   };
+useEffect(() => {
+ 
 
   checkAdmin();
 }, [navigate]);

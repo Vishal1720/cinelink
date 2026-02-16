@@ -19,21 +19,40 @@ const location = useLocation();
     navigate("/Reg");  // manually go to /community route
   };
 
-// 🔹 Check login status ONLY after component mounts
+
+
 useEffect(() => {
-    const role = localStorage.getItem("role");
-    const email = localStorage.getItem("userEmail");
-    const name=localStorage.getItem("username");//this is only for admin for now
-    if (location.pathname === "/reset-password" ) {return}
-    
-    // 🔹 If user is already logged in, redirect to movie list page
-    if (role === "user" && email) {
-      navigate("/movielistpage");
-    }else if (role === "admin" && name)  {
+  const checkSession = async () => {
+    // 🔹 Get current authenticated user from Supabase
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // If no logged in user → do nothing
+    if (!user) return;
+
+    const email = user.email;
+
+    // 🔹 Fetch role from database (NOT localStorage)
+    const { data, error } = await supabase
+      .from("user")
+      .select("role")
+      .eq("email", email)
+      .single();
+
+    if (error || !data) return;
+
+    if (data.role === "admin") {
       navigate("/adminpage");
+    } else if (data.role === "user") {
+      navigate("/movielistpage");
     }
-   
-  }, [navigate]); // dependency so effect runs once after render
+  };
+
+  // Skip redirect for reset-password page
+  if (location.pathname === "/reset-password") return;
+
+  checkSession();
+}, [navigate, location.pathname]);
+
   return (
     <header className="cineverse-header">
       <div className="left-section" onClick={navigateToLanding}>
