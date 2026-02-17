@@ -99,14 +99,15 @@ const fetchReviewCounts = async () => {
     const { data: castData, error: castError } = await supabase
   .from("cast_in_movies")
   .select(`
-    role_in_movie,
+    role_in_movie,priority,
     cast:cast_id (
       id,
       cast_name,
       avatar_url
     )
   `)
-  .eq("movie_id", id);
+  .eq("movie_id", id)
+  .order("priority", { ascending: true });
 
 
          

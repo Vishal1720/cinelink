@@ -220,13 +220,8 @@ const rankMap = await fetchUserRanks(emails);
           return { ...review, likes: count || 0,userRank: rankMap[review.email] || null };
         })
       );
-
-      
       setReviews(reviewsWithLikes);
-     
 
-
-     
     } finally {
       setLoading(false);
     }
