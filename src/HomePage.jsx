@@ -15,6 +15,10 @@ const HomePage = () => {
   const [error, setError] = useState(null);
 const [homeGenres, setHomeGenres] = useState([]);
 const [ottnames, setOttnames] = useState([]);
+const [topRatedType] = useState(() => {
+  const types = ["all", "Movie", "Series"];
+  return types[Math.floor(Math.random() * types.length)];
+});
 // fetch banners ONCE
 useEffect(() => {
   fetchBanners();
@@ -295,7 +299,14 @@ const randomFive = shuffled.slice(0, 5);
     </div>
     <TopRatedSection
     limit={10}
-    title="Top Rated Picks"
+    type={topRatedType}
+  title={
+    topRatedType === "all"
+      ? "Top Rated Picks"
+      : topRatedType === "Movie"
+      ? "Top Rated Movies"
+      : "Top Rated Series"
+  }
   />
   {ottnames.map((ottname) => {
     return <OttMovieRecommendation key={ottname} ottname={ottname}  width='all' />;

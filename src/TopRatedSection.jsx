@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 export default function TopRatedSection({
   movieid,
   limit = 10,
-  title = "Top Rated Picks"
+  title = "Top Rated Picks",
+  type = "all"
 }) {
   const [suggested, setSuggested] = useState([]);
   const scrollRef = useRef(null);
@@ -14,7 +15,7 @@ export default function TopRatedSection({
 
   const fetchSuggestions = async () => {
     // 1️⃣ Fetch movies
-    const { data: movies, error } = await supabase
+    let query=supabase
       .from("movies")
       .select(`
         id,
@@ -23,6 +24,12 @@ export default function TopRatedSection({
         genre_in_movies ( genre_name )
       `)
       .neq("id", movieid ?? -1);
+      if(type!=="all"){
+        query=query.eq("type", type);
+      }
+    const { data: movies, error } = await query;
+
+    
 
     if (error || !movies) {
       console.error(error);
