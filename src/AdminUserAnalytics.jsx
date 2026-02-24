@@ -133,7 +133,7 @@ const AdminUserAnalytics = () => {
             <div className="stat-card">
               <p className="stat-label">Total Reviews</p>
               <p className="stat-value">{totalReviewsSum}</p>
-              <span className="stat-badge badge-blue">High Activity</span>
+      
             </div>
 
             <div className="stat-card">

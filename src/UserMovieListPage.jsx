@@ -469,11 +469,11 @@ useEffect(() => {
       </main>
       <footer className="footer">
         <p className="footer-text">© 2025 CineVerse. All rights reserved.</p>
-        <div className="footer-links">
+        {/* <div className="footer-links">
           <a className="footer-link" href="#">About Us</a>
           <a className="footer-link" href="#">Contact</a>
           <a className="footer-link" href="#">Privacy Policy</a>
-        </div>
+        </div> */}
       </footer>
       {showRequestModal && (
   <div className="modal-overlay">
