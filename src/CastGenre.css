@@ -228,7 +228,7 @@
 }
 
 /* Forms */
-.input-group {
+.panel .input-group {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
