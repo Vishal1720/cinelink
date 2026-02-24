@@ -7,6 +7,7 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Debounce search to avoid too many requests
   useEffect(() => {
@@ -15,6 +16,7 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
         searchMovies();
       } else {
         setMovies([]);
+        setError(null);
       }
     }, 500);
 
@@ -23,6 +25,7 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
 
   const searchMovies = async () => {
     setLoading(true);
+    setError(null);
     try {
       const { data, error } = await supabase
         .from('movies')
@@ -37,8 +40,10 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
 
       if (error) throw error;
       setMovies(data || []);
-    } catch (error) {
-      console.error("Error searching movies:", error);
+    } catch (err) {
+      console.error("Error searching movies:", err);
+      setError(err.message || "Search failed");
+      setMovies([]);
     } finally {
       setLoading(false);
     }
@@ -46,7 +51,7 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px', width: '90%', maxHeight: '80vh', overflowY: 'auto', background: '#1a1a1a', color: 'white', borderRadius: '12px', padding: '20px' }}>
+      <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '680px', width: '100%', maxHeight: '80vh', overflowY: 'auto', padding: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3>Add to "{listName}"</h3>
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer' }}>&times;</button>
@@ -57,6 +62,7 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
           placeholder="Search for a movie..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') searchMovies(); }}
           style={{
             width: '100%',
             padding: '12px',
@@ -71,10 +77,11 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
         />
 
         {loading && <p>Searching...</p>}
+        {error && <p style={{ color: '#ffb4b4' }}>{error}</p>}
 
         <div className="search-results" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {!loading && movies.length === 0 && searchTerm && (
-            <p>No movies found.</p>
+            <p style={{ color: '#cbd5f5' }}>No movies found.</p>
           )}
 
           {movies.map(movie => (
@@ -106,6 +113,7 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
                 </p>
               </div>
               <button
+                onClick={(e) => { e.stopPropagation(); onSelectMovie(movie); }}
                 style={{ marginLeft: 'auto', background: '#e50914', color: 'white', border: 'none', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer' }}
               >
                 Add

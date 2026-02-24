@@ -97,7 +97,21 @@ const Watchlist = () => {
       return;
     }
 
-    const ids = [...new Set(watchRows.map(r => r.movie_id))];
+    // sanitize movie ids: remove falsy values and ensure numeric IDs
+    const ids = [...new Set(
+      watchRows
+        .map(r => r.movie_id)
+        .filter(Boolean)
+        .map(id => (typeof id === 'number' ? id : Number(id)))
+        .filter(id => !isNaN(id))
+    )];
+
+    if (ids.length === 0) {
+      // no valid movie ids to query
+      setGroupedMovies({});
+      setLoading(false);
+      return;
+    }
 
     const { data: moviesData, error: moviesError } = await supabase
       .from('movies')
