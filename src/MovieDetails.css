@@ -481,3 +481,88 @@
   outline: 2px solid #06b6d4;
   outline-offset: 2px;
 }
+/* Discussion Button */
+.discussion-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.discussion-icon-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.discussion-icon-btn span {
+  font-size: 26px;
+  color: #ffffff;
+  transition: transform 0.2s ease;
+}
+
+.discussion-btn-wrapper:hover .discussion-icon-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.08);
+}
+
+.discussion-btn-wrapper:hover .discussion-icon-btn span {
+  transform: scale(1.1);
+}
+
+.discussion-btn-wrapper:active .discussion-icon-btn {
+  transform: scale(0.95);
+}
+
+.discussion-btn-label {
+  font-size: 0.65rem;
+  color: #8B949E;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  transition: color 0.2s ease;
+}
+
+.discussion-btn-wrapper:hover .discussion-btn-label {
+  color: #F0F6FC;
+}
+
+.discussion-count-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #DC2626;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+  border: 2px solid #121c2a;
+  pointer-events: none;
+  line-height: 1;
+  z-index: 10;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.5);
+  animation: badgePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes badgePop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}

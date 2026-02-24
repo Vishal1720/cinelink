@@ -18,6 +18,7 @@ const MovieDetails = () => {
   const [loading, setLoading] = useState(true);
   const [selectedRating, setSelectedRating] = useState(null);
   const [reviewCounts, setReviewCounts] = useState({});
+  const [discussionCount, setDiscussionCount] = useState(0);
 const navigate = useNavigate();
 
   const [ratingCategories, setRatingCategories] = useState([]);//for pie chart
@@ -27,6 +28,15 @@ const pieData = ratingCategories.map((cat) => ({
   value: reviewCounts[cat.id] || 0,
   emoji: cat.cat_emoji
 })).filter((item) => item.value > 0); // ❗ remove zero-value categories;
+
+const fetchDiscussionCount = async () => {
+  const { count, error } = await supabase
+    .from("discussion")
+    .select("id", { count: "exact", head: true })
+    .eq("movie_id", id);
+
+  if (!error) setDiscussionCount(count || 0);
+};
 
 const totalReviews = Object.values(reviewCounts).reduce((a, b) => a + b, 0);
 
@@ -66,6 +76,7 @@ const fetchReviewCounts = async () => {
       // Fetch review counts for each category
       fetchReviewCounts();
        fetchRatingCategories(); 
+      fetchDiscussionCount();
        
     }
   }, [id]);
@@ -246,14 +257,16 @@ const uniqueOttNames = [...new Set(ottNames)];
                     )}
                   </a>
                 ))}
-                <div className="moviedetails-btn-ott">
-  <button
-    className="discussion-icon-btn"
-    onClick={() => navigate(`/discussion/${id}`)}
-  >
+           <div className="discussion-btn-wrapper" onClick={() => navigate(`/discussion/${id}`)}>
+  <div className="discussion-icon-btn">
     <span className="material-symbols-outlined">groups</span>
-   
-  </button>
+  </div>
+  {discussionCount > 0 && (
+    <span className="discussion-count-badge">
+      {discussionCount > 99 ? "99+" : discussionCount}
+    </span>
+  )}
+  <span className="discussion-btn-label">Chat</span>
 </div>
 
               </div>
