@@ -38,11 +38,33 @@ useEffect(() => {
       }));
     }
   }, [state]);
-  const languageOptions = [
-    "English", "Hindi", "Kannada", "Tulu","Tamil", "Telugu", "Malayalam",
-    "Marathi", "Gujarati", "Bengali", "Punjabi",
-    "Korean", "Japanese", "French", "Spanish", "German", "Chinese"
-  ];
+ const languageOptions = [
+  { value: "Hindi", label: "Hindi" },
+  { value: "English", label: "English" },
+  { value: "Kannada", label: "Kannada" },
+  { value: "Tulu", label: "Tulu" },
+  { value: "Tamil", label: "Tamil" },
+  { value: "Telugu", label: "Telugu" },
+  { value: "Malayalam", label: "Malayalam" },
+  { value: "Marathi", label: "Marathi" },
+  { value: "Gujarati", label: "Gujarati" },
+  { value: "Bengali", label: "Bengali" },
+  { value: "Punjabi", label: "Punjabi" },
+  { value: "Urdu", label: "Urdu" },
+  { value: "Odia", label: "Odia" },
+  { value: "Assamese", label: "Assamese" },
+  { value: "Konkani", label: "Konkani" },
+  { value: "Spanish", label: "Spanish" },
+  { value: "French", label: "French" },
+  { value: "German", label: "German" },
+  { value: "Italian", label: "Italian" },
+  { value: "Portuguese", label: "Portuguese" },
+  { value: "Russian", label: "Russian" },
+  { value: "Chinese (Mandarin)", label: "Chinese (Mandarin)" },
+  { value: "Japanese", label: "Japanese" },
+  { value: "Korean", label: "Korean" },
+  { value: "Arabic", label: "Arabic" }
+];
 
   const [genres, setGenres] = useState([]);
   const [urlnames, setUrlNames] = useState([]);
@@ -357,19 +379,18 @@ for (const castItem of formData.castList) {
 
                 <div className="form-group">
                   <label>Language</label>
-                  <input
-                    list="language-list"
-                    name="language"
-                    placeholder="Enter or choose language"
-                    value={formData.language}
-                    onChange={handleInputChange}
-                    className="input-field"
+                  <Select
+                    options={languageOptions}
+                    className="react-select-container"
+                    classNamePrefix="react-select"
+                    value={languageOptions.find(opt => opt.value === formData.language) || null}
+                    onChange={(selected) =>
+                      setFormData(prev => ({ ...prev, language: selected ? selected.value : "" }))
+                    }
+                    placeholder="Select language..."
+                    isSearchable={true}
+                    isClearable={true}
                   />
-                  <datalist id="language-list">
-                    {languageOptions.map(lang => (
-                      <option key={lang} value={lang} />
-                    ))}
-                  </datalist>
                   {errors.language && <p className="error-text">{errors.language}</p>}
                 </div>
 
@@ -479,7 +500,6 @@ for (const castItem of formData.castList) {
         )}
 
         {/* CREW TAB */}
-       {/* CREW TAB */}
 {activeTab === "crew" && (
   <div className="form-content">
 
@@ -516,7 +536,6 @@ for (const castItem of formData.castList) {
     placeholder="Search cast..."
     isSearchable={true}
   isClearable={true}
-    // no custom props/components — plain Select as requested
   />
 </div>
 
