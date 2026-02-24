@@ -444,7 +444,15 @@ try {
 )}
 
     <div className="reviews-section">
-      <h3 className="reviews-section-title">Reviews</h3>
+      
+        <h3 className="reviews-section-title">
+  Reviews 
+  <span className="reviews-count">
+    ({reviews.length})
+  </span>
+</h3>
+
+      
 
       {/* ⭐ CASE 1: User has NOT reviewed → Input + Chart */}
       {!AlreadyReviewed && (

@@ -789,3 +789,22 @@
   color: #A78BFA;
   transform: scale(1.1);
 }
+.reviews-section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #F0F6FC;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.reviews-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #8B949E;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 0.15rem 0.65rem;
+}
