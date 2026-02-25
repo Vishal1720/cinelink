@@ -9,7 +9,8 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Debounce search to avoid too many requests
+  // Debounce
+  //  search to avoid too many requests
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchTerm.trim()) {
@@ -36,7 +37,7 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
             )
           `)
         .ilike('title', `%${searchTerm}%`)
-        .limit(20);
+        .limit(2);
 
       if (error) throw error;
       setMovies(data || []);
@@ -51,7 +52,8 @@ const MovieSearchModal = ({ onClose, onSelectMovie, listName }) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '680px', width: '100%', maxHeight: '80vh', overflowY: 'auto', padding: '20px' }}>
+      <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '680px',
+    width: '100%',overflowY:'visible'}}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3>Add to "{listName}"</h3>
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer' }}>&times;</button>
