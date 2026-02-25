@@ -376,7 +376,6 @@ const resetForm = () => {
                   <th>Preview</th>
                   <th>Movie Details</th>
                   <th>Description</th>
-                  <th className="text-center">Status</th>
                   <th className="text-right">Actions</th>
                 </tr>
               </thead>
@@ -405,9 +404,7 @@ const resetForm = () => {
                     <td>
                       <p className="banner-description">{banner.banner_desc}</p>
                     </td>
-                    <td className="text-center">
-                      <span className="status-badge active">Active</span>
-                    </td>
+                   
                     <td className="text-right">
                       <div className="action-buttons">
                        <button
