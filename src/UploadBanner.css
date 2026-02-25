@@ -694,3 +694,209 @@
 padding: 100px;
     
 } 
+
+.banner-management .table-container {
+  background: #1e293b;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.banner-management table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.banner-management thead tr {
+  background: rgba(6, 182, 212, 0.08);
+  border-bottom: 2px solid rgba(6, 182, 212, 0.2);
+}
+
+.banner-management thead th {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #06b6d4;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.banner-management thead th:nth-child(1) { width: 18%; }
+.banner-management thead th:nth-child(2) { width: 22%; }
+.banner-management thead th:nth-child(3) { width: 38%; }
+.banner-management thead th:nth-child(4) { width: 22%; text-align: right; }
+
+.banner-management tbody tr {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.banner-management tbody tr:last-child {
+  border-bottom: none;
+}
+
+.banner-management tbody tr:hover {
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.banner-management tbody td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+}
+
+.banner-management .banner-preview {
+  position: relative;
+  width: 10rem;
+  aspect-ratio: 16/9;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.banner-management tbody tr:hover .banner-preview {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.banner-management .banner-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-management .preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.banner-management tbody tr:hover .preview-overlay {
+  opacity: 1;
+}
+
+.banner-management .preview-overlay .material-icons-round {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.banner-management .movie-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.banner-management .movie-info .movie-id {
+  font-size: 0.7rem;
+  color: #06b6d4;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.banner-management .movie-info h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.banner-management .movie-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.banner-management .genre-tag {
+  background: rgba(6, 182, 212, 0.12);
+  color: #67e8f9;
+  padding: 0.15rem 0.55rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  border: 1px solid rgba(6, 182, 212, 0.15);
+}
+
+.banner-management .banner-description {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.banner-management .action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.banner-management tbody tr:hover .action-buttons {
+  opacity: 1;
+}
+
+.banner-management .btn-icon {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.5rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.banner-management .btn-icon:hover {
+  background: rgba(6, 182, 212, 0.12);
+  border-color: rgba(6, 182, 212, 0.25);
+  color: #06b6d4;
+  transform: translateY(-1px);
+}
+
+.banner-management .btn-icon.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  transform: translateY(-1px);
+}
+
+.banner-management .empty-state {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.banner-management .empty-state .material-icons-round {
+  font-size: 4rem;
+  color: #334155;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.banner-management .empty-state p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.banner-management .text-center {
+  text-align: center;
+}
+
+.banner-management .text-right {
+  text-align: right;
+}
