@@ -162,7 +162,7 @@ const { data: data2, error: error2 } = await supabase
     style={{
       position: "absolute",
       right: "12px",
-      top: "50px",
+      top: "33.5px",
       cursor: "pointer",
       userSelect: "none"
     }}
