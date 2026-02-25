@@ -327,6 +327,68 @@ const EditMovies = () => {
       label: c.cast_name
     }));
 
+ const handleDelete = async () => {
+  if (!selectedMovie) return;
+
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this movie/series? This action cannot be undone."
+  );
+
+  if (!confirmDelete) return;
+
+  const movieId = selectedMovie.id;
+
+  try {
+    // 1️⃣ Delete Genre Relations
+    await supabase
+      .from("genre_in_movies")
+      .delete()
+      .eq("movie_id", movieId);
+
+    // 2️⃣ Delete Cast Relations
+    await supabase
+      .from("cast_in_movies")
+      .delete()
+      .eq("movie_id", movieId);
+
+    // 3️⃣ Delete OTT Links
+    await supabase
+      .from("url_in_movies")
+      .delete()
+      .eq("movie_id", movieId);
+
+    // 4️⃣ Finally Delete Movie
+    const { error } = await supabase
+      .from("movies")
+      .delete()
+      .eq("id", movieId);
+
+    if (error) throw error;
+
+    alert("Movie/Series deleted successfully!");
+
+    // Reset UI
+    setSelectedMovie(null);
+    setSearchTerm("");
+    setSearchResults([]);
+
+    setFormData({
+      title: "",
+      year: "",
+      duration: "",
+      desc: "",
+      trailer_link: "",
+      language: "",
+      type: "",
+      genres: [],
+      castList: []
+    });
+
+  } catch (err) {
+    alert("Error deleting movie/series: " + err.message);
+  }
+};
+
   /* ================= UI ================= */
 
   return (
@@ -519,6 +581,7 @@ const EditMovies = () => {
               <button className="btn-next" onClick={updateMovie}>
                 Update Movie / Series
               </button>
+              <button className="btn-next" onClick={()=>handleDelete()}>Delete Movie / Series</button>
             </div>
 
           </div>
