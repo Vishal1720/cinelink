@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import emptyImg from "./assets/icons/unfilled.png";
 import filledImg from "./assets/icons/filled.png";
 
-
+import levenshtein from "fast-levenshtein";
 const UserMovieListPage = () => {
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
@@ -18,7 +18,7 @@ const UserMovieListPage = () => {
 const [selectedLanguage, setSelectedLanguage] = useState("All Languages");
 
 const [languages, setLanguages] = useState([]);
-
+const [suggestedMovie, setSuggestedMovie] = useState(null);//this is when no movie matches
 
 const [languageExpanded, setLanguageExpanded] = useState(false);
 
@@ -241,6 +241,28 @@ setLanguages(uniqueLanguages);
     return () => window.removeEventListener('watchlistChanged', onWatchlistChanged);
   }, []);
 
+ const findClosestMatch = (search, movieList) => {
+  if (!search) return null;
+
+  const lowerSearch = search.toLowerCase().trim();
+  let bestMatch = null;
+  let lowestDistance = Infinity;
+
+  movieList.forEach(movie => {
+    const title = movie.title.toLowerCase();
+
+    const distance = levenshtein.get(lowerSearch, title);
+
+    if (distance < lowestDistance) {
+      lowestDistance = distance;
+      bestMatch = movie;
+    }
+  });
+
+  // Only suggest if reasonably close
+  return lowestDistance <= 2 ? bestMatch : null;
+};
+
   // Filter movies based on selected genre and search text
   const filteredMovies = sortMovies(
   movies.filter(movie => {
@@ -251,7 +273,7 @@ setLanguages(uniqueLanguages);
     const matchesSearch =
       movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       movie.language?.toLowerCase() === searchTerm.toLowerCase() ||
-      movieGenres.some(g => g.toLowerCase()===searchTerm.toLowerCase());
+      movieGenres.some(g => g.toLowerCase()===searchTerm.toLowerCase())||
       movie.year?.toString() === searchTerm;
    
     const matchesLanguage =
@@ -263,11 +285,14 @@ setLanguages(uniqueLanguages);
 
 useEffect(() => {
   if (searchTerm.trim() && filteredMovies.length === 0) {
+    const suggestion = findClosestMatch(searchTerm, movies);
+    setSuggestedMovie(suggestion);
     setShowRequestBox(true);
   } else {
+    setSuggestedMovie(null);
     setShowRequestBox(false);
   }
-}, [searchTerm, filteredMovies]);
+}, [searchTerm, filteredMovies, movies]);
   return (
     <div>
       <UserHeader />
@@ -358,7 +383,21 @@ useEffect(() => {
 
       {showRequestBox && (
   <div className="request-box">
-    <p>No results found for: <strong>{searchTerm}</strong></p>
+   <p>No results found for: <strong>{searchTerm}</strong></p>
+
+{suggestedMovie && (
+  <p className="suggestion-text">
+    Did you mean{" "}
+    <span 
+      className="suggestion-link"
+      onClick={() => showmovieDetails(suggestedMovie.id)}
+      style={{ cursor: "pointer", fontWeight: "bold" }}
+    >
+      {suggestedMovie.title}
+    </span>
+    ?
+  </p>
+)}
     <button className="request-btn" onClick={() => setShowRequestModal(true)}>
       Request this movie/series
     </button>
