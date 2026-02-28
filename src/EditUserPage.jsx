@@ -6,6 +6,7 @@ import './EditUserPage.css';
 import ReviewsByPerson from './ReviewByPerson';
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import RecommendationsByPerson from './RecommendationsByPerson';
 const EditUserPage = () => {
   const navigate=useNavigate();
     const [searchParams] = useSearchParams();
@@ -362,6 +363,7 @@ const profileEmail = searchParams.get("email") ?? loggedInEmail;
 
          
           <ReviewsByPerson email={userDetails.email} ratingtype={ratingType} />
+          <RecommendationsByPerson email={userDetails.email} />
            {/* Edit Form */}
            { showEditForm &&  
           <div className="eup-edit-panel"  >

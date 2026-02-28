@@ -1,0 +1,273 @@
+/* ============================================
+   RecommendationsByPerson.css
+   Scoped to .recommendations-by-person
+   Mirrors ReviewsByPerson visual style
+   ============================================ */
+
+/* Loading */
+.rbp-loading {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Empty */
+.rbp-empty {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.9rem;
+  padding: 2rem;
+  text-align: center;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+}
+
+/* Section wrapper */
+.recommendations-by-person {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Header row */
+.rbp-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+}
+
+.rbp-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Filter tabs */
+.rbp-filter-tabs {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* Icon-only pill tabs */
+.rbp-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.rbp-tab-icon {
+  font-size: 1.1rem !important;
+  line-height: 1;
+}
+
+/* Hide label — icon only */
+.rbp-tab-label {
+  display: none;
+}
+
+.rbp-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rbp-tab--active {
+  background: rgba(168, 85, 247, 0.18);
+  border-color: rgba(168, 85, 247, 0.45);
+  color: #d8b4fe;
+}
+
+/* Cards list */
+.rbp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Single card — mirrors .review-card */
+.rbp-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+  align-items: flex-start;
+}
+
+.rbp-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(168, 85, 247, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Poster area — holds 1 or 2 posters */
+.rbp-posters {
+  position: relative;
+  flex-shrink: 0;
+  width: 64px;
+  height: 90px;
+}
+
+/* Main poster — same size as review-poster */
+.rbp-poster {
+  position: absolute;
+  width: 60px;
+  height: 88px;
+  border-radius: 0.5rem;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rbp-poster--main {
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+/* Second poster offset — only visible for like_based */
+.rbp-poster--secondary {
+  top: 6px;
+  left: 10px;
+  z-index: 1;
+  filter: brightness(0.7);
+}
+
+.rbp-poster:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  filter: brightness(1) !important;
+  z-index: 10;
+}
+
+/* Content */
+.rbp-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+/* Card header row */
+.rbp-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rbp-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.rbp-movie-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rbp-movie-title-secondary {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Type badge */
+.rbp-type-badge {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.rbp-type-badge--like_based {
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  color: #f9a8d4;
+}
+
+.rbp-type-badge--normal_based {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+}
+
+/* Message text */
+.rbp-message {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer row */
+.rbp-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.rbp-date {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: monospace;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .rbp-card {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .rbp-posters {
+    width: 52px;
+    height: 76px;
+  }
+
+  .rbp-poster {
+    width: 48px;
+    height: 70px;
+  }
+
+  .rbp-movie-title {
+    font-size: 0.85rem;
+  }
+}
