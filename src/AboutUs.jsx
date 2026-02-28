@@ -3,7 +3,8 @@ import VishalImg from "./assets/vishal.png";
 import NikhithaImg from "./assets/nikhitha.png";
 import "./AboutUs.css";
 import { useNavigate } from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import { supabase } from "./supabase.js";
 const features = [
   {
     icon: "database",
@@ -31,12 +32,7 @@ const features = [
   },
 ];
 
-const stats = [
-  { value: "100", label: "Movies Listed" },
-  { value: "18", label: "Total Users" },
-  { value: "50", label: "Total Reviews" },
-  { value: "4",  label: "Total user recommendations" },
-];
+
 
 const team = [
   {
@@ -48,7 +44,7 @@ const team = [
     badgeIcon: "terminal",
     badgeVariant: "blue",
     glowVariant: "blue",
-    linkedIn: "https://www.linkedin.com/in/vishalshetty1720",
+    linkedIn: "https://www.linkedin.com/in/vishalshetty17",
     portfolio: "https://vishal-shetty.web.app/",
     github:"https://github.com/Vishal1720",
     socialVariant: "blue",
@@ -71,6 +67,38 @@ const team = [
 
 export default function AboutUs() {
   const navigate = useNavigate();
+
+  const [stats, setStats] = useState([
+    { value: "...", label: "Movies Listed" },
+    { value: "...", label: "Total Users" },
+    { value: "...", label: "Total Reviews" },
+    { value: "...", label: "User Recommendations" },
+  ]);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const [
+        { count: movieCount },
+        { count: userCount },
+        { count: reviewCount },
+        { count: recommendCount },
+      ] = await Promise.all([
+        supabase.from("movies").select("*", { count: "exact", head: true }),
+        supabase.from("user").select("*", { count: "exact", head: true }),
+        supabase.from("reviews").select("*", { count: "exact", head: true }),
+        supabase.from("user_recommendation").select("*", { count: "exact", head: true }),
+      ]);
+
+      setStats([
+        { value: movieCount ?? "—", label: "Movies Listed" },
+        { value: userCount  ?? "—", label: "Total Users" },
+        { value: reviewCount ?? "—", label: "Total Reviews" },
+        { value: recommendCount ?? "—", label: "User Recommendations" },
+      ]);
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <div className="about-us-page">
