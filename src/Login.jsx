@@ -82,12 +82,21 @@ const { data: data2, error: error2 } = await supabase
   .select("*")
   .eq("email", formData.email)
   .single();
-  
+
   if (error2 || !data2) {
   setError("User profile not found. Please contact support.");
   setLoading(false);
   return;
 }
+
+  if (data2.account_status === "blocked") {
+  await supabase.auth.signOut();
+  setError("Your account has been blocked by admin.");
+  setLoading(false);
+  return;
+}
+  
+  
 
       
        if(data2["role"]=="admin"){

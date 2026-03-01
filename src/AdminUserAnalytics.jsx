@@ -9,6 +9,10 @@ const AdminUserAnalytics = () => {
   const [topReviewer, setTopReviewer] = useState(null);
   const [topLiked, setTopLiked] = useState(null);
 
+  const [searchValue, setSearchValue] = useState("");
+const [searchedUser, setSearchedUser] = useState(null);
+const [searchLoading, setSearchLoading] = useState(false);
+
   // Aggregates
   const totalReviewsSum = users.reduce(
     (sum, u) => sum + (u.total_reviews || 0),
@@ -24,6 +28,49 @@ const AdminUserAnalytics = () => {
     (sum, u) => sum + (u.amazing || 0),
     0
   );
+  const handleSearch = async () => {
+  if (!searchValue.trim()) return;
+
+  setSearchLoading(true);
+
+  const { data, error } = await supabase
+    .from("user")
+    .select("*")
+    .or(`name.ilike.%${searchValue}%,email.ilike.%${searchValue}%`)
+    .limit(1)
+    .single();
+
+  if (error) {
+    console.error(error);
+    setSearchedUser(null);
+  } else {
+    setSearchedUser(data);
+  }
+
+  setSearchLoading(false);
+};
+
+const toggleBlockStatus = async () => {
+  if (!searchedUser) return;
+
+  const newStatus =
+    searchedUser.account_status === "blocked" ? "active" : "blocked";
+
+  const { error } = await supabase
+    .from("user")
+    .update({ account_status: newStatus })
+    .eq("email", searchedUser.email);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  setSearchedUser({
+    ...searchedUser,
+    account_status: newStatus,
+  });
+};
 
   const sentimentBalance =
     totalReviewsSum > 0
@@ -152,6 +199,70 @@ const AdminUserAnalytics = () => {
               </div>
             )}
           </div>
+
+{/* SEARCH & BLOCK SECTION */}
+<div className="block-section">
+  <h3 className="block-title">User Access Control</h3>
+
+  <div className="block-search-row">
+    <input
+      type="text"
+      placeholder="Search by name or email..."
+      className="search-input-control"
+      value={searchValue}
+      onChange={(e) => {
+            setSearchValue(e.target.value);
+  setSearchedUser(null); 
+}}
+      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+    />
+
+    <button className="btn-primary" onClick={handleSearch}>
+      {searchLoading ? "Searching..." : "Search"}
+    </button>
+  </div>
+
+  {searchedUser && (
+    <div className="block-result-card">
+      <div className="block-user-info">
+        <img
+          src={searchedUser.avatar_url}
+          alt={searchedUser.name}
+          className="block-avatar"
+        />
+        <div>
+          <p className="block-name">{searchedUser.name}</p>
+          <p className="block-email">{searchedUser.email}</p>
+        </div>
+      </div>
+
+      <div className="block-action">
+        <span
+          className={
+            searchedUser.account_status === "blocked"
+              ? "status-badge blocked"
+              : "status-badge active"
+          }
+        >
+          {searchedUser.account_status}
+        </span>
+
+        <button
+          className={
+            searchedUser.account_status === "blocked"
+              ? "btn-unblock"
+              : "btn-block"
+          }
+          onClick={toggleBlockStatus}
+        >
+          {searchedUser.account_status === "blocked"
+            ? "Unblock User"
+            : "Block User"}
+        </button>
+      </div>
+    </div>
+  )}
+</div>
 
           {/* TABLE (SEPARATE COMPONENT) */}
           <LeaderBoardTable />

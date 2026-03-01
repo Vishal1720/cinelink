@@ -7,6 +7,8 @@ const LeaderboardTable = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  
+
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -47,6 +49,7 @@ const LeaderboardTable = () => {
           <span className="col-center text-red">Unbearable</span>
           <span className="col-engagement">Engagement</span>
           <span className="col-center col-score">Score</span>
+       
         </div>
 
         {/* Body */}
@@ -102,6 +105,7 @@ const LeaderboardTable = () => {
                   {Number(user.review_score).toFixed(1)}
                 </span>
               </div>
+              
 
             </div>
           ))}
