@@ -215,6 +215,17 @@ const EditUserPage = () => {
               <p className="eup-stat-label">Movies Reviewed</p>
             </div>
           </div>
+
+          <div className="eup-stat-card">
+            <div className="eup-stat-icon eup-stat-icon-primary">
+              <span className="material-symbols-outlined">recommend</span>
+            </div>
+            <div className="eup-stat-info">
+              <h4 className="eup-stat-value">{userStatDetails?.total_reviews || 0}</h4>
+              <p className="eup-stat-label">Recommendations</p>
+            </div>
+          </div>
+
           <div className="eup-stat-card">
             <div className="eup-stat-icon eup-stat-icon-pink">
               <span className="material-symbols-outlined">favorite</span>
@@ -224,6 +235,7 @@ const EditUserPage = () => {
               <p className="eup-stat-label">Likes Received</p>
             </div>
           </div>
+
           <div className="eup-stat-card">
             <div className="eup-stat-icon eup-stat-icon-blue">
               <span className="material-symbols-outlined">thumb_up</span>
@@ -233,6 +245,7 @@ const EditUserPage = () => {
               <p className="eup-stat-label">Likes Given</p>
             </div>
           </div>
+
         </section>
 
         {/* ── Main Content Grid ── */}
