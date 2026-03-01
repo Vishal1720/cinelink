@@ -221,7 +221,7 @@ const EditUserPage = () => {
               <span className="material-symbols-outlined">recommend</span>
             </div>
             <div className="eup-stat-info">
-              <h4 className="eup-stat-value">{userStatDetails?.total_reviews || 0}</h4>
+              <h4 className="eup-stat-value">{userStatDetails?.total_recommendations || 0}</h4>
               <p className="eup-stat-label">Recommendations</p>
             </div>
           </div>
