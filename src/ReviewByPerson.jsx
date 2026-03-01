@@ -25,8 +25,7 @@ const navigate = useNavigate();
           likes_count
         `)
         .eq("reviewer_email", email)
-        .order("review_created_at", { ascending: false })
-        .limit(10);
+        .order("review_created_at", { ascending: false });
 
       // Apply filter only if not "all"
       if (ratingtype !== "all" ) 
@@ -64,7 +63,7 @@ const navigate = useNavigate();
 
   return (
     <section className="reviews-by-person">
-      <h2 className="reviews-title">Recent Reviews</h2>
+      <h2 className="reviews-title">Reviews</h2>
 
       <div className="reviews-list">
         {reviews.map((review) => (
