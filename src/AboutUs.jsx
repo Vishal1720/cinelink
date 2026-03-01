@@ -16,7 +16,7 @@ const features = [
     icon: "stream",
     color: "cyan",
     title: "Watch Options",
-    desc: "Instantly discover where a movie is available to stream, rent, or watch in theatres. Cineverse helps users quickly find accessible viewing options across platforms.",
+    desc: "Instantly discover where a movie is available. Cineverse helps users quickly find accessible viewing options across platforms.",
   },
   {
     icon: "analytics",
