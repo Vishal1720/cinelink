@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { supabase } from "./supabase";
 import Reg from "./Reg";
 import Login from "./Login";
 import LandingPage from "./LandingPage";
@@ -33,7 +34,29 @@ import RecommendationPage from "./RecommendationPage";
 import SendNotification from "./SendNotification";
 import AboutUs from "./AboutUs";
 function App() {
-  
+  useEffect(() => {
+  const checkBlockedUser = async () => {
+    const { data: sessionData } = await supabase.auth.getSession();
+
+    if (!sessionData?.session?.user) return;
+
+    const email = sessionData.session.user.email;
+
+    const { data, error } = await supabase
+      .from("user")
+      .select("account_status")
+      .eq("email", email)
+      .single();
+
+    if (data?.account_status === "blocked") {
+      await supabase.auth.signOut();
+      alert("Your account has been blocked by admin.");
+      window.location.href = "/Login";
+    }
+  };
+
+  checkBlockedUser();
+}, []);
 
   return (
     <BrowserRouter>
