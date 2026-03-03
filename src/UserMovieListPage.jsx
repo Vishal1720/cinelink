@@ -8,6 +8,9 @@ import emptyImg from "./assets/icons/unfilled.png";
 import filledImg from "./assets/icons/filled.png";
 
 import levenshtein from "fast-levenshtein";
+
+const PAGE_SIZE = 42;
+
 const UserMovieListPage = () => {
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
@@ -31,6 +34,10 @@ const [watchlistIds, setWatchlistIds] = useState(new Set());
 const [contentType, setContentType] = useState("All");
 
 const [sortBy, setSortBy] = useState("name-asc");
+
+// Pagination state
+const [currentPage, setCurrentPage] = useState(1);
+
 const sortMovies = (list) => {
    
   
@@ -283,6 +290,11 @@ setLanguages(uniqueLanguages);
   })
 );
 
+// Reset to page 1 whenever filters/search/sort change
+useEffect(() => {
+  setCurrentPage(1);
+}, [searchTerm, selectedGenre, selectedLanguage, contentType, sortBy]);
+
 useEffect(() => {
   if (searchTerm.trim() && filteredMovies.length === 0) {
     const suggestion = findClosestMatch(searchTerm, movies);
@@ -293,6 +305,14 @@ useEffect(() => {
     setShowRequestBox(false);
   }
 }, [searchTerm, filteredMovies, movies]);
+
+// Pagination calculations
+const totalPages = Math.ceil(filteredMovies.length / PAGE_SIZE);
+const paginatedMovies = filteredMovies.slice(
+  (currentPage - 1) * PAGE_SIZE,
+  currentPage * PAGE_SIZE
+);
+
   return (
     <div>
       <UserHeader />
@@ -443,7 +463,7 @@ useEffect(() => {
 
           <section className="movies-section">
             <div className="movies-grid">
-              {filteredMovies.map((movie) => (
+              {paginatedMovies.map((movie) => (
              
                 <div key={movie.id} className="movie-card" onClick={() => showmovieDetails(movie.id)} onMouseEnter={() => setHoveredMovie(movie.id)}
                   onMouseLeave={() => setHoveredMovie(null)}
@@ -503,6 +523,54 @@ useEffect(() => {
                 </div>
               ))}
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button
+                  className="pagination-btn"
+                  onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  disabled={currentPage === 1}
+                >
+                  ‹
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(page =>
+                    page === 1 ||
+                    page === totalPages ||
+                    Math.abs(page - currentPage) <= 2
+                  )
+                  .reduce((acc, page, idx, arr) => {
+                    if (idx > 0 && page - arr[idx - 1] > 1) {
+                      acc.push('...');
+                    }
+                    acc.push(page);
+                    return acc;
+                  }, [])
+                  .map((item, idx) =>
+                    item === '...' ? (
+                      <span key={`ellipsis-${idx}`} className="pagination-ellipsis">…</span>
+                    ) : (
+                      <button
+                        key={item}
+                        className={`pagination-btn ${currentPage === item ? 'active' : ''}`}
+                        onClick={() => { setCurrentPage(item); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      >
+                        {item}
+                      </button>
+                    )
+                  )}
+
+                <button
+                  className="pagination-btn"
+                  onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  disabled={currentPage === totalPages}
+                >
+                  ›
+                </button>
+              </div>
+            )}
           </section>
         </div>
       </main>
