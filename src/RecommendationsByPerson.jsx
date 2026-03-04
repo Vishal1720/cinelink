@@ -78,7 +78,7 @@ const RecommendationsByPerson = ({ email }) => {
     <section className="recommendations-by-person">
       {/* Header with filter tabs */}
       <div className="rbp-header">
-        <h2 className="rbp-title">Recent Recommendations</h2>
+        <h2 className="rbp-title">Recommendations</h2>
         <div className="rbp-filter-tabs">
           {[
             { key: "all", icon: "apps", label: "All" },

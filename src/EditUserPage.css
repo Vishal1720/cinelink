@@ -640,10 +640,12 @@
 @media (max-width: 639px) {
   .edit-user-page .eup-main-content { padding: 1rem 0.875rem; }
   .edit-user-page .eup-hero-banner  { border-radius: 1.25rem; min-height: auto; }
-  .edit-user-page .eup-chart-panel,
+  .edit-user-page .eup-chart-panel{width:95vw;}
   .edit-user-page .eup-edit-panel   { border-radius: 1.25rem; padding: 1.25rem; }
   .edit-user-page .eup-stats-grid   { grid-template-columns: 1fr; }
   .edit-user-page .eup-stat-card    { padding: 1rem; }
+  .eup-right-col .reviews-by-person {width:95vw;}
+  .eup-right-col .recommendations-by-person {width:95vw;}
 }
 
 .eup-legend-item { cursor: pointer; }
