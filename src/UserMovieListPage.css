@@ -983,3 +983,16 @@ height: fit-content;
 @keyframes umlToastOut {
   to { opacity: 0; transform: translateX(-50%) translateY(-6px); }
 }
+@media (max-width: 639px) {
+  /* Default: open to the LEFT (right-column cards) */
+  .uml-wl-dropdown {
+    right: 0;
+    left: auto;
+  }
+
+  /* LEFT column cards: every odd card → open to the RIGHT */
+  .movie-card:nth-child(odd) .uml-wl-dropdown {
+    right: auto;
+    left: 0;
+  }
+}
