@@ -11,7 +11,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CastGenre from "./CastGenre";
 import UserMovieListPage from "./UserMovieListPage";
 import Reviews from "./Reviews";
-
+import Landingheader from "./Landingheader";
 import ReviewsSection from "./ReviewsSection";
 import GoogleCallback from "./GoogleCallback";
 import Watchlist from "./Watchlist";
@@ -33,6 +33,7 @@ import AddRecommendation from "./AddRecommendation";
 import RecommendationPage from "./RecommendationPage";
 import SendNotification from "./SendNotification";
 import AboutUs from "./AboutUs";
+import UserHeader from "./UserHeader";
 function App() {
   useEffect(() => {
   const checkBlockedUser = async () => {
@@ -90,7 +91,8 @@ function App() {
           <Route path="/recommendations" element={<RecommendationPage />}></Route>
           <Route path="/add-recommendation" element={<AddRecommendation />}></Route>
           <Route path="/add-notification" element={<SendNotification />} />
-          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/about-us" element={<><UserHeader/><AboutUs /></>} />
+          <Route path="/about" element={<><Landingheader/><AboutUs /></>} />
       </Routes>
     </BrowserRouter>
   );

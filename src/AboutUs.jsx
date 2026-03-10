@@ -103,7 +103,7 @@ export default function AboutUs() {
   return (
     <div className="about-us-page">
       {/* ─── Header ─── */}
-      <UserHeader />
+     
 
       {/* ─── Ambient background ─── */}
       <div className="au-bg-layer" aria-hidden="true">
