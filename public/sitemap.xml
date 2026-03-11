@@ -3,22 +3,12 @@
 
   <url>
     <loc>https://cineversetv.vercel.app/</loc>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://cineversetv.vercel.app/Login</loc>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://cineversetv.vercel.app/Reg</loc>
-    <priority>0.8</priority>
+    <lastmod>2026-03-11</lastmod> 
   </url>
 
   <url>
     <loc>https://cineversetv.vercel.app/about</loc>
-    <priority>0.7</priority>
+    <lastmod>2026-03-11</lastmod>
   </url>
 
 </urlset>
