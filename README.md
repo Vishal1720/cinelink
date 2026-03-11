@@ -1,124 +1,51 @@
+# 🎬 CineVerse TV – Movie & Series Discovery Platform
 
-# 🎬 CineVerse – Smart Movie & Series Review Platform
+CineVerse is a web app to **discover, review, and decide what to watch** with community reviews, intelligent recommendations, and direct OTT / booking links.
 
-CineVerse is a full-stack web application that helps users **discover, review, and decide what to watch and where to watch it** using trusted community reviews, intelligent recommendations, and direct OTT / booking links.
+🔗 **Live:** https://cineversetv.vercel.app/
 
 ---
 
 ## 🚀 Features
 
-### 🔹 User Reviews & Ratings
-- One review per user per movie/series (prevents spam)
-- Emotion-based rating categories:
-  - 😫 Unbearable  
-  - 👍 One Time Watch  
-  - 🤩 Amazing  
-  - 🏆 Masterpiece
-- Like system to surface high-quality reviews
-- Users cannot like their own reviews
-
----
-
-### 🔹 Leaderboard & User Ranking
-- Dynamic leaderboard based on:
-  - Reviews submitted (30 points each)
-  - Likes received (1 point each)
-  - Likes given (0.5 points each)
-- Top 3 users highlighted with:
-  - 🥇 Gold
-  - 🥈 Silver
-  - 🥉 Bronze
-- Rank badge displayed beside each review
-
----
-
-### 🔹 Intelligent Recommendations
-- Genre-based movie/series recommendations
-- “If you liked this, try these” system based on:
-  - Users giving positive reviews (rating categories 3 & 4)
-  - Users liking positive reviews across movies
-- Recommendation logic handled using SQL views for better performance
-
----
-
-### 🔹 AI-Powered Audience Summary
-- AI-generated summary of audience sentiment
-- Generated only after a minimum number of reviews
-- Stored in database to avoid repeated API calls
-- Helps users quickly understand public opinion
-
----
-
-### 🔹 OTT & Booking Integration
-- Direct OTT links (Netflix, Prime Video, etc.)
-- BookMyShow redirection
-- Opens OTT or booking apps directly for seamless experience
-
----
-
-### 🔹 Admin Analytics Dashboard
-- User engagement analytics
-- Sentiment balance across platform
-- Top reviewers and most liked users
-- Review and like distribution insights
+- **Reviews & Ratings** — Emotion-based categories (Unbearable → Masterpiece), one review per user, like system to surface quality reviews
+- **Leaderboard** — Dynamic ranking based on reviews submitted, likes received and given. Top 3 highlighted with 🥇🥈🥉 badges
+- **Smart Recommendations** — Genre-based + "If you liked this" system powered by SQL views
+- **AI Audience Summary** — Gemini-powered sentiment summary generated after minimum reviews, cached in DB to avoid repeat calls
+- **OTT & Booking Links** — Direct links to Netflix, Prime Video, BookMyShow and more
+- **Admin Dashboard** — Engagement analytics, sentiment balance, top reviewers and like distribution
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- React.js
-- CSS 
-
-### Backend / Database
-- Supabase (PostgreSQL)
-- SQL Views for:
-  - User ranking
-  - Recommendation engine
-- Supabase Storage for posters and avatars
-
-### AI
-- Gemini API (Audience summary generation)
+| Layer | Tech |
+|---|---|
+| Frontend | React.js, CSS |
+| Backend | Supabase (PostgreSQL) |
+| AI | Gemini API |
+| Storage | Supabase Storage |
 
 ---
 
-## 🔐 Security & Integrity
+## 🔐 Integrity
 - One review per user per movie
-- No self-likes allowed
-- Likes act as community validation
-- Ranking discourages fake or spam reviews
+- No self-likes
+- Ranking system discourages spam
 
 ---
 
-## 📈 Scalability
-- Database-level aggregation
-- Minimal frontend computation
-- Can be extended to:
-  - Books
-  - Games
-  - Courses
-
----
-
-## 🎯 Why CineVerse?
-- More interactive than traditional rating platforms
-- Focus on trust and quality reviews
-- Action-oriented (watch or book directly)
-- Balanced recognition system for users
-- Modern UX with AI assistance
-
----
-
-## 📌 Future Enhancements
-- Personalized recommendation feed
+## 📌 Future Plans
+- Personalized feed
 - Follow reviewers
-- Comment threads on reviews
+- Comment threads
 - Weekly/monthly leaderboards
-- Materialized views for high-scale data
+- Materialized views for scale
 
 ---
 
+## 👨‍💻 Developers
+- [Vishal Shetty](https://github.com/Vishal1720)
+- [Nikhitha](https://github.com/nikhitha211203)
 
-
-## 🏁 Final Note
-> CineVerse focuses on **trust, interaction, and action**, not just ratings.
+> CineVerse focuses on **trust, interaction, and action** — not just ratings.
