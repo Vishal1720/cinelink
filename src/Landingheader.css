@@ -101,21 +101,45 @@
   background-color: #334a6c;
   outline: none;
 }
-
 @media (max-width: 640px) {
-  .navigation {
-    display: none; /* Adjust if hamburger menu needed */
-  }
-  .auth-buttons{
-    margin-left: 0rem;
-    padding-bottom: 4%;
-    padding-left: 4%;
-    
-  }
-  .left-section {
-    font-size: 1rem;
-  }
   .cineverse-header {
-    padding: 0 1rem;
+    padding: 0 0.75rem;
+    height: 64px;
+    overflow: hidden; /* prevent any child from bleeding out */
+  }
+
+  .navigation {
+    display: none;
+  }
+
+  .left-section {
+    font-size: 0.95rem;
+    flex: 1;
+    min-width: 0; /* allow shrinking */
+  }
+
+  .logo-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .auth-buttons {
+    margin-left: 0.5rem; /* small fixed gap from logo */
+    padding: 0;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .btn {
+    min-width: unset;        /* remove 110px forcing overflow */
+    width: auto;
+    padding: 0.35rem 0.65rem; /* tighter horizontal padding */
+    font-size: 0.78rem;
+  }
+
+  .signin-btn {
+    margin-top: 0;           /* remove the 4% pushing it down/right */
+    margin-right: 0.5rem; 
   }
 }
