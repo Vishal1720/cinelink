@@ -382,14 +382,7 @@ const resetForm = () => {
               <tbody>
                 {filteredBanners.map((banner) => (
                   <tr key={banner.id}>
-                    <td>
-                      <div className="banner-preview">
-                        <img src={banner.banner_url} alt={banner.movies?.title} />
-                        <div className="preview-overlay">
-                          <span className="material-icons-round">visibility</span>
-                        </div>
-                      </div>
-                    </td>
+                    
                     <td>
                       <div className="movie-info">
                         <span className="movie-id">ID: #{banner.movie_id}</span>
