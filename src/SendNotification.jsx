@@ -81,7 +81,7 @@ const SendNotification = () => {
             const notificationMap = new Map();
             
             for (const notif of (data || [])) {
-                const key = `${notif.type}-${notif.notification_text}`;
+                const key = `${notif.type}-${notif.notification_text}-${notif.created_at}`;
                 
                 // Only keep this notification if we haven't seen this key before
                 // or if this one is more recent (though they're already sorted, first one is most recent)
@@ -280,12 +280,10 @@ setRecentNotifications(distinctNotifications);
         if (hoursSinceCreated < 24) return { label: 'Sent', color: 'emerald' };
         return { label: 'Sent', color: 'emerald' };
     };
-const handleDeleteNotification = async (notificationId) => {
+const handleDeleteNotification = async (notificationText, createdAt) => {
     try {
-        console.log("Deleting ID:", notificationId);
-
         const confirmDelete = window.confirm(
-            "⚠️ Are you sure you want to delete this notification?\n\nThis action cannot be undone."
+            "⚠️ Delete this notification for ALL users?\n\nThis cannot be undone."
         );
 
         if (!confirmDelete) return;
@@ -293,25 +291,33 @@ const handleDeleteNotification = async (notificationId) => {
         const { data, error } = await supabase
             .from('notification')
             .delete()
-            .eq('id', notificationId)
-            .select();
+            .eq('notification_text', notificationText)
+            .eq('created_at', createdAt)
+            .select(); // important
 
         if (error) throw error;
 
         if (!data || data.length === 0) {
-            alert("❌ No notification found to delete.");
+            alert("❌ No matching notifications found.");
             return;
         }
 
+        // Remove all matching notifications from UI
         setRecentNotifications((prev) =>
-            prev.filter((notif) => notif.id !== notificationId)
+            prev.filter(
+                (notif) =>
+                    !(
+                        notif.notification_text === notificationText &&
+                        notif.created_at === createdAt
+                    )
+            )
         );
 
-        alert("✅ Notification deleted successfully!");
+        alert(`✅ Deleted ${data.length} notifications successfully!`);
 
     } catch (error) {
         console.error("Delete error:", error);
-        alert("❌ Failed to delete notification. Please try again.");
+        alert("❌ Failed to delete notifications.");
     }
 };
     return (
@@ -597,7 +603,7 @@ const handleDeleteNotification = async (notificationId) => {
 
             <button
                 className="send-notif-delete-btn"
-                onClick={() => handleDeleteNotification(notification.id)}
+                onClick={() => handleDeleteNotification( notification.notification_text,notification.created_at)}
             >
                 <span className="material-symbols-outlined">delete</span>
             </button>
