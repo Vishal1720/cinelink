@@ -282,23 +282,32 @@ setRecentNotifications(distinctNotifications);
     };
 const handleDeleteNotification = async (notificationId) => {
     try {
-        
+        console.log("Deleting ID:", notificationId);
+
         const confirmDelete = window.confirm(
             "⚠️ Are you sure you want to delete this notification?\n\nThis action cannot be undone."
         );
 
         if (!confirmDelete) return;
-        const { error } = await supabase
+
+        const { data, error } = await supabase
             .from('notification')
             .delete()
-            .eq('id', notificationId);
+            .eq('id', notificationId)
+            .select();
 
         if (error) throw error;
+
+        if (!data || data.length === 0) {
+            alert("❌ No notification found to delete.");
+            return;
+        }
+
         setRecentNotifications((prev) =>
             prev.filter((notif) => notif.id !== notificationId)
         );
 
-              alert("✅ Notification deleted successfully!");
+        alert("✅ Notification deleted successfully!");
 
     } catch (error) {
         console.error("Delete error:", error);
