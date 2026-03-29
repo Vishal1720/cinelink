@@ -81,7 +81,7 @@ const SendNotification = () => {
             const notificationMap = new Map();
             
             for (const notif of (data || [])) {
-                const key = `${notif.type}-${notif.notification_text}`;
+                const key = `${notif.type}-${notif.notification_text}-${notif.created_at}`;
                 
                 // Only keep this notification if we haven't seen this key before
                 // or if this one is more recent (though they're already sorted, first one is most recent)
@@ -92,10 +92,9 @@ const SendNotification = () => {
             
             // Convert map to array and take top 5
             const distinctNotifications = Array.from(notificationMap.values())
-                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                .slice(0, 5);
-            
-            setRecentNotifications(distinctNotifications);
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+setRecentNotifications(distinctNotifications);
         } catch (error) {
             console.error('Error fetching recent notifications:', error);
             setRecentNotifications([]);
@@ -281,7 +280,46 @@ const SendNotification = () => {
         if (hoursSinceCreated < 24) return { label: 'Sent', color: 'emerald' };
         return { label: 'Sent', color: 'emerald' };
     };
+const handleDeleteNotification = async (notificationText, createdAt) => {
+    try {
+        const confirmDelete = window.confirm(
+            "⚠️ Delete this notification for ALL users?\n\nThis cannot be undone."
+        );
 
+        if (!confirmDelete) return;
+
+        const { data, error } = await supabase
+            .from('notification')
+            .delete()
+            .eq('notification_text', notificationText)
+            .eq('created_at', createdAt)
+            .select(); // important
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            alert("❌ No matching notifications found.");
+            return;
+        }
+
+        // Remove all matching notifications from UI
+        setRecentNotifications((prev) =>
+            prev.filter(
+                (notif) =>
+                    !(
+                        notif.notification_text === notificationText &&
+                        notif.created_at === createdAt
+                    )
+            )
+        );
+
+        alert(`✅ Deleted ${data.length} notifications successfully!`);
+
+    } catch (error) {
+        console.error("Delete error:", error);
+        alert("❌ Failed to delete notifications.");
+    }
+};
     return (
         <div className="send-notif-page">
             <AdminHeader />
@@ -538,27 +576,45 @@ const SendNotification = () => {
                                     recentNotifications.map((notification) => {
                                         const status = getNotificationStatus(notification);
                                         return (
-                                            <div key={notification.id} className="send-notif-recent-item">
-                                                <div className="send-notif-recent-col-campaign">
-                                                    <div className="send-notif-recent-title-row">
-                                                        <span className={`send-notif-recent-dot send-notif-dot-${status.color}`}></span>
-                                                        <h3 className="send-notif-recent-title">
-                                                            {notification.type === 'm_promotion' ? 'Movie Promotion' : 'General Message'}
-                                                        </h3>
-                                                    </div>
-                                                    <p className="send-notif-recent-message">
-                                                        {notification.notification_text.substring(0, 40)}...
-                                                    </p>
-                                                </div>
-                                                <div className="send-notif-recent-col-status">
-                                                    <span className={`send-notif-recent-status send-notif-status-${status.color}`}>
-                                                        {status.label}
-                                                    </span>
-                                                    <span className="send-notif-recent-time">
-                                                        {formatTimeAgo(notification.created_at)}
-                                                    </span>
-                                                </div>
-                                            </div>
+                                            <div className="send-notif-recent-item">
+    
+    {/* LEFT: Campaign */}
+    <div className="send-notif-recent-col-campaign">
+        <div className="send-notif-title-left">
+            <span className={`send-notif-recent-dot send-notif-dot-${status.color}`}></span>
+            <h3 className="send-notif-recent-title">
+                {notification.type === 'm_promotion' ? 'Movie Promotion' : 'General Message'}
+            </h3>
+        </div>
+
+        <p className="send-notif-recent-message">
+            {notification.notification_text.substring(0, 40)}...
+        </p>
+    </div>
+
+    {/* RIGHT: Status + Delete */}
+    <div className="send-notif-recent-col-status">
+
+        <div className="send-notif-status-row">
+
+            <span className={`send-notif-recent-status send-notif-status-${status.color}`}>
+                {status.label}
+            </span>
+
+            <button
+                className="send-notif-delete-btn"
+                onClick={() => handleDeleteNotification( notification.notification_text,notification.created_at)}
+            >
+                <span className="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+
+        <span className="send-notif-recent-time">
+            {formatTimeAgo(notification.created_at)}
+        </span>
+    </div>
+
+</div>
                                         );
                                     })
                                 )}
