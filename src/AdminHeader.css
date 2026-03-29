@@ -256,3 +256,88 @@
   padding: 24px;
   background: #0f1220;
 }
+
+
+
+
+
+
+
+/* 🔽 Review Dropdown Group */
+.admin-nav-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main title (Reviews / Recommendations) */
+.admin-nav-title {
+  display: flex;
+  align-items:right;
+  justify-content:left;
+  gap: 10px;
+  color: #a0a8b6;
+  font-size: 15px;
+  padding: 15px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Same hover feel as other buttons */
+.admin-nav-title:hover {
+  background-color: #2e3a5e;
+  color: #667eea;
+}
+
+/* Dropdown arrow */
+.dropdown-arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+/* Rotate arrow when open */
+.admin-nav-title.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Submenu container */
+.admin-submenu {
+  margin-left: 18px;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Submenu buttons */
+.admin-sub-item {
+  background: transparent;
+  border: none;
+  color: #a0a8b6;
+  font-size: 13px;
+  padding: 6px 12px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover like parent */
+.admin-sub-item:hover {
+  background-color: #2e3a5e;
+  color: #667eea;
+}
+
+/* Active submenu item */
+.admin-sub-item.active {
+  background-color: #2e3a5e;
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* Optional: highlight parent when active */
+.admin-nav-title.active {
+  background-color: #2e3a5e;
+  color: #667eea;
+  font-weight: 600;
+}

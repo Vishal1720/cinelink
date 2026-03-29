@@ -1,0 +1,266 @@
+/* ========================= */
+/* MAIN CONTAINER */
+/* ========================= */
+.admin-rec-container {
+  padding: 20px;
+  padding-left: 200px; /* ✅ adjust based on sidebar width */
+  color: #fff;
+  background: #0f1220;
+  min-height: 100vh;
+}
+
+
+.analytics-table-wrapper{
+    width: 1000px;
+    display: flex;
+}
+
+/* Title */
+.admin-rec-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Loading / Empty */
+.loading-text,
+.no-data {
+  color: #a0a8b6;
+  text-align: center;
+  margin-top: 40px;
+}
+.col-center{
+    width: 100px;
+}
+
+.col-engagement {
+    width: 300px;
+}
+
+
+
+/* ========================= */
+/* TABLE CONTAINER */
+/* ========================= */
+.table-container {
+  overflow-x: auto;
+  background: #141722;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+/* ========================= */
+/* TABLE */
+/* ========================= */
+.rec-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+  font-size: 14px;
+  table-layout: auto; /* ✅ auto adjust */
+}
+
+/* Header */
+.rec-table thead {
+  background: #1c2133;
+}
+
+.rec-table th {
+  padding: 12px;
+  text-align: left;
+  color: #a0a8b6;
+  font-weight: 500;
+  border-bottom: 1px solid #2e3a5e;
+}
+
+/* Cells */
+.rec-table th,
+.rec-table td {
+  padding: 12px;
+  border-bottom: 1px solid #2e3a5e;
+  vertical-align: top;
+}
+
+/* Hover */
+.rec-table tbody tr:hover {
+  background: #1c2133;
+}
+
+/* ========================= */
+/* COLUMN WIDTHS */
+/* ========================= */
+.rec-table th:nth-child(1),
+.rec-table td:nth-child(1) { width: 25%; }
+
+.rec-table th:nth-child(2),
+.rec-table td:nth-child(2) { width: 15%; }
+
+.rec-table th:nth-child(3),
+.rec-table td:nth-child(3) { width: 20%; }
+
+.rec-table th:nth-child(4),
+.rec-table td:nth-child(4) { width: 30%; }
+
+.rec-table th:nth-child(5),
+.rec-table td:nth-child(5) { 
+  width: 10%; 
+}
+
+/* ========================= */
+/* MOVIES COLUMN */
+/* ========================= */
+.col-center {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.col-center span {
+  font-size: 0.85rem;
+}
+
+/* ========================= */
+/* MESSAGE COLUMN */
+/* ========================= */
+.message-cell {
+  max-width: 320px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+/* ========================= */
+/* ACTION COLUMN */
+/* ========================= */
+.rec-table td:last-child {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px;   /* reduce padding */
+}
+
+/* ========================= */
+/* BUTTON */
+/* ========================= */
+.delete-btn {
+  background: #2e3a5e;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #667eea;
+}
+
+/* ========================= */
+/* 📱 MOBILE VIEW */
+/* ========================= */
+@media (max-width: 768px) {
+
+  .admin-rec-container {
+    padding: 10px;
+    padding-left: 10px; /* ✅ remove sidebar gap on mobile */
+  }
+
+  .rec-table thead {
+    display: none;
+  }
+
+  .rec-table,
+  .rec-table tbody,
+  .rec-table tr,
+  .rec-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .rec-table tr {
+    background: #1c2133;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .rec-table td {
+    border: none;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  /* Labels */
+  .rec-table td::before {
+    content: attr(data-label);
+    font-weight: 500;
+    color: #a0a8b6;
+    flex: 1;
+  }
+
+  .rec-table td span,
+  .rec-table td div,
+  .rec-table td p {
+    flex: 2;
+    text-align: right;
+  }
+
+  .message-cell {
+    text-align: right;
+  }
+
+  .rec-table td:last-child {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px;   /* reduce padding */
+}
+}
+
+/* ========================= */
+/* 📲 TABLET VIEW */
+/* ========================= */
+@media (max-width: 1024px) {
+
+  .admin-rec-container {
+    padding-left: 200px; /* slightly smaller sidebar spacing */
+  }
+
+  .rec-table th,
+  .rec-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .message-cell {
+    max-width: 240px;
+  }
+
+  .delete-btn {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+}
+
+/* ========================= */
+/* 💻 LARGE SCREENS */
+/* ========================= */
+@media (min-width: 1200px) {
+
+  .admin-rec-container {
+    padding: 30px;
+    padding-left: 280px;
+  }
+
+  .rec-table {
+    font-size: 15px;
+  }
+
+  .message-cell {
+    max-width: 400px;
+  }
+}

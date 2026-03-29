@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
 import { supabase } from './supabase';
 
+
 const AdminHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
   const navigate = useNavigate();
 const defaultAvatar =
   "https://wiggitkoxqislzddubuk.supabase.co/storage/v1/object/public/AvatarBucket/defaultavatar.jpg";
@@ -78,8 +80,13 @@ useEffect(() => {
   };
 
   const reviews_page = () => {
-  setIsMenuOpen(false);
+  setIsMenuOpen(false);  
   navigate("/admin-reviews");
+};
+
+const recommendations_page = () => {
+  setIsMenuOpen(false);
+  navigate("/AdminRecommendation");
 };
 
   const banner = () => {
@@ -97,6 +104,13 @@ useEffect(() => {
     navigate("/add-notification");
   }
 const location = useLocation();
+
+const getReviewLabel = () => {
+  if (location.pathname === "/AdminRecommendation") {
+    return "Recommendations";
+  }
+  return "Reviews";
+};
 
 // selecting tab when page change
 const isActive = (path) =>
@@ -182,15 +196,42 @@ const isActive = (path) =>
               </button>
             </li>
 
-           <li>
-              <button
-                 className={`admin-nav-item ${isActive("/admin-reviews")}`}
-                  onClick={reviews_page}
-                >
-                  <span className="admin-icon">⭐</span>
-                    Reviews
-             </button>
-            </li>
+          <li>
+  <div className="admin-nav-group">
+    
+    {/* Main clickable dropdown */}
+    <div 
+      className="admin-nav-title"
+      onClick={() => setIsReviewOpen(!isReviewOpen)}
+    >
+      <span className="admin-icon">⭐</span>
+      {getReviewLabel()}
+      <span className="dropdown-arrow">
+        {isReviewOpen ? "▲" : "▼"}
+      </span>
+    </div>
+
+    {/* Dropdown items */}
+    {isReviewOpen && (
+      <div className="admin-submenu">
+        <button
+          className={`admin-sub-item ${isActive("/admin-reviews")}`}
+          onClick={reviews_page}
+        >
+          • Reviews
+        </button>
+
+        <button
+          className={`admin-sub-item ${isActive("/AdminRecommendation")}`}
+          onClick={recommendations_page}
+        >
+          • Recommendations
+        </button>
+      </div>
+    )}
+    
+  </div>
+</li>
 
             <li>
               <button className={`admin-nav-item ${isActive("/castgenre")}`} onClick={genre_caste}>

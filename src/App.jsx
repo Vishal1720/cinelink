@@ -34,6 +34,7 @@ import RecommendationPage from "./RecommendationPage";
 import SendNotification from "./SendNotification";
 import AboutUs from "./AboutUs";
 import UserHeader from "./UserHeader";
+import AdminRecommendation from "./AdminRecommendation";
 function App() {
   useEffect(() => {
   const checkBlockedUser = async () => {
@@ -93,6 +94,7 @@ function App() {
           <Route path="/add-notification" element={<SendNotification />} />
           <Route path="/about-us" element={<><UserHeader/><AboutUs /></>} />
           <Route path="/about" element={<><Landingheader/><AboutUs /></>} />
+          <Route path="/AdminRecommendation" element={<AdminRecommendation />} />
       </Routes>
     </BrowserRouter>
   );
