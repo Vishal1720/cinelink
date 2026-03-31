@@ -238,9 +238,7 @@ const resetForm = () => {
             <p>Upload and manage promotional banners for the home screen.</p>
           </div>
           <div className="header-actions">
-            <button className="btn-filter">
-              <span className="material-icons-round">filter_list</span> Filter
-            </button>
+           
 
             <button className="btn-primary" onClick={handleSaveBanner} disabled={loading}>
               <span className="material-icons-round">save</span> 
