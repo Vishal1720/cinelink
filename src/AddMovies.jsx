@@ -178,7 +178,7 @@ const fetchAllCast = async () => {
 
     if (!formData.title.trim()) newErrors.title = "Movie title is required.";
     if (!formData.releaseYear.trim()) newErrors.releaseYear = "Release year is required.";
-    else if (isNaN(formData.releaseYear) || formData.releaseYear < 1888)
+    else if (isNaN(formData.releaseYear) || formData.releaseYear < 1888 || formData.releaseYear > 2100)
       newErrors.releaseYear = "Enter a valid year.";
 
     if (!formData.duration.trim()) newErrors.duration = "Duration is required.";
