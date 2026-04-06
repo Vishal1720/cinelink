@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 import levenshtein from "fast-levenshtein";
 
-const PAGE_SIZE = 42;
+const PAGE_SIZE = 24;
 
 const UserMovieListPage = () => {
   const [genres, setGenres] = useState([]);
