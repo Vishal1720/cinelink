@@ -40,7 +40,7 @@ const UserHeader = () => {
         }
 
         if (!session?.user?.email) {
-          console.log('No user email found in session');
+          // console.log('No user email found in session');
           navigate('/Login');
           return;
         }
@@ -57,7 +57,7 @@ const UserHeader = () => {
         if (error) {
           console.error('Error fetching notifications:', error);
         } else {
-          console.log('Unread notifications count:', data?.length || 0);
+          // console.log('Unread notifications count:', data?.length || 0);
           setUnreadCount(data?.length || 0);
         }
       } catch (err) {
