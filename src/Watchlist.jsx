@@ -3,8 +3,6 @@ import './Watchlist.css'
 import UserHeader from './UserHeader'
 import { supabase } from './supabase'
 import { useNavigate } from 'react-router-dom'
-import emptyImg from "./assets/icons/unfilled.png"
-import filledImg from "./assets/icons/filled.png"
 import MovieSearchModal from './MovieSearchModal'
 
 const Watchlist = () => {
@@ -19,6 +17,10 @@ const Watchlist = () => {
   const [activeListForSearch, setActiveListForSearch] = useState(null);
   const [newListName, setNewListName] = useState("");
   const [isCreatingList, setIsCreatingList] = useState(false);
+
+  // Rename states
+  const [renamingList, setRenamingList] = useState(null);
+  const [renameValue, setRenameValue] = useState("");
 
   const fetchRatingSummary = async (movieId) => {
     const { data, error } = await supabase
@@ -97,7 +99,6 @@ const Watchlist = () => {
       return;
     }
 
-    // sanitize movie ids: remove falsy values and ensure numeric IDs
     const ids = [...new Set(
       watchRows
         .map(r => r.movie_id)
@@ -107,7 +108,6 @@ const Watchlist = () => {
     )];
 
     if (ids.length === 0) {
-      // no valid movie ids to query
       setGroupedMovies({});
       setLoading(false);
       return;
@@ -258,6 +258,55 @@ const Watchlist = () => {
     setIsCreatingList(false);
   }
 
+  const startRename = (listName) => {
+    setRenamingList(listName);
+    setRenameValue(listName);
+  }
+
+  const cancelRename = () => {
+    setRenamingList(null);
+    setRenameValue("");
+  }
+
+  const confirmRename = async () => {
+    const trimmed = renameValue.trim();
+    if (!trimmed || trimmed === renamingList) { cancelRename(); return; }
+    if (trimmed.toLowerCase() === "default") {
+      alert("Cannot rename to 'Default'");
+      return;
+    }
+    if (groupedMovies[trimmed]) {
+      alert("A collection with that name already exists!");
+      return;
+    }
+
+    if (mail) {
+      const { error } = await supabase
+        .from('watchlist')
+        .update({ type: trimmed })
+        .eq('email', mail)
+        .eq('type', renamingList);
+
+      if (error) {
+        console.error("Error renaming list:", error);
+        alert("Failed to rename collection.");
+        return;
+      }
+    }
+
+    setGroupedMovies(prev => {
+      const entries = Object.entries(prev);
+      const newState = {};
+      entries.forEach(([key, val]) => {
+        newState[key === renamingList ? trimmed : key] = val;
+      });
+      return newState;
+    });
+
+    window.dispatchEvent(new Event('watchlistChanged'));
+    cancelRename();
+  }
+
   useEffect(() => {
     fetchWatchlist();
 
@@ -272,58 +321,52 @@ const Watchlist = () => {
       <main className="main-content">
         <div className="content-wrapper">
 
-          {/* <div className="watchlist-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-           */}
-           <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 'bold' }}>My Collections</h2>
-           <div className="watchlist-header" >
-
-            
+          <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 'bold' }}>My Collections</h2>
+          <div className="watchlist-header">
             <div className="watchlist-header-actions">
-  {!isCreatingList ? (
-    <button
-      className="new-collection-btn"
-      onClick={() => setIsCreatingList(true)}
-    >
-      <span style={{ fontSize: '1.2rem' }}>+</span> New Collection
-    </button>
-  ) : (
-  <div className="create-list-form">
-  <input
-    type="text"
-    value={newListName}
-    onChange={(e) => setNewListName(e.target.value)}
-    placeholder="Collection name"
-    autoFocus
-    onKeyDown={(e) => e.key === "Enter" && createNewList()}
-  />
-
-  <button
-    className="watchlist-create-btn"
-    onClick={createNewList}
-    title="Create collection"
-  >
-    ✓
-  </button>
-
-  <button
-    className="watchlist-cancel-btn"
-    onClick={() => {
-      setIsCreatingList(false);
-      setNewListName("");
-    }}
-    title="Cancel"
-  >
-    ✕
-  </button>
-</div>
-
-  )}
-</div>
-
+              {!isCreatingList ? (
+                <button
+                  className="new-collection-btn"
+                  onClick={() => setIsCreatingList(true)}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>+</span> New Collection
+                </button>
+              ) : (
+                <div className="create-list-form">
+                  <input
+                    type="text"
+                    value={newListName}
+                    onChange={(e) => setNewListName(e.target.value)}
+                    placeholder="Collection name"
+                    autoFocus
+                    onKeyDown={(e) => e.key === "Enter" && createNewList()}
+                  />
+                  <button
+                    className="watchlist-create-btn"
+                    onClick={createNewList}
+                    title="Create collection"
+                  >
+                    ✓
+                  </button>
+                  <button
+                    className="watchlist-cancel-btn"
+                    onClick={() => {
+                      setIsCreatingList(false);
+                      setNewListName("");
+                    }}
+                    title="Cancel"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '50px' }}><div className="loader"></div></div>
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '50px' }}>
+              <div className="loader"></div>
+            </div>
           ) : (
             <div className="lists-container">
               {Object.keys(groupedMovies).length === 0 ? (
@@ -333,79 +376,105 @@ const Watchlist = () => {
                 </div>
               ) : (
                 Object.keys(groupedMovies).map(listName => (
-                  <section key={listName} className="list-section" style={{ marginBottom: '50px', background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '16px' }}>
-                    <div className="list-title-row" style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
-                      <h3 style={{ margin: 0, color: '#fff', fontSize: '1.5rem', borderLeft: '4px solid #E50914', paddingLeft: '12px' }}>{listName}</h3>
-                      <button
-                        onClick={() => { setActiveListForSearch(listName); setIsSearchOpen(true); }}
-                        style={{
-                          background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem',
-                          transition: 'background 0.2s'
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                        title="Add movie"
-                      >
-                        +
-                      </button>
+                  <section key={listName} className="list-section">
+                    <div className="list-title-row">
+                      {renamingList === listName ? (
+                        <div className="rename-list-form">
+                          <input
+                            type="text"
+                            value={renameValue}
+                            onChange={(e) => setRenameValue(e.target.value)}
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") confirmRename();
+                              if (e.key === "Escape") cancelRename();
+                            }}
+                          />
+                          <button className="watchlist-create-btn" onClick={confirmRename} title="Save">✓</button>
+                          <button className="watchlist-cancel-btn" onClick={cancelRename} title="Cancel">✕</button>
+                        </div>
+                      ) : (
+                        <h3 className="list-title">{listName}</h3>
+                      )}
 
-                      <button
-                        onClick={() => deleteList(listName)}
-                        style={{
-                          background: 'transparent', border: '1px solid #444', color: '#aaa', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem',
-                          marginLeft: 'auto',
-                          transition: 'all 0.2s'
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#E50914'; e.currentTarget.style.color = '#E50914'; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.color = '#aaa'; }}
-                        title="Delete collection"
-                      >
-                        🗑
-                      </button>
+                      {renamingList !== listName && (
+                        <button
+                          className="list-rename-btn"
+                          onClick={() => startRename(listName)}
+                          title="Rename collection"
+                        >
+                          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+                            <path d="M11.5 1.5a1.414 1.414 0 0 1 2 2L5 12H3v-2L11.5 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </button>
+                      )}
 
-                      <span style={{ color: '#888', fontSize: '0.9rem', fontWeight: '500', minWidth: '60px', textAlign: 'right' }}>{groupedMovies[listName].length} items</span>
+                      {renamingList !== listName && (
+                        <button
+                          className="list-add-btn"
+                          onClick={() => { setActiveListForSearch(listName); setIsSearchOpen(true); }}
+                          title="Add movie"
+                        >
+                          +
+                        </button>
+                      )}
+
+                      {renamingList !== listName && (
+                        <button
+                          className="list-delete-btn"
+                          onClick={() => deleteList(listName)}
+                          title="Delete collection"
+                        >
+                          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+                            <path d="M2 4h12M5 4V2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5V4M6 7v5M10 7v5M3 4l.8 9.1A1 1 0 0 0 4.8 14h6.4a1 1 0 0 0 1-.9L13 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </button>
+                      )}
+
+                      <span className="list-count">{groupedMovies[listName].length} items</span>
                     </div>
 
                     <div className="movies-grid">
                       {groupedMovies[listName].length === 0 ? (
-                        <div style={{ width: '100%', padding: '30px', textAlign: 'center', border: '2px dashed #333', borderRadius: '12px', color: '#555', cursor: 'pointer' }} onClick={() => { setActiveListForSearch(listName); setIsSearchOpen(true); }}>
+                        <div
+                          className="empty-list-placeholder"
+                          onClick={() => { setActiveListForSearch(listName); setIsSearchOpen(true); }}
+                        >
                           + Add a movie to {listName}
                         </div>
                       ) : (
                         groupedMovies[listName].map(movie => (
-                          <div key={movie.id} className="movie-card" onClick={() => navigate(`/movie/${movie.id}`)} onMouseEnter={() => setHoveredMovie(movie.id)} onMouseLeave={() => setHoveredMovie(null)} style={{ position: 'relative' }}>
+                          <div
+                            key={movie.id}
+                            className="movie-card"
+                            onClick={() => navigate(`/movie/${movie.id}`)}
+                            onMouseEnter={() => setHoveredMovie(movie.id)}
+                            onMouseLeave={() => setHoveredMovie(null)}
+                          >
+                            {/* ── Remove button: dark circle with SVG × ── */}
                             <button
                               onClick={(e) => removeFromWatchlist(e, movie.id, listName)}
-                              className="watchlist-heart-btn"
-                              style={{
-                                position: 'absolute',
-                                top: '0.75rem',
-                                right: '0.75rem',
-                                width: '37px',
-                                height: '37px',
-                                borderRadius: '50%',
-                                border: 'none',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '1.25rem',
-                                opacity: 1,
-                                transition: 'opacity 0.3s, transform 0.2s',
-                                zIndex: 2,
-                                boxShadow: '0 2px 8px rgba(0,0,0,1)',
-                                backgroundColor: 'rgba(255, 255, 255, 0.8)'
-                              }}
+                              className="watchlist-remove-btn"
                               title="Remove from this list"
                             >
-                              <img src={filledImg} alt="Remove" style={{ width: '26px', height: '26px' }} />
+                              <svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="1.5" y1="1.5" x2="11.5" y2="11.5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+                                <line x1="11.5" y1="1.5" x2="1.5" y2="11.5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+                              </svg>
                             </button>
 
-                            <img src={movie.poster_url} alt={`Movie poster for ${movie.title}`} className="movie-poster" loading="lazy" />
+                            <img
+                              src={movie.poster_url}
+                              alt={`Movie poster for ${movie.title}`}
+                              className="movie-poster"
+                              loading="lazy"
+                            />
                             <div className="movie-info">
                               <p className="movie-title">{movie.title}</p>
                               {movie.ratingSummary ? (
-                                <p className="movie-rating">{movie.ratingSummary.emoji_pic} {movie.ratingSummary.category} ({movie.ratingSummary.percentage}%)</p>
+                                <p className="movie-rating">
+                                  {movie.ratingSummary.emoji_pic} {movie.ratingSummary.category} ({movie.ratingSummary.percentage}%)
+                                </p>
                               ) : (
                                 <p className="movie-rating">No ratings yet</p>
                               )}
