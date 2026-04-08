@@ -283,4 +283,7 @@
 @media (max-width: 600px) {
   .watchlist-poster { height: 160px; }
   .create-list-form input { min-width: 160px; }
+  .list-count{
+    display: none;
+  }
 }
